@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-Cryptoverse CTF 2022</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Cryptoverse CTF 2022 | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Cryptoverse CTF 2022" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hi friends!" />
+<meta property="og:description" content="Hi friends!" />
+<link rel="canonical" href="http://localhost:8000/posts/cryptoverse22" />
+<meta property="og:url" content="http://localhost:8000/posts/cryptoverse22" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-10-24T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Cryptoverse CTF 2022" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2022-10-24T00:00:00+05:30","datePublished":"2022-10-24T00:00:00+05:30","description":"Hi friends!","headline":"Cryptoverse CTF 2022","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/posts/cryptoverse22"},"url":"http://localhost:8000/posts/cryptoverse22"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div>
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat cryptoverse</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>Cryptoverse CTF 2022</h2>
+  <time datetime="2022-10-24T00:00:00+05:30" class="by-line">24 Oct 2022</time>
+  <p>Hi friends!</p>
+
+<p>I played another CTF named Cryptoverse CTF 2022.
+Cryptoverse CTF 2022 is a beginner-friendly CTF organized by an individual who is particularly interested in Cryptography and Reverse Engineering.</p>
+
+<p>Let me explain the challs i solved in Cryptoverse CTF 2022.</p>
+
+<h1 id="baby-reverse">Baby Reverse</h1>
+
+<p>This is a basic reverse challenge.</p>
+
+<p><img src="/assets/img/post_img/babyreverse1.png" alt="baby_reverse" w="600" h="600" /></p>
+
+<p>This can be solved by using strings command in linux</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>strings chall
+</code></pre></div></div>
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : cvctf{7h15_15_4_f4k3_fl4g}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="cryptowarmup-1">Crypto/Warmup 1</h1>
+
+<p><img src="/assets/img/post_img/cryptowarmup1.png" alt="crypto/warmup1" w="600" h="600" /></p>
+
+<p>The task is to decode the base64 cipher “cGlwZ3N7cG5yZm5lXzY0X3Nnan0=”.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"cGlwZ3N7cG5yZm5lXzY0X3Nnan0="</span> | <span class="nb">base64</span> <span class="nt">-d</span>
+<span class="nv">$ </span>pipgs<span class="o">{</span>pnrfne_64_sgj<span class="o">}</span>
+</code></pre></div></div>
+<p>Then do a rot13 on the deciphered text.</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"pipgs{pnrfne_64_sgj}"</span> | rot13
+<span class="nv">$ </span>cvctf<span class="o">{</span>caesar_64_ftw<span class="o">}</span>
+</code></pre></div></div>
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : cvctf{caesar_64_ftw}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="cryptowarmup-2">Crypto/Warmup 2</h1>
+
+<p><img src="/assets/img/post_img/cryptowarmup2.png" alt="crypto/warmup2" w="600" h="600" /></p>
+
+<p>The cipher is fzvxw{hqtegmfr_lw_msf_scrslg_kvwlhyk_fpr_kxg?} which is a vegener cipher and the key to decrypt the cipher is determination. 
+I used <a href="https://www.dcode.fr/vigenere-cipher">this</a> site to do it.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : cvctf{vigenere_is_too_guessy_without_the_key?}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="cryptowarmup-3">Crypto/Warmup 3</h1>
+
+<p><img src="/assets/img/post_img/cryptowarmup3.png" alt="crypto/warmup3" w="600" h="600" /></p>
+
+<p>-.-. …- -.-. - ..-. – —– .-. ….. …– .. … -. —– - ….. —– ..-. ..- -. is the morse code. I used <a href="https://gchq.github.io/CyberChef/">CyberChef</a> to convert morse code to plaintext.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : cvctf{m0r53isn0t50fun}</code>
+***</p>
+</blockquote>
+
+<h1 id="cryptosubstitution">Crypto/Substitution</h1>
+
+<p><img src="/assets/img/post_img/cryptosubstitution.png" alt="crypto/Substitution" w="600" h="600" /></p>
+
+<p>I used <a href="https://www.guballa.de/substitution-solver">This</a> website to solve this.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : cvctf{averysimplesubstitution}</code>
+***</p>
+</blockquote>
+
+<h1 id="cryptorsa-1">Crypto/RSA 1</h1>
+
+<p><img src="/assets/img/post_img/cryptorsa1.png" alt="crypto/RSA1" w="600" h="600" /></p>
+
+<p>This is a RSA challenge with small e. And i used factordb to find the primes of N, then i computed the phi to find the d which can be used to decrypt the cipher.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">utilis</span> <span class="kn">import</span> <span class="n">egcd</span><span class="p">,</span><span class="n">modinv</span><span class="p">,</span><span class="n">Convert</span>
+<span class="kn">from</span> <span class="n">Factorizations.factordb</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">factordb</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">f</span> <span class="o">=</span>  <span class="nc">FactorDB</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">f</span><span class="p">.</span><span class="nf">connect</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">f</span><span class="p">.</span><span class="nf">get_factor_list</span><span class="p">()</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="s">"0x7c05a45d02649367ebf6f472663119777ce5f9b3f2283c7b03471e9feb1714a3ce9fa31460eebd9cd5aca7620ecdb52693a736e2fcc83d7909130c6038813fd16ef50c5ca6f491b4a8571289e6ef710536c4615604f8e7aeea606d4b5f59d7adbec935df23dc2bbc2adebbee07c05beb7fa68065805d8c8f0e86b5c3f654e651"</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="s">"0x10001"</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="s">"0x35b63f7513dbb828800a6bcd708d87a6c9f33af634b8006d7a94b7e3ba62e6b9a1732a58dc35a8df9f7554e1168bfe3de1cb64792332fc8e5c9d5db1e49e86deb650ee0313aae53b227c75e40779a150ddb521f3c80f139e26b2a8880f0869f755965346cd28b7ddb132cf8d8dcc31c6b1befc83e21d8c452bcce8b9207ab76e"</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">factordb</span> <span class="o">=</span> <span class="nf">factordb</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">factordb</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">factordb</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">q</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="nf">modinv</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="n">phi</span><span class="p">)</span>
+    <span class="n">decode</span> <span class="o">=</span> <span class="nf">pow</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+    <span class="nc">Convert</span><span class="p">(</span><span class="n">decode</span><span class="p">)</span>
+<span class="k">except</span> <span class="nb">IndexError</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"[-] Sorry Can't Factorize n "</span><span class="p">)</span>
+</code></pre></div></div>
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : cvctf{f4c70rDB_15_p0w3rfu1}</code></p>
+</blockquote>
+
+<hr />
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2023
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>

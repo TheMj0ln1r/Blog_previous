@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-m0leCon Beginner CTF 2022</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>m0leCon Beginner CTF 2022 | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="m0leCon Beginner CTF 2022" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I played m0lecon CTF 2022 with my CTF team TEAM-ASGARD. These are the few challenges those i solved." />
+<meta property="og:description" content="I played m0lecon CTF 2022 with my CTF team TEAM-ASGARD. These are the few challenges those i solved." />
+<link rel="canonical" href="http://localhost:8000/posts/m0leconbeginner" />
+<meta property="og:url" content="http://localhost:8000/posts/m0leconbeginner" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-11-13T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="m0leCon Beginner CTF 2022" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2022-11-13T00:00:00+05:30","datePublished":"2022-11-13T00:00:00+05:30","description":"I played m0lecon CTF 2022 with my CTF team TEAM-ASGARD. These are the few challenges those i solved.","headline":"m0leCon Beginner CTF 2022","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/posts/m0leconbeginner"},"url":"http://localhost:8000/posts/m0leconbeginner"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div>
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat m0leCon</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>m0leCon Beginner CTF 2022</h2>
+  <time datetime="2022-11-13T00:00:00+05:30" class="by-line">13 Nov 2022</time>
+  <p>I played <strong>m0lecon CTF 2022</strong> with my CTF team <a href="https://ctftime.org/team/196057">TEAM-ASGARD</a>. These are the few challenges those i solved.</p>
+
+<h1 id="crypto---unrecognizable">Crypto - Unrecognizable</h1>
+
+<p>The challenge contains these two images.</p>
+
+<p><img src="/assets/img/post_img/m0lecon_unrecognizable1.png" alt="challenge" width="200" height="200" /></p>
+
+<p><img src="/assets/img/post_img/m0lecon_unrecognizable2.png" alt="whoami" width="200" height="200" /></p>
+
+<p>Immediately i wrote this script to make <code class="language-plaintext highlighter-rouge">xor</code> of these two images.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageChops</span>
+<span class="n">im1</span> <span class="o">=</span> <span class="n">Image</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="s">'challenge.png'</span><span class="p">)</span>
+<span class="n">im2</span> <span class="o">=</span> <span class="n">Image</span><span class="p">.</span><span class="nf">open</span><span class="p">(</span><span class="s">'whoami.png'</span><span class="p">)</span>
+
+<span class="n">im3</span> <span class="o">=</span> <span class="n">ImageChops</span><span class="p">.</span><span class="nf">add</span><span class="p">(</span><span class="n">ImageChops</span><span class="p">.</span><span class="nf">subtract</span><span class="p">(</span><span class="n">im2</span><span class="p">,</span> <span class="n">im1</span><span class="p">),</span> <span class="n">ImageChops</span><span class="p">.</span><span class="nf">subtract</span><span class="p">(</span><span class="n">im1</span><span class="p">,</span> <span class="n">im2</span><span class="p">))</span>
+<span class="n">im3</span><span class="p">.</span><span class="nf">save</span><span class="p">(</span><span class="s">"im3.png"</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Which gives new image consist of the flag in it.</p>
+
+<p><img src="/assets/img/post_img/m0lecon_unrecognizable3.png" alt="flag" width="200" height="200" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag: ptm{y0u_r34lly_7r4c3d_m3}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="misc---f33linegcut3">Misc - f33linegCut3</h1>
+
+<p>The challenge contains this selfie.jpeg image.</p>
+
+<p><img src="/assets/img/post_img/m0lecon_selfie.jpeg" alt="feelingCut3" width="300" height="300" /></p>
+
+<p>Used <code class="language-plaintext highlighter-rouge">exiftool</code> to read metadata. <code class="language-plaintext highlighter-rouge">exiftool selfie.jpeg</code> and found this comment in metadata.</p>
+
+<p>Comment:010101000110100001100101010011010110100101100111011010000111010001111001010100000110000101110111</p>
+
+<p>Then I followed this <code class="language-plaintext highlighter-rouge">Bin &gt; Hex &gt; Ascii</code> Using <a href="https://gchq.github.io/CyberChef/" target="_blank">Cyberchef</a>.</p>
+
+<p>The result is of this is <code class="language-plaintext highlighter-rouge">TheMightyPaw</code></p>
+
+<p>Now I tried <code class="language-plaintext highlighter-rouge">steghide extract -sf selfie.jpeg</code> and it results a <code class="language-plaintext highlighter-rouge">mesage.zip</code> which is password protected.</p>
+
+<p>Unzipped the <code class="language-plaintext highlighter-rouge">message.zip</code> using <code class="language-plaintext highlighter-rouge">TheMightyPaw</code> as the password. It gave us the flag.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : ptm{n33d_M0r3_c4TN1p_b0ss}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="misc---filerecover">Misc - FileRecover</h1>
+
+<p>In this challenge a <code class="language-plaintext highlighter-rouge">capture.pcap</code> is attached.</p>
+
+<p>By analyzing it in wireshark. I found that in one packet large size of data has been transmitted. I exported the packet data as the Image. The image contains the flag we need.</p>
+
+<p><img src="/assets/img/post_img/m0lecon_pcap" alt="pcap" width="300" height="300" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : n37w0rk_ch4ll3n935_4r3_fun_2</code></p>
+</blockquote>
+
+<hr />
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2023
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>

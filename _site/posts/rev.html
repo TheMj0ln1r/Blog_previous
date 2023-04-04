@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-InvaderCTF-2022 Reversing Writeups</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>InvaderCTF-2022 Reversing Writeups | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="InvaderCTF-2022 Reversing Writeups" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hi guys!," />
+<meta property="og:description" content="Hi guys!," />
+<link rel="canonical" href="http://localhost:8000/posts/rev" />
+<meta property="og:url" content="http://localhost:8000/posts/rev" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-08-18T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="InvaderCTF-2022 Reversing Writeups" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2022-08-18T00:00:00+05:30","datePublished":"2022-08-18T00:00:00+05:30","description":"Hi guys!,","headline":"InvaderCTF-2022 Reversing Writeups","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/posts/rev"},"url":"http://localhost:8000/posts/rev"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div>
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat InvaderCTF</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>InvaderCTF-2022 Reversing Writeups</h2>
+  <time datetime="2022-08-18T00:00:00+05:30" class="by-line">18 Aug 2022</time>
+  <p>Hi guys!,</p>
+
+<p>This is Mj0ln1r and this is my first blog, writeup and first CTF as well. All new ? haha.</p>
+
+<p>I started learning new skills and playing CTF’s as well to gain hands on experience in the security field. Coming to this blog, its all about my solved challenges in InvaderCTF 2022.</p>
+
+<p>InvaderCTF is a CTF competion which was organized by our collenge[RGUKTN] alumni those are working at great positions with the skills learned through CTF’s.
+There is a list of categories in this CTF such as “web”, “pwn”, “reverse”, “cryptography”, and “miscellaneous”.
+And i solved some challenges from each category.</p>
+
+<p>In this post i am going to explain about the procedure i followed to solve <code class="language-plaintext highlighter-rouge">Reverse Engineering</code> challenges.</p>
+
+<h1 id="reversing-challenges">Reversing Challenges</h1>
+
+<h2 id="warmup">Warmup</h2>
+
+<p>Really a simple warmup <code class="language-plaintext highlighter-rouge">*_~</code></p>
+
+<blockquote>
+  <p>Warmup chall for beginners.
+Can we get source back from compiled binary ?</p>
+</blockquote>
+
+<p>I got a binary file within the challenge</p>
+
+<p>Lets see the strings in the binary file</p>
+<div class="language-terminal highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span><span class="w"> </span>strings warmup
+<span class="go">/lib64/ld-linux-x86-64.so.2
+libc.so.6
+__isoc99_scanf
+puts
+__stack_chk_fail
+printf
+__cxa_finalize
+strcmp
+__libc_start_main
+GLIBC_2.7
+GLIBC_2.4
+GLIBC_2.2.5
+_ITM_deregisterTMCloneTable
+__gmon_start__
+_ITM_registerTMCloneTable
+u+UH
+[]A\A]A^A_
+InvaderCTF{pl4in_t3xt_s3cr3ts_0n_cl1ent_s1d3_c0de}
+Enter flag : 
+]%*c
+Yepp, It is correct :)
+Submit in https://ctf.pwn.af
+Nope :(
+</span></code></pre></div></div>
+<p>Wait..What…? Sorry i forgot that its a warmup <code class="language-plaintext highlighter-rouge">*_~</code></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag = InvaderCTF{pl4in_t3xt_s3cr3ts_0n_cl1ent_s1d3_c0de}</code></p>
+</blockquote>
+
+<hr />
+
+<h2 id="py-encrypter">Py Encrypter</h2>
+
+<p><img src="/assets/img/post_img/pyencrypter.png" alt="Py encrypter" w="400&quot;,h=&quot;400" /></p>
+
+<p>The code in the given source file</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">random</span>
+
+<span class="c1"># Two byte hash
+</span><span class="k">def</span> <span class="nf">myHash</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="n">random</span><span class="p">.</span><span class="nf">seed</span><span class="p">(</span><span class="s">"H4shS33d"</span> <span class="o">+</span> <span class="n">string</span><span class="p">)</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="nf">getrandbits</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nf">hex</span><span class="p">(</span><span class="n">num</span><span class="p">)[</span><span class="mi">2</span><span class="p">:].</span><span class="nf">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">encryptFlag</span><span class="p">(</span><span class="n">flag</span><span class="p">):</span>
+    <span class="n">enc</span> <span class="o">=</span> <span class="s">""</span>
+    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">flag</span><span class="p">:</span>
+        <span class="n">enc</span> <span class="o">+=</span> <span class="nf">myHash</span><span class="p">(</span><span class="n">char</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">enc</span>
+
+<span class="n">flag</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter flag : "</span><span class="p">)</span>
+<span class="n">enc</span> <span class="o">=</span> <span class="nf">encryptFlag</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">"Encrypted flag is : "</span><span class="p">,</span> <span class="n">enc</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>I know i have to reverse the hash to get the flag,but i did in a unintend way <code class="language-plaintext highlighter-rouge">-_-</code></p>
+
+<h4 id="unintend-solution">Unintend Solution</h4>
+
+<p>In the Challenge files they gave a hint that the flag is going to starts with <code class="language-plaintext highlighter-rouge">InvaderCTF{</code></p>
+
+<p>So, i tried to get the hash of the ‘I’ in using the given encryption script.
+Its the first 4 chars of the encrypted flag. I decided to seperate the encrypted string into group of 4 chars.</p>
+
+<p>Then i did the bruteforce <code class="language-plaintext highlighter-rouge">+_+</code>. Sorry author! But i got the flag ,haha.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">random</span>
+
+<span class="c1"># Two byte hash
+</span><span class="k">def</span> <span class="nf">myHash</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="n">random</span><span class="p">.</span><span class="nf">seed</span><span class="p">(</span><span class="s">"H4shS33d"</span> <span class="o">+</span> <span class="n">string</span><span class="p">)</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="nf">getrandbits</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nf">hex</span><span class="p">(</span><span class="n">num</span><span class="p">)[</span><span class="mi">2</span><span class="p">:].</span><span class="nf">zfill</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">encryptFlag</span><span class="p">(</span><span class="n">flag</span><span class="p">):</span>
+    <span class="n">enc</span> <span class="o">=</span> <span class="s">""</span>
+    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">flag</span><span class="p">:</span>
+        <span class="n">enc</span> <span class="o">+=</span> <span class="nf">myHash</span><span class="p">(</span><span class="n">char</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">enc</span>
+
+<span class="n">brut</span> <span class="o">=</span> <span class="s">"ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz0123456789_"</span>
+<span class="nb">hash</span> <span class="o">=</span> <span class="s">"1fb9,bdbf,bfa9,5295,262c,1fb9,17ac,7573,5295,6685,500e,bfa9,cf34,7573,d256,6685,bdbf,bfa9,cf34,bdbf,f2a3,0797,b15a,6685,6217,cf34,6685,0728,7573,262c,9082"</span>
+<span class="nb">hash</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="s">","</span><span class="p">)</span>
+
+<span class="n">flag</span> <span class="o">=</span> <span class="s">""</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">brut</span><span class="p">)):</span>
+    <span class="n">enc</span> <span class="o">=</span> <span class="nf">encryptFlag</span><span class="p">(</span><span class="n">brut</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="nb">hash</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">enc</span> <span class="o">==</span> <span class="nb">hash</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+            <span class="nb">hash</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">brut</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">"InvaderCTF{"</span><span class="o">+</span><span class="s">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="nb">hash</span><span class="p">)</span><span class="o">+</span><span class="s">"}"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : InvaderCTF{ch4ract3r_b4s3d_h4sh1ng_is_w3ak}</code></p>
+</blockquote>
+
+<h3 id="intended-solution">Intended Solution</h3>
+
+<p>I have to do it in other way am i correct?</p>
+
+<p>Here it is..</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">random</span>
+<span class="kn">import</span> <span class="n">string</span>
+<span class="n">flag</span> <span class="o">=</span> <span class="s">"08ef07973844262cd256a8635295ad53ece7518ae30f1fb9bdbfbfa95295262c1fb917ac757352956685500ebfa9cf347573d2566685bdbfbfa9cf34bdbff2a30797b15a66856217cf34668507287573262c908276b5"</span>
+<span class="n">flag</span> <span class="o">=</span> <span class="p">[</span><span class="n">flag</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">4</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nf">len</span><span class="p">(</span><span class="n">flag</span><span class="p">),</span><span class="mi">4</span><span class="p">)]</span>
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">flag</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">string</span><span class="p">.</span><span class="n">printable</span><span class="p">:</span>
+        <span class="n">random</span><span class="p">.</span><span class="nf">seed</span><span class="p">(</span><span class="s">"H4shS33d"</span><span class="o">+</span><span class="n">i</span><span class="p">)</span> 
+        <span class="n">num</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="nf">getrandbits</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nf">int</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="mi">16</span><span class="p">)</span><span class="o">==</span><span class="n">num</span><span class="p">:</span>
+            <span class="nf">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">end</span><span class="o">=</span><span class="s">""</span><span class="p">)</span>
+            <span class="k">break</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : InvaderCTF{ch4ract3r_b4s3d_h4sh1ng_is_w3ak}</code></p>
+</blockquote>
+
+<hr />
+
+<h2 id="crackme">CrackME</h2>
+
+<p><img src="/assets/img/post_img/crack_me.png" alt="Crack me" w="400&quot;,h=&quot;400" /></p>
+
+<p>In the attached files they gave me a <code class="language-plaintext highlighter-rouge">crackme.pyc</code> binary file. I used a online decompiler 
+to get back the source code.</p>
+
+<p>The source code of the binary file.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kn">import</span> <span class="n">random</span>
+<span class="n">random</span><span class="p">.</span><span class="nf">seed</span><span class="p">(</span><span class="sa">u</span><span class="s">'[5</span><span class="se">\x80</span><span class="s">E</span><span class="se">\x1d\x1a</span><span class="s">X</span><span class="se">\x91</span><span class="s">Z</span><span class="se">\x8f</span><span class="s">'</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+    <span class="n">enc</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">string</span><span class="p">:</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="nf">ord</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="o">+</span> <span class="mi">120</span> <span class="o">^</span> <span class="n">random</span><span class="p">.</span><span class="nf">getrandbits</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+        <span class="n">enc</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nf">bytearray</span><span class="p">(</span><span class="n">enc</span><span class="p">)</span>
+
+
+<span class="n">flag</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">'Enter flag : '</span><span class="p">)</span>
+<span class="n">encFlag</span> <span class="o">=</span> <span class="nf">encrypt</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">encFlag</span> <span class="o">==</span> <span class="s">'</span><span class="se">\xd1\xe0\xb3\x9e\x80\xbf\xd3\x97\xa1\xda\x97\xdd\xe4\xef\xc9\xdf\x92\xff\xa2\xd5\x95\xfc\x99\xe6\xbc\xfa\xf5\xab\xd1\x89\xae\xd4\xe0\x94\xbb\x80\x96\x97\xa4\xd5\xd1\xe6\xce</span><span class="s">'</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">'Flag was right :)'</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">'Nope'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The encrypted flag is</p>
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>\xd1\xe0\xb3\x9e\x80\xbf\xd3\x97\xa1\xda\x97\xdd\xe4\xef\xc9\xdf\x92\xff\xa2\xd5\x95\xfc\x99\xe6\xbc\xfa\xf5\xab\xd1\x89\xae\xd4\e0\x94\xbb\x80\x96\x97\xa4\xd5\xd1\xe6\xce
+</code></pre></div></div>
+
+<p>I have to get the input char from the encrypted flag, the encryption is done with the XOR operation.
+And the seed is also same for every byte, so we can get flag char by</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">temp</span> <span class="o">=</span> <span class="nf">ord</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="o">+</span> <span class="mi">120</span> <span class="o">^</span> <span class="n">random</span><span class="p">.</span><span class="nf">getrandbits</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="nf">ord</span><span class="p">(</span><span class="n">char</span><span class="p">)</span> <span class="o">=</span> <span class="n">encryptedbyte</span> <span class="o">^</span> <span class="n">random</span><span class="p">.</span><span class="nf">getrandbits</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="o">-</span> <span class="mi">120</span>
+</code></pre></div></div>
+
+<p>The script to get the flag is</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">random</span>
+<span class="n">random</span><span class="p">.</span><span class="nf">seed</span><span class="p">(</span><span class="sa">u</span><span class="s">'[5</span><span class="se">\x80</span><span class="s">E</span><span class="se">\x1d\x1a</span><span class="s">X</span><span class="se">\x91</span><span class="s">Z</span><span class="se">\x8f</span><span class="s">'</span><span class="p">)</span>
+<span class="n">enc_flag</span> <span class="o">=</span> <span class="n">l</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="sa">b</span><span class="s">'</span><span class="se">\xd1\xe0\xb3\x9e\x80\xbf\xd3\x97\xa1\xda\x97\xdd\xe4\xef\xc9\xdf\x92\xff\xa2\xd5\x95\xfc\x99\xe6\xbc\xfa\xf5\xab\xd1\x89\xae\xd4\xe0\x94\xbb\x80\x96\x97\xa4\xd5\xd1\xe6\xce</span><span class="s">'</span><span class="p">)</span>
+
+<span class="n">j</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">i</span> <span class="o">^</span> <span class="n">random</span><span class="p">.</span><span class="nf">getrandbits</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+    <span class="n">temp</span> <span class="o">-=</span> <span class="mi">120</span>
+    <span class="n">j</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">j</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="nf">chr</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="s">""</span><span class="p">)</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : InvaderCTF{d3c0mpilati0n_m4kes_l1f3_e4si3r}</code></p>
+</blockquote>
+
+<hr />
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2023
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>

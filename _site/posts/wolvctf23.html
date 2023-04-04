@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-WolvCTF 2023</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>WolvCTF 2023 | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="WolvCTF 2023" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I played WolvCTF 2023 with Invaders0x1 which is held on March 18, 2023. These are the writeups for the solved challenges." />
+<meta property="og:description" content="I played WolvCTF 2023 with Invaders0x1 which is held on March 18, 2023. These are the writeups for the solved challenges." />
+<link rel="canonical" href="http://localhost:8000/posts/wolvctf23" />
+<meta property="og:url" content="http://localhost:8000/posts/wolvctf23" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-03-18T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="WolvCTF 2023" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2023-03-18T00:00:00+05:30","datePublished":"2023-03-18T00:00:00+05:30","description":"I played WolvCTF 2023 with Invaders0x1 which is held on March 18, 2023. These are the writeups for the solved challenges.","headline":"WolvCTF 2023","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/posts/wolvctf23"},"url":"http://localhost:8000/posts/wolvctf23"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div>
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat wolvctf</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>WolvCTF 2023</h2>
+  <time datetime="2023-03-18T00:00:00+05:30" class="by-line">18 Mar 2023</time>
+  <p>I played <a href="https://wolvctf.io">WolvCTF 2023</a> with <a href="https://ctftime.org/team/217079">Invaders0x1</a> which is held on March 18, 2023.
+These are the writeups for the solved challenges.</p>
+
+<h1 id="charlottes-web">Charlotte’s Web</h1>
+
+<p><img src="/assets/img/post_img/wolv_charlotte.png" alt="Charlottes_web" w="400" h="200" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">/src</code> is found in source code.</p>
+
+<p><img src="/assets/img/post_img/wolv_charlotte1.png" alt="src" w="400" h="200" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">flag</code> will be opened when we resquest <code class="language-plaintext highlighter-rouge">/super-secret-route-nobody-will-guess</code> with a <code class="language-plaintext highlighter-rouge">PUT</code> method.</p>
+
+<p><img src="/assets/img/post_img/wolv_charlotte2.png" alt="Flag" w="500" h="300" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : wctf{y0u_h4v3_b33n_my_fr13nd___th4t_1n_1t53lf_1s_4_tr3m3nd0u5_th1ng}</code></p>
+</blockquote>
+
+<h1 id="baby-pwn">baby-pwn</h1>
+
+<p><img src="/assets/img/post_img/wolv_babypwn.png" alt="Baby pwn" w="400" h="300" /></p>
+
+<p>Attached files <a href="/assets/files/wolvctf23/baby-pwn.c" download="">baby-pwn.c</a> and <a href="/assets/files/wolvctf23/baby-pwn" download="">baby-pwn.c</a></p>
+
+<p>Function present in <code class="language-plaintext highlighter-rouge">baby-pwn.c</code></p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="nf">vuln</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="k">volatile</span> <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mh">0xdeadbeef</span><span class="p">;</span>
+<span class="kt">char</span> <span class="n">buff</span><span class="p">[</span><span class="mi">32</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+<span class="n">printf</span><span class="p">(</span><span class="s">"Gimme some input: "</span><span class="p">);</span>
+<span class="n">fgets</span><span class="p">(</span><span class="n">buff</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="n">stdin</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">!=</span> <span class="mh">0xdeadbeef</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">print_flag</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Trying bufferoverflow input string length of 48 in the remote server.</p>
+
+<p><img src="/assets/img/post_img/wolv_babypwn1.png" alt="Flag " w="500" h="300" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : wctf{W3lc0me_t0_C0stc0_I_L0v3_Y0u!}</code></p>
+</blockquote>
+
+<h1 id="baby-rev">baby-rev</h1>
+
+<p><img src="/assets/img/post_img/wolv_babyrev.png" alt="Baby rev" w="400" h="300" /></p>
+
+<p>Here is the challenge file <a href="/assets/files/wolvctf23/baby-re" download="">baby-rev</a></p>
+
+<p>Simple <code class="language-plaintext highlighter-rouge">**strings**</code> did the thing.</p>
+
+<p><img src="/assets/img/post_img/wolv_babyrev1.png" alt="Baby rev" w="400" h="300" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : wctf{Oh10_Stat3_1s_Smelly!}</code></p>
+</blockquote>
+
+<h1 id="we-will-rock-you">We Will Rock You</h1>
+
+<p><img src="/assets/img/post_img/wolv_rockyou.png" alt="We wil rock you" w="400" h="300" /></p>
+
+<p>We have to crack password protected <a href="/assets/files/wolvctf23/we_will_rock_you.zip" download="">zip file</a></p>
+
+<p>Creating hashes from zip file to make john understands it.
+<img src="/assets/img/post_img/wolv_rockyou1.png" alt="We will rock you" w="500" h="400" /></p>
+
+<p>Cracking the hashes with the john
+<img src="/assets/img/post_img/wolv_rockyou2.png" alt="We will rock you" w="500" h="400" /></p>
+
+<p>Password : michigan4ever</p>
+
+<p>After extracting zip with the password we can find a flag.txt</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : wctf{m1cH1g4n_4_3v3R}</code></p>
+</blockquote>
+
+<h1 id="yowhatsthepassword">yowhatsthepassword</h1>
+
+<p><img src="/assets/img/post_img/wolv_yowhats.png" alt="yowhatsathepassword" w="400" h="200" /></p>
+
+<p><a href="/assets/files/wolvctf23/main.py" download="">main.py</a></p>
+
+<p>Content of <code class="language-plaintext highlighter-rouge">main.py</code></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># I'm thinking of a number from 0 to 2^32 - 1
+# Can you guess it?
+</span>
+<span class="kn">import</span> <span class="n">random</span>
+<span class="kn">import</span> <span class="n">base64</span>
+<span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="n">seed</span><span class="p">):</span>
+  <span class="n">random</span><span class="p">.</span><span class="nf">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+  <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">while</span> <span class="n">c</span> <span class="o">!=</span> <span class="nf">ord</span><span class="p">(</span><span class="s">'}'</span><span class="p">):</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="nf">randint</span><span class="p">(</span><span class="mi">97</span><span class="p">,</span> <span class="mi">126</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="nf">chr</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+  <span class="nf">print</span><span class="p">()</span>
+
+<span class="n">secret</span> <span class="o">=</span> <span class="s">'ly9ppw=='</span>
+
+<span class="kn">import</span> <span class="n">base64</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="nf">input</span><span class="p">(</span><span class="s">"password? &gt;&gt;&gt; "</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="nf">int</span><span class="p">(</span><span class="n">base64</span><span class="p">.</span><span class="nf">b64decode</span><span class="p">(</span><span class="n">secret</span><span class="p">).</span><span class="nf">hex</span><span class="p">(),</span> <span class="mi">16</span><span class="p">)</span> <span class="o">==</span> <span class="n">s</span><span class="p">:</span>
+  <span class="nf">generate</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="nf">print</span><span class="p">(</span><span class="s">'nope'</span><span class="p">)</span>
+</code></pre></div></div>
+<p>A simple condition check was done here. The password of should be <code class="language-plaintext highlighter-rouge">int(base64.b64decode(secret).hex(), 16)</code></p>
+
+<p><img src="/assets/img/post_img/wolv_yowhats1.png" alt="yowhatsathepassword" w="500" h="300" /></p>
+
+<p>So, the password is <code class="language-plaintext highlighter-rouge">2536466855</code></p>
+
+<p><img src="/assets/img/post_img/wolv_yowhats2.png" alt="yowhatsathepassword" w="400" h="200" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : wctf{ywtp}</code></p>
+</blockquote>
+
+<h1 id="escaped">escaped</h1>
+
+<p><img src="/assets/img/post_img/wolv_escaped.png" alt="escaped" w="400" h="300" /></p>
+
+<p>The challenge file <a href="/assets/files/wolvctf23/jail.py" download="">jail.py</a></p>
+
+<p>Content of <code class="language-plaintext highlighter-rouge">jail.py</code></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">print</span><span class="p">(</span><span class="s">"Welcome to my `cat` program. Give me a string and I'll output it back."</span><span class="p">)</span>
+<span class="n">code</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter your string (with double quotes) &gt;&gt;&gt; "</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="n">ast</span>
+
+<span class="k">if</span> <span class="n">code</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">'"'</span> <span class="ow">and</span> <span class="n">code</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">'"'</span> <span class="ow">and</span> <span class="nf">all</span><span class="p">(</span><span class="n">ch</span> <span class="o">!=</span> <span class="s">'"'</span> <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">code</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]):</span>
+  <span class="n">compiled</span> <span class="o">=</span> <span class="nf">compile</span><span class="p">(</span><span class="s">'print("'</span> <span class="o">+</span> <span class="nf">eval</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="o">+</span> <span class="s">'")'</span><span class="p">,</span> <span class="s">"out"</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s">"exec"</span><span class="p">)</span>
+  <span class="nf">exec</span><span class="p">(</span><span class="n">compiled</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">eval()</code> function is capable of evaluating the code what we pass to it. But the <code class="language-plaintext highlighter-rouge">print("' + eval(code) + '")</code> is generating the string not the execution of our input code.</p>
+
+<p><img src="/assets/img/post_img/wolv_escaped1.png" alt="escaped" w="500" h="400" /></p>
+
+<p>Now we have to escape the <code class="language-plaintext highlighter-rouge">"</code> in the <code class="language-plaintext highlighter-rouge">print()</code> to generate the executed output of the passed input.Out input shouldn’t contain <code class="language-plaintext highlighter-rouge">"</code> in the string except at the beginning and end.</p>
+
+<p>The payload can be in this form</p>
+
+<p><img src="/assets/img/post_img/wolv_escaped2.png" alt="escaped" w="500" h="400" /></p>
+
+<p>The payload to get the flag is <code class="language-plaintext highlighter-rouge">"\x22,__import__('os').system('cat flag.txt'),\x22"</code>. Here <code class="language-plaintext highlighter-rouge">\x22</code> is interpreted as <code class="language-plaintext highlighter-rouge">"</code> this will become <code class="language-plaintext highlighter-rouge">print("",__import__('os').system('cat flag.txt'),""</code>. Therefore it will prints the flag.</p>
+
+<p><img src="/assets/img/post_img/wolv_escaped3.png" alt="escaped" w="500" h="400" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : wctf{m30w_uwu_:3}</code></p>
+</blockquote>
+
+<h1 id="elytra">elytra</h1>
+
+<p><img src="/assets/img/post_img/wolv_elytra.png" alt="elytra" w="400" h="300" /></p>
+
+<p>A text file is given <a href="/assets/files/wolvctf23/iwon.txt" download="">iwon.txt</a></p>
+
+<p>When we view the contents of the file in raw format we encounter <code class="language-plaintext highlighter-rouge">0xa</code> and <code class="language-plaintext highlighter-rouge">0xd</code> repeatedly.</p>
+
+<p><code class="language-plaintext highlighter-rouge">0xa</code> is  “\n” and <code class="language-plaintext highlighter-rouge">0xd</code> is “\r”</p>
+
+<p>When we process it with python we can observe <code class="language-plaintext highlighter-rouge">\r</code> in few lines only, so <code class="language-plaintext highlighter-rouge">\r</code> is forming a pattern here.</p>
+
+<p>Marking the line as <code class="language-plaintext highlighter-rouge">1</code> in which <code class="language-plaintext highlighter-rouge">\r</code> is appeared if not as <code class="language-plaintext highlighter-rouge">0</code></p>
+
+<p>This will generate a binary pattern then we can convert it into ascii to obtain the flag.</p>
+
+<p><strong>Solution script</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="s">"iwon.txt"</span><span class="p">,</span><span class="s">"rb"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+	<span class="n">pattern</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+		<span class="k">if</span> <span class="sa">b</span><span class="s">"</span><span class="se">\r</span><span class="s">"</span> <span class="ow">in</span> <span class="n">i</span><span class="p">:</span>
+			<span class="nf">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+			<span class="n">pattern</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"1"</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">pattern</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"0"</span><span class="p">)</span>
+<span class="n">binarystring</span> <span class="o">=</span> <span class="s">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+
+<span class="n">byte_list</span> <span class="o">=</span> <span class="p">[</span><span class="nf">int</span><span class="p">(</span><span class="n">binarystring</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">8</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nf">len</span><span class="p">(</span><span class="n">binarystring</span><span class="p">),</span> <span class="mi">8</span><span class="p">)]</span>
+<span class="c1"># print(byte_list)
+</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">byte_list</span><span class="p">:</span>
+	<span class="nf">print</span><span class="p">(</span><span class="nf">chr</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="s">""</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><img src="/assets/img/post_img/wolv_elytra1.png" alt="elytra" w="500" h="300" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : wctf{ggwp}</code></p>
+</blockquote>
+
+<h1 id="dino-trading">Dino Trading</h1>
+
+<p><img src="/assets/img/post_img/wolv_dino.png" alt="dino trading" w="400" h="200" /></p>
+
+<p>This is from forensics category. A pcap file is provided <a href="/assets/files/wolvctf23/download.pcapng" download="">download.pcapng</a></p>
+
+<p>Analysing traffic with Wireshark. If we follow TCP stream we can see that the parties shared a <code class="language-plaintext highlighter-rouge">epicfight.png</code> file.</p>
+
+<p><img src="/assets/img/post_img/wolv_dino1.png" alt="dino trading" w="500" h="300" /></p>
+
+<p>Exporting FTP-DATA of the packet in which the file has been shared as <code class="language-plaintext highlighter-rouge">png</code></p>
+
+<p><img src="/assets/img/post_img/wolv_dino2.png" alt="dino trading" w="500" h="300" /></p>
+
+<p><img src="/assets/img/post_img/wolv_dino3.png" alt="dino trading" w="500" h="300" /></p>
+
+<p>This is the image which was shared on network.</p>
+
+<p><img src="/assets/img/post_img/wolv_dino4.png" alt="dino trading" w="500" h="300" /></p>
+
+<p>Extracting data from image with <code class="language-plaintext highlighter-rouge">steghide</code></p>
+
+<p><img src="/assets/img/post_img/wolv_dino5.png" alt="dino trading" w="500" h="300" /></p>
+
+<p>Reading <code class="language-plaintext highlighter-rouge">hidden.txt</code> and decoding it from <code class="language-plaintext highlighter-rouge">base64</code></p>
+
+<p><img src="/assets/img/post_img/wolv_dino6.png" alt="dino trading" w="500" h="300" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : wctf{an_1mage_in_a_peecap_b64}</code></p>
+</blockquote>
+
+<h1 id="wannaflag-i-an-introduction">WannaFlag I: An Introduction</h1>
+
+<p><img src="/assets/img/post_img/wolv_wannaflag-1.png" alt="wannaflag" w="450" h="300" /></p>
+
+<p>This challenge is from OSINT challenge series WannaFlag.
+The given image
+<img src="/assets/img/post_img/wolv_wannaflag-11.png" alt="wannaflag" w="300" h="200" /></p>
+
+<p>Reverse image search on google.</p>
+
+<p><img src="/assets/img/post_img/wolv_wannaflag-12.png" alt="wannaflag" w="500" h="400" /></p>
+
+<p>As the challenge says “read the reviews on google maps”. Reading reviews of image <a href="https://www.google.com/search?q=The+Cube&amp;kgmid=/g/1yg6ngznr&amp;hl=en-GB&amp;gl=GB#lrd=0x883cae3897494825:0xb2adec7980125508,1,,,,">https://www.google.com/search?q=The+Cube&amp;kgmid=/g/1yg6ngznr&amp;hl=en-GB&amp;gl=GB#lrd=0x883cae3897494825:0xb2adec7980125508,1,,,,</a></p>
+
+<p><img src="/assets/img/post_img/wolv_wannaflag-13.png" alt="wannaflag" w="500" h="400" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">netcat wanna-flag-i dot wolvctf dot io one three three seven</code> can be converted as <code class="language-plaintext highlighter-rouge">nc wanna-flag-i.wolvctf.io 1337</code>.</p>
+
+<p>By connecting to this address we got the first part of the flag. <code class="language-plaintext highlighter-rouge">wctf{sp1n</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nc wanna-flag-i.wolvctf.io 1337
+<span class="o">==</span> proof-of-work: disabled <span class="o">==</span>
+Good job finding the Cube! It<span class="s1">'s a favorite destination among UofM students!
+Anyways here is the flag:
+wctf{sp1n
+Huh???? Where did the rest of the flag g
+                       ______
+                    .-"      "-.
+                   /            \
+       _          |              |          _
+      ( \         |,  .-.  .-.  ,|         / )
+       &gt; "=._     | )(__/  \__)( |     _.=" &lt;
+      (_/"=._"=._ |/     /\     \| _.="_.="\_)
+             "=._ (_     ^^     _)"_.="
+                 "=\__|IIIIII|__/="")
+                _.="| \IIIIII/ |"=._
+      _     _.="_.="\          /"=._"=._     _
+     ( \_.="_.="     `--------`     "=._"=._/ )
+      &gt; _.="                            "=._ &lt;
+     (_/                                    \_)
+                       ______
+                    .-"      "-.
+                   /            \
+       _          |              |          _
+      ( \         |,  .-.  .-.  ,|         / )
+       &gt; "=._     | )(__/  \__)( |     _.=" &lt;
+      (_/"=._"=._ |/     /\     \| _.="_.="\_)
+             "=._ (_     ^^     _)"_.="
+                 "=\__|IIIIII|__/="")
+                _.="| \IIIIII/ |"=._
+      _     _.="_.="\          /"=._"=._     _
+     ( \_.="_.="     `--------`     "=._"=._/ )
+      &gt; _.="                            "=._ &lt;
+     (_/                                    \_)
+                       ______
+                    .-"      "-.
+                   /            \
+       _          |              |          _
+      ( \         |,  .-.  .-.  ,|         / )
+       &gt; "=._     | )(__/  \__)( |     _.=" &lt;
+      (_/"=._"=._ |/     /\     \| _.="_.="\_)
+             "=._ (_     ^^     _)"_.="
+                 "=\__|IIIIII|__/="")
+                _.="| \IIIIII/ |"=._
+      _     _.="_.="\          /"=._"=._     _
+     ( \_.="_.="     `--------`     "=._"=._/ )
+      &gt; _.="                            "=._ &lt;
+     (_/                                    \_)
+██╗    ██╗ █████╗ ███╗   ██╗███╗   ██╗ █████╗ ███████╗██╗      █████╗  ██████╗
+██║    ██║██╔══██╗████╗  ██║████╗  ██║██╔══██╗██╔════╝██║     ██╔══██╗██╔════╝
+██║ █╗ ██║███████║██╔██╗ ██║██╔██╗ ██║███████║█████╗  ██║     ███████║██║  ███╗
+██║███╗██║██╔══██║██║╚██╗██║██║╚██╗██║██╔══██║██╔══╝  ██║     ██╔══██║██║   ██║
+╚███╔███╔╝██║  ██║██║ ╚████║██║ ╚████║██║  ██║██║     ███████╗██║  ██║╚██████╔╝
+ ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝ ╚═════╝
+HAHAHHAHAHHAHA Ohhhhh man what an easy CTF to pwn
+
+And I mean also really?? At least make a geo-osint KIND of difficult
+The CTF is HOSTED by UofM where else would that dumb cube be????
+
+Oh man ok well organizers if you want your "challenge" back or flags or whatever send 500,000 Goerli here:
+0x08f5AF98610aE4B93cD0A856682E6319bF1be8a6
+
+Who knows maybe we'</span>ll take more flags <span class="k">if </span>you don<span class="s1">'t pay in time &gt;:)
+#YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs
+#YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs
+#YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs #YourFlagsBelongToUs
+                       ______
+                    .-"      "-.
+                   /            \
+       _          |              |          _
+      ( \         |,  .-.  .-.  ,|         / )
+       &gt; "=._     | )(__/  \__)( |     _.=" &lt;
+      (_/"=._"=._ |/     /\     \| _.="_.="\_)
+             "=._ (_     ^^     _)"_.="
+                 "=\__|IIIIII|__/="")
+                _.="| \IIIIII/ |"=._
+      _     _.="_.="\          /"=._"=._     _
+     ( \_.="_.="     `--------`     "=._"=._/ )
+      &gt; _.="                            "=._ &lt;
+     (_/                                    \_)
+                       ______
+                    .-"      "-.
+                   /            \
+       _          |              |          _
+      ( \         |,  .-.  .-.  ,|         / )
+       &gt; "=._     | )(__/  \__)( |     _.=" &lt;
+      (_/"=._"=._ |/     /\     \| _.="_.="\_)
+             "=._ (_     ^^     _)"_.="
+                 "=\__|IIIIII|__/="")
+                _.="| \IIIIII/ |"=._
+      _     _.="_.="\          /"=._"=._     _
+     ( \_.="_.="     `--------`     "=._"=._/ )
+      &gt; _.="                            "=._ &lt;
+     (_/                                    \_)
+                       ______
+                    .-"      "-.
+                   /            \
+       _          |              |          _
+      ( \         |,  .-.  .-.  ,|         / )
+       &gt; "=._     | )(__/  \__)( |     _.=" &lt;
+      (_/"=._"=._ |/     /\     \| _.="_.="\_)
+             "=._ (_     ^^     _)"_.="
+                 "=\__|IIIIII|__/="")
+                _.="| \IIIIII/ |"=._
+      _     _.="_.="\          /"=._"=._     _
+     ( \_.="_.="     `--------`     "=._"=._/ )
+      &gt; _.="                            "=._ &lt;
+     (_/                                    \_)
+██╗    ██╗ █████╗ ███╗   ██╗███╗   ██╗ █████╗ ███████╗██╗      █████╗  ██████╗
+██║    ██║██╔══██╗████╗  ██║████╗  ██║██╔══██╗██╔════╝██║     ██╔══██╗██╔════╝
+██║ █╗ ██║███████║██╔██╗ ██║██╔██╗ ██║███████║█████╗  ██║     ███████║██║  ███╗
+██║███╗██║██╔══██║██║╚██╗██║██║╚██╗██║██╔══██║██╔══╝  ██║     ██╔══██║██║   ██║
+╚███╔███╔╝██║  ██║██║ ╚████║██║ ╚████║██║  ██║██║     ███████╗██║  ██║╚██████╔╝
+ ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝ ╚═════╝
+██╗    ██╗ █████╗ ███╗   ██╗███╗   ██╗ █████╗ ███████╗██╗      █████╗  ██████╗
+██║    ██║██╔══██╗████╗  ██║████╗  ██║██╔══██╗██╔════╝██║     ██╔══██╗██╔════╝
+██║ █╗ ██║███████║██╔██╗ ██║██╔██╗ ██║███████║█████╗  ██║     ███████║██║  ███╗
+██║███╗██║██╔══██║██║╚██╗██║██║╚██╗██║██╔══██║██╔══╝  ██║     ██╔══██║██║   ██║
+╚███╔███╔╝██║  ██║██║ ╚████║██║ ╚████║██║  ██║██║     ███████╗██║  ██║╚██████╔╝
+ ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝ ╚═════╝
+██╗    ██╗ █████╗ ███╗   ██╗███╗   ██╗ █████╗ ███████╗██╗      █████╗  ██████╗
+██║    ██║██╔══██╗████╗  ██║████╗  ██║██╔══██╗██╔════╝██║     ██╔══██╗██╔════╝
+██║ █╗ ██║███████║██╔██╗ ██║██╔██╗ ██║███████║█████╗  ██║     ███████║██║  ███╗
+██║███╗██║██╔══██║██║╚██╗██║██║╚██╗██║██╔══██║██╔══╝  ██║     ██╔══██║██║   ██║
+╚███╔███╔╝██║  ██║██║ ╚████║██║ ╚████║██║  ██║██║     ███████╗██║  ██║╚██████╔╝
+ ╚══╝╚══╝ ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝     ╚══════╝╚═╝  ╚═╝ ╚═════╝
+Also all of you John OSINTs on twitter need to leave us alone
+</span></code></pre></div></div>
+
+<p>In the output they asked to pay pay 500,000 Goerli to the wallet <code class="language-plaintext highlighter-rouge">0x08f5AF98610aE4B93cD0A856682E6319bF1be8a6</code>. I cannot dooo itt..So, i ignored it :).</p>
+
+<p>When we scroll to the last we have <code class="language-plaintext highlighter-rouge">John OSINTs on twitter</code> and <code class="language-plaintext highlighter-rouge">#YourFlagsBelongToUs</code>.
+I did a quick twitter search,</p>
+
+<p><img src="/assets/img/post_img/wolv_wannaflag-14.png" alt="wannaflag" w="500" h="300" /></p>
+
+<p>Decoding from <code class="language-plaintext highlighter-rouge">base64</code> will give us flag.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"d2N0Znt1aGhoX3doM3IzX2QxZF80bGxfMHVyX2ZsNGdzX2cwP30="</span> | <span class="nb">base64</span> <span class="nt">-d</span>
+wctf<span class="o">{</span>uhhh_wh3r3_d1d_4ll_0ur_fl4gs_g0?<span class="o">}</span>
+</code></pre></div></div>
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : wctf{uhhh_wh3r3_d1d_4ll_0ur_fl4gs_g0?}</code></p>
+</blockquote>
+
+<hr />
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2023
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>

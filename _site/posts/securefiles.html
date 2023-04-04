@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-SecureFiles</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>SecureFiles | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="SecureFiles" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hello buddy," />
+<meta property="og:description" content="Hello buddy," />
+<link rel="canonical" href="http://localhost:8000/posts/securefiles" />
+<meta property="og:url" content="http://localhost:8000/posts/securefiles" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-11-03T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="SecureFiles" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2022-11-03T00:00:00+05:30","datePublished":"2022-11-03T00:00:00+05:30","description":"Hello buddy,","headline":"SecureFiles","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/posts/securefiles"},"url":"http://localhost:8000/posts/securefiles"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div>
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command"></span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>SecureFiles</h2>
+  <time datetime="2022-11-03T00:00:00+05:30" class="by-line">03 Nov 2022</time>
+  <p>Hello buddy,</p>
+
+<p>Today Mj0ln1r is posting this file encryptor and decryptor named “SecureFiles”.
+SecureFiles is a encryption and decryption tool to share important files over any media.
+I wrote this script called <code class="language-plaintext highlighter-rouge">SecureFiles</code> in python. I learned about <code class="language-plaintext highlighter-rouge">XOR</code> encryption, basic encoding and decoding using python, file management, <code class="language-plaintext highlighter-rouge">magic numbers</code> and random seed values in python.</p>
+
+<p>So, here’s a brief information about my simple SecureFiles tool.</p>
+
+<h1 id="securefiles">SecureFiles</h1>
+
+<p>With this tool we can able to encrypt text files, images, video’s, audio’s and any other files. And the decryption option is also available to decrypt the files.
+This tool should be installed in the both reciever’s and sender’s system.</p>
+
+<p>Okay, Let me show some code..</p>
+
+<p>Look at the <code class="language-plaintext highlighter-rouge">main()</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+	<span class="nf">print</span><span class="p">(</span><span class="s">"""
+File Encrypter and Decrypter Menu
+---------------------------------------------
+Copy and paste the file in the "files" directory...
+		1. Encrypt Image files      
+		2. Encrypt Text files		
+		3. Encrypt Audio files		
+		4. Encrypt Video files		
+		5. Encrypt other files		
+		6. Decrypt Image files		
+		7. Decrypt Text files		
+		8. Decrypt Audio files		
+		9. Decrypt Video files		
+		10. Decrypt other files		
+		0. Exit						
+---------------------------------------------
+		"""</span><span class="p">)</span>
+	<span class="n">choice</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="nf">input</span><span class="p">(</span><span class="s">"Choose your option[0/1-10] : "</span><span class="p">))</span>
+	
+	<span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+		<span class="nb">file</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter image name : "</span><span class="p">)</span>
+		<span class="nf">check_file</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+		<span class="nf">encrypt</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+		<span class="nb">file</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter Text file name : "</span><span class="p">)</span>
+		<span class="nf">check_file</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+		<span class="nf">encrypt</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+		<span class="nb">file</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter Audio file name : "</span><span class="p">)</span>
+		<span class="nf">check_file</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+		<span class="nf">encrypt</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+		<span class="nb">file</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter Video file name : "</span><span class="p">)</span>
+		<span class="nf">check_file</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+		<span class="nf">encrypt</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+		<span class="nb">file</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter File name : "</span><span class="p">)</span>
+		<span class="nf">check_file</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+		<span class="nf">encrypt</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+		<span class="nb">file</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter Image name : "</span><span class="p">)</span>
+		<span class="nf">check_file</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+		<span class="nf">decrypt</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
+		<span class="nb">file</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter Text file name : "</span><span class="p">)</span>
+		<span class="nf">check_file</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+		<span class="nf">decrypt</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+		<span class="nb">file</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter Audio file name : "</span><span class="p">)</span>
+		<span class="nf">check_file</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+		<span class="nf">decrypt</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
+		<span class="nb">file</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter Video file name : "</span><span class="p">)</span>
+		<span class="nf">check_file</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+		<span class="nf">decrypt</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
+		<span class="nb">file</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter File name : "</span><span class="p">)</span>
+		<span class="nf">check_file</span><span class="p">(</span><span class="nb">file</span><span class="p">)</span>
+		<span class="nf">decrypt</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+		<span class="nf">print</span><span class="p">(</span><span class="s">"Terminating.."</span><span class="p">)</span>
+		<span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="nf">print</span><span class="p">(</span><span class="s">"Invalid choice.."</span><span class="p">)</span>
+		<span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div></div>
+<p>The main() is displaying the menu of the tool and calling the functions based on the users choice.The check_file() function is checking wheather the file
+is existed in the files directory or not.</p>
+
+<p>Lets look at the image encryption case. The encrypt funtion is doing the encryption of the image.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="n">source_file</span><span class="p">,</span><span class="n">choice</span><span class="p">):</span>
+	<span class="nb">file</span> <span class="o">=</span> <span class="nf">open</span><span class="p">(</span><span class="s">"./files/"</span><span class="o">+</span><span class="n">source_file</span><span class="p">,</span><span class="s">"rb"</span><span class="p">)</span>
+	<span class="n">data</span> <span class="o">=</span> <span class="nb">file</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
+	<span class="n">b_array</span> <span class="o">=</span> <span class="nf">bytearray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+	<span class="n">key</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter Key to encrypt {}: "</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">menu</span><span class="p">[</span><span class="n">choice</span><span class="p">]))</span>
+	<span class="n">random</span><span class="p">.</span><span class="nf">seed</span><span class="p">(</span><span class="s">"CH4R4NU"</span><span class="o">+</span><span class="n">key</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">b_array</span><span class="p">)):</span>
+		<span class="n">k</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="nf">getrandbits</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+		<span class="n">b_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">b_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^</span> <span class="n">k</span>
+	<span class="nb">file</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+	<span class="n">b64_array</span> <span class="o">=</span> <span class="n">base64</span><span class="p">.</span><span class="nf">b64encode</span><span class="p">(</span><span class="n">b_array</span><span class="p">)</span>
+	<span class="k">if</span> <span class="s">"."</span> <span class="ow">in</span> <span class="n">source_file</span><span class="p">:</span>
+		<span class="n">ext</span> <span class="o">=</span> <span class="s">"."</span><span class="o">+</span><span class="n">source_file</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+		<span class="nb">file</span> <span class="o">=</span> <span class="nf">open</span><span class="p">(</span><span class="s">"./files/"</span><span class="o">+</span><span class="n">source_file</span><span class="p">.</span><span class="nf">strip</span><span class="p">(</span><span class="n">ext</span><span class="p">)</span><span class="o">+</span><span class="s">"_encrypted"</span><span class="o">+</span><span class="n">ext</span><span class="p">,</span><span class="s">"wb"</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="nb">file</span> <span class="o">=</span> <span class="nf">open</span><span class="p">(</span><span class="s">"./files/"</span><span class="o">+</span><span class="n">source_file</span><span class="o">+</span><span class="s">"_encrypted"</span><span class="p">,</span><span class="s">"wb"</span><span class="p">)</span>
+	<span class="nb">file</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">b64_array</span><span class="p">)</span>
+	<span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\t</span><span class="s">The {} is encrypted and saved in files directory.."</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">menu</span><span class="p">[</span><span class="n">choice</span><span class="p">]))</span>
+</code></pre></div></div>
+<p>The encryption is done with the xor operation. The random.seed and base64 encoding is used to make the encryption stronger. The user can input his/her password called key as while encrypting the file. The key is the only way to decrypt the encrypted file.</p>
+
+<p>If we encrypted our image successfully, the encrypted image will be saved at files folder. We can share this encrypted file to anyone but no one can view the actual image. To get the actual image we have to decrypt the image by specifiying the key which is used for encryption. The decryption process is done by the 
+<code class="language-plaintext highlighter-rouge">decrypt</code> function.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="n">source_file</span><span class="p">,</span><span class="n">choice</span><span class="p">):</span>
+	<span class="nb">file</span> <span class="o">=</span> <span class="nf">open</span><span class="p">(</span><span class="s">"./files/"</span><span class="o">+</span><span class="n">source_file</span><span class="p">,</span><span class="s">"rb"</span><span class="p">)</span>
+	<span class="n">data</span> <span class="o">=</span> <span class="nb">file</span><span class="p">.</span><span class="nf">read</span><span class="p">()</span>
+	<span class="n">b_array</span> <span class="o">=</span> <span class="nf">bytearray</span><span class="p">(</span><span class="n">base64</span><span class="p">.</span><span class="nf">b64decode</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+	<span class="n">key</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter Key to decrypt image : "</span><span class="p">)</span>
+	<span class="n">random</span><span class="p">.</span><span class="nf">seed</span><span class="p">(</span><span class="s">"CH4R4NU"</span><span class="o">+</span><span class="n">key</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">b_array</span><span class="p">)):</span>
+		<span class="n">k</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="nf">getrandbits</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+		<span class="n">b_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">b_array</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^</span> <span class="n">k</span> 
+	<span class="nb">file</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+	<span class="k">if</span> <span class="s">"."</span> <span class="ow">in</span> <span class="n">source_file</span><span class="p">:</span>
+		<span class="n">ext</span> <span class="o">=</span> <span class="s">"."</span><span class="o">+</span><span class="n">source_file</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+		<span class="n">source_file</span> <span class="o">=</span> <span class="s">"./files/"</span><span class="o">+</span><span class="n">source_file</span><span class="p">.</span><span class="nf">strip</span><span class="p">(</span><span class="n">ext</span><span class="p">)</span><span class="o">+</span><span class="s">"_decrypted"</span><span class="o">+</span><span class="n">ext</span>
+		<span class="nb">file</span> <span class="o">=</span> <span class="nf">open</span><span class="p">(</span><span class="n">source_file</span><span class="p">,</span><span class="s">"wb"</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">source_file</span> <span class="o">=</span> <span class="s">"./files/"</span><span class="o">+</span><span class="n">source_file</span><span class="o">+</span><span class="s">"_decrypted"</span>
+		<span class="nb">file</span> <span class="o">=</span> <span class="nf">open</span><span class="p">(</span><span class="n">source_file</span><span class="p">,</span><span class="s">"wb"</span><span class="p">)</span>
+	<span class="nb">file</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">b_array</span><span class="p">)</span>
+	<span class="nf">isdecrypted</span><span class="p">(</span><span class="n">source_file</span><span class="p">,</span><span class="n">choice</span><span class="p">)</span>
+</code></pre></div></div>
+<p>The bytes of the encrypted image file is decoded first from the base64, then the function asking the key and setting up the same random seed which is used in the encryption. Then the xor operation is performed, the bytes are written into a file and saved it in files folder. At the end of the decrypt function the
+ <code class="language-plaintext highlighter-rouge">isdecrypted()</code> is called.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">isdecrypted</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="n">choice</span><span class="p">):</span>
+	<span class="nf">print</span><span class="p">(</span><span class="s">"-"</span><span class="o">*</span><span class="mi">50</span><span class="p">)</span>
+	<span class="n">typ</span> <span class="o">=</span> <span class="n">magic</span><span class="p">.</span><span class="nf">from_file</span><span class="p">(</span><span class="nb">file</span><span class="p">,</span><span class="n">mime</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+	<span class="nf">if </span><span class="p">(</span><span class="s">"text"</span> <span class="ow">in</span> <span class="n">typ</span><span class="p">)</span> <span class="ow">and</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">7</span><span class="p">:</span>
+		<span class="nf">print</span><span class="p">(</span><span class="s">"Text File is decrypted and saved in files directory..:-)"</span><span class="p">)</span>
+	<span class="nf">elif </span><span class="p">(</span><span class="s">"image"</span> <span class="ow">in</span> <span class="n">typ</span><span class="p">)</span> <span class="ow">and</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+		<span class="nf">print</span><span class="p">(</span><span class="s">"Image is decrypted and saved in files directory..:-)"</span><span class="p">)</span>
+	<span class="nf">elif </span><span class="p">(</span><span class="s">"audio"</span> <span class="ow">in</span> <span class="n">typ</span><span class="p">)</span> <span class="ow">and</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+		<span class="nf">print</span><span class="p">(</span><span class="s">"Audio file is decrypted and saved in files directory..:-)"</span><span class="p">)</span>
+	<span class="nf">elif </span><span class="p">(</span><span class="s">"video"</span> <span class="ow">in</span> <span class="n">typ</span><span class="p">)</span> <span class="ow">and</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
+		<span class="nf">print</span><span class="p">(</span><span class="s">"Video is decrypted and saved in files directory..:-)"</span><span class="p">)</span>
+	<span class="nf">elif </span><span class="p">(</span><span class="s">"text/plain"</span> <span class="ow">in</span> <span class="n">typ</span> <span class="p">)</span> <span class="ow">and</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
+		<span class="nf">print</span><span class="p">(</span><span class="s">"File is decrypted and saved in files directory..:-)"</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="nf">print</span><span class="p">(</span><span class="s">"The key is wrong..."</span><span class="p">)</span>
+		<span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="nf">print</span><span class="p">(</span><span class="s">"-"</span><span class="o">*</span><span class="mi">50</span><span class="p">)</span>
+
+</code></pre></div></div>
+<p>The isdecrypted function is checking wheather the decrypted image is valid or not. The magical numbers of the image is being tested by the magic module.
+If the magical numbers are matched the function is going to tell that the decryption is successfull, if not the function will tell that the key is wrong to decrypt. If the key is wrong the program is going to be exited.</p>
+
+<h3 id="requirements">Requirements</h3>
+
+<p>You require these additional modules</p>
+
+<ol>
+  <li>base64</li>
+  <li>magic</li>
+  <li>os</li>
+  <li>random</li>
+</ol>
+
+<p>These modules will be pre installed on every system, if not then install them with <code class="language-plaintext highlighter-rouge">pip3 or pip</code></p>
+
+<blockquote class="prompt-info">
+  <p>You need to copy your file and paste it in files folder of present in the SecureFiles folder to encrypt or decrypt the file</p>
+</blockquote>
+
+<h3 id="installation">Installation</h3>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/TheMj0ln1r/SecureFiles.git
+cd SecureFiles
+python3 SecureFiles.py
+</code></pre></div></div>
+<h3 id="preview">Preview</h3>
+
+<p><img src="/assets/img/project_img/securefiles.png" alt="Preview" w="600&quot;,h=&quot;600" /></p>
+
+<blockquote class="prompt-info">
+  <p>If anything should be modified in the script please let me know.</p>
+</blockquote>
+
+<p>You can find complete source code of SecureFiles here : <a href="https://github.com/TheMj0ln1r/SecureFiles">https://github.com/TheMj0ln1r/SecureFiles</a></p>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2023
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>

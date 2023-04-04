@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-NetScan</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>NetScan | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="NetScan" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hi guys!," />
+<meta property="og:description" content="Hi guys!," />
+<link rel="canonical" href="http://localhost:8000/posts/pythonnetscan" />
+<meta property="og:url" content="http://localhost:8000/posts/pythonnetscan" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-09-29T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="NetScan" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2022-09-29T00:00:00+05:30","datePublished":"2022-09-29T00:00:00+05:30","description":"Hi guys!,","headline":"NetScan","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/posts/pythonnetscan"},"url":"http://localhost:8000/posts/pythonnetscan"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div>
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command"></span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>NetScan</h2>
+  <time datetime="2022-09-29T00:00:00+05:30" class="by-line">29 Sep 2022</time>
+  <p>Hi guys!,</p>
+
+<p>This is Mj0ln1r and i am back with a new post but this time a project devoleped with python.</p>
+
+<p>I am very much intrested to do automating tasks using python. To learn python upto the advanced level i decided to make basic projects with the python.This is my first step towards the path i choosen.</p>
+
+<p>I wrote this script called <code class="language-plaintext highlighter-rouge">NetScan</code> in python. I learned <code class="language-plaintext highlighter-rouge">basics of socket programming</code> , little bit about <code class="language-plaintext highlighter-rouge">platform</code> module in python and basic tools <code class="language-plaintext highlighter-rouge">ping</code>, <code class="language-plaintext highlighter-rouge">arp</code> which are useful in computer networking.</p>
+
+<p>So, here’s a small intro about my basic netscan script.</p>
+
+<h1 id="netscan">NetScan</h1>
+
+<p>This is a basic computer networking based project the script i developed using python which can perform following tasks.</p>
+
+<ol>
+  <li>Get any websites IP</li>
+  <li>Discover live hosts</li>
+  <li>Discover Hosts and MAC</li>
+</ol>
+
+<p>I used ping to send the ICMP packets to every device connected to network, the response from that device has been analyzed and printed the devices which are responded for the ICMP request.
+This process could be slow if the number of hosts to be scanned are increased, but it will works fine as it uses just a basic ping which is available in any operating system.</p>
+
+<p>A TCP scan is also used to get the active hosts in a network this will overcome the ping scan drawbacks, i.e the ICMP packets can be blocked by a firewall in this process we may get the host status as unreachable. To overcome this are going to sent tcp packets to the port 135 using socket module in python.</p>
+
+<p>An arp scan is used to the MAC adrresses of all the hosts connected in a network.</p>
+
+<p>I devoloped this script with less additional modules which can make the scan slow , but this can be executed in any system without any additional requirements.</p>
+
+<h3 id="requirements">Requirements</h3>
+
+<p>You may require some python modules</p>
+
+<ol>
+  <li>subprocess</li>
+  <li>socket</li>
+  <li>platform</li>
+</ol>
+
+<p>These modules will be pre installed on every system, if not then install them with <code class="language-plaintext highlighter-rouge">pip3 or pip</code></p>
+<h3 id="installation">Installation</h3>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/TheMj0ln1r/NetScan.git
+cd NetScan
+python3 NetScan.py
+</code></pre></div></div>
+
+<h3 id="preview">Preview</h3>
+<p><img src="/assets/img/project_img/netscan.png" alt="Preview" w="600&quot;,h=&quot;600" /></p>
+
+<blockquote class="prompt-info">
+  <p>If anything should be modified in the script please let me know.</p>
+</blockquote>
+
+<p>You can find complete source code of NetScan here : <a href="https://github.com/TheMj0ln1r/NetScan">https://github.com/TheMj0ln1r/NetScan</a></p>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2023
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>
