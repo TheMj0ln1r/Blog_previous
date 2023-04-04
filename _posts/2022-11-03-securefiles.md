@@ -1,8 +1,6 @@
 ---
 layout: post
 title:  "SecureFiles"
-tags: [python,securefiles,fileencryptor,filedecryptor]
-categories: [Projects,Python]
 ---
 
 Hello buddy,

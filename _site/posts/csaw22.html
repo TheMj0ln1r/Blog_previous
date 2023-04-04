@@ -36,7 +36,7 @@
   <div>
       <a href="/">
         <h1>mj0ln1r@home:~$</h1></a>
-        <span id="command">cat csaw22</span>
+        <span id="command">cat csaw22
     <div class="header-links">
       <a href="/archive"><h2 class="header-link">Archive</h2></a>
 <a href="/about"><h2 class="header-link">About</h2></a>
@@ -60,7 +60,7 @@ CSAW CTF is one of the oldest and biggest CTFs with 1216 teams with 1+ points in
 
 <h1 id="gotta-crack-them-all">Gotta Crack Them All</h1>
 
-<p><img src="/assets/img/post_img/gotta.png" alt="gotta_crack_them_all" w="300" h="200" /></p>
+<p><img src="/assets/img/post_img/gotta.png" alt="gotta_crack_them_all" /></p>
 
 <p>The content of <code class="language-plaintext highlighter-rouge">encrypt.py</code></p>
 
@@ -76,7 +76,7 @@ CSAW CTF is one of the oldest and biggest CTFs with 1216 teams with 1+ points in
 <p>If we observe the encrypt.py the passwords are encrypted using the XOR encryption.</p>
 
 <p>First i tried to encrypt the leaked password with the given encryption algorithm.
-<img src="/assets/img/post_img/gotta_leak.png" alt="gotta_leak" w="700" h="700" /></p>
+<img src="/assets/img/post_img/gotta_leak.png" alt="gotta_leak" /></p>
 
 <p>Now i have a leaked password and its cipher <code class="language-plaintext highlighter-rouge">kz\xc6\xb9\xd9Du\xcb\x8a\x9e\xe0\x9d\xbeo\xee\x03\xcf\xddd</code>. Now the idea was simple if we XORed the leaked password with the cipher we can get the encryption key then that key can be used to decrypt all the encrypted passwords.</p>
 
@@ -140,7 +140,7 @@ Seadra-Water
 
 <p>Here it is the Chall which takes 5 hours of my life. But at the end it boosted my confidence levels upto the sky.</p>
 
-<p><img src="/assets/img/post_img/phi.png" alt="phi_in_too_much_common" w="400" h="400" /></p>
+<p><img src="/assets/img/post_img/phi.png" alt="phi_in_too_much_common" /></p>
 
 <p>First i connected to the challenge with the netcat.</p>
 <div class="language-terminal highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gp">$</span><span class="w"> </span>nc crypto.chal.csaw.io 5000
@@ -309,7 +309,7 @@ flag<span class="o">{</span>aR3nT_U_tH3_RSA_ninJA<span class="o">}</span>
 
 <h1 id="docker-leakage">Docker Leakage</h1>
 
-<p><img src="/assets/img/post_img/dockeREleakage.png" alt="DockeRElekage" w="400" h="400" /></p>
+<p><img src="/assets/img/post_img/dockeREleakage.png" alt="DockeRElekage" /></p>
 
 <p>Docker Leakage is a reversing challenge, the challenge provides a dockeREleakage.zip file which consist of docker image details.</p>
 
@@ -335,7 +335,7 @@ flag<span class="o">{</span>aR3nT_U_tH3_RSA_ninJA<span class="o">}</span>
 <hr />
 
 <h1 id="word-wide-web">Word Wide Web</h1>
-<p><img src="/assets/img/post_img/wordwideweb.png" alt="Word_Wide_Web" w="400" h="400" /></p>
+<p><img src="/assets/img/post_img/wordwideweb.png" alt="Word_Wide_Web" /></p>
 
 <p>http://web.chal.csaw.io:5010/stuff have the huge number of words in it, among all of them one word has the hyperlink to the another page. When we automate the process until we get the last page which can get the flag.</p>
 
@@ -367,7 +367,7 @@ flag<span class="o">{</span>aR3nT_U_tH3_RSA_ninJA<span class="o">}</span>
 
 <h1 id="our-spy-in-new-terrainosint">Our Spy In New Terrain(OSINT)</h1>
 
-<p><img src="/assets/img/post_img/our_sint.png" alt="OSINT" w="400" h="400" /></p>
+<p><img src="/assets/img/post_img/our_sint.png" alt="OSINT" /></p>
 
 <p>This is an intresting OSINT challenge from the forensics category. They provided just the twitter account name of the recruit. We have to answer the questions been asked in the remote program <code class="language-plaintext highlighter-rouge">nc misc.chall.csaw.io 5005</code>.</p>
 

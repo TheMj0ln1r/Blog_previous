@@ -36,7 +36,7 @@
   <div>
       <a href="/">
         <h1>mj0ln1r@home:~$</h1></a>
-        <span id="command">cat wolvctf</span>
+        <span id="command">cat wolvctf
     <div class="header-links">
       <a href="/archive"><h2 class="header-link">Archive</h2></a>
 <a href="/about"><h2 class="header-link">About</h2></a>
@@ -54,15 +54,15 @@ These are the writeups for the solved challenges.</p>
 
 <h1 id="charlottes-web">Charlotte’s Web</h1>
 
-<p><img src="/assets/img/post_img/wolv_charlotte.png" alt="Charlottes_web" w="400" h="200" /></p>
+<p><img src="/assets/img/post_img/wolv_charlotte.png" alt="Charlottes_web" /></p>
 
 <p><code class="language-plaintext highlighter-rouge">/src</code> is found in source code.</p>
 
-<p><img src="/assets/img/post_img/wolv_charlotte1.png" alt="src" w="400" h="200" /></p>
+<p><img src="/assets/img/post_img/wolv_charlotte1.png" alt="src" /></p>
 
 <p><code class="language-plaintext highlighter-rouge">flag</code> will be opened when we resquest <code class="language-plaintext highlighter-rouge">/super-secret-route-nobody-will-guess</code> with a <code class="language-plaintext highlighter-rouge">PUT</code> method.</p>
 
-<p><img src="/assets/img/post_img/wolv_charlotte2.png" alt="Flag" w="500" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_charlotte2.png" alt="Flag" /></p>
 
 <blockquote>
   <p><code class="language-plaintext highlighter-rouge">Flag : wctf{y0u_h4v3_b33n_my_fr13nd___th4t_1n_1t53lf_1s_4_tr3m3nd0u5_th1ng}</code></p>
@@ -70,7 +70,7 @@ These are the writeups for the solved challenges.</p>
 
 <h1 id="baby-pwn">baby-pwn</h1>
 
-<p><img src="/assets/img/post_img/wolv_babypwn.png" alt="Baby pwn" w="400" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_babypwn.png" alt="Baby pwn" /></p>
 
 <p>Attached files <a href="/assets/files/wolvctf23/baby-pwn.c" download="">baby-pwn.c</a> and <a href="/assets/files/wolvctf23/baby-pwn" download="">baby-pwn.c</a></p>
 
@@ -90,7 +90,7 @@ These are the writeups for the solved challenges.</p>
 
 <p>Trying bufferoverflow input string length of 48 in the remote server.</p>
 
-<p><img src="/assets/img/post_img/wolv_babypwn1.png" alt="Flag " w="500" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_babypwn1.png" alt="Flag " /></p>
 
 <blockquote>
   <p><code class="language-plaintext highlighter-rouge">Flag : wctf{W3lc0me_t0_C0stc0_I_L0v3_Y0u!}</code></p>
@@ -98,13 +98,13 @@ These are the writeups for the solved challenges.</p>
 
 <h1 id="baby-rev">baby-rev</h1>
 
-<p><img src="/assets/img/post_img/wolv_babyrev.png" alt="Baby rev" w="400" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_babyrev.png" alt="Baby rev" /></p>
 
 <p>Here is the challenge file <a href="/assets/files/wolvctf23/baby-re" download="">baby-rev</a></p>
 
 <p>Simple <code class="language-plaintext highlighter-rouge">**strings**</code> did the thing.</p>
 
-<p><img src="/assets/img/post_img/wolv_babyrev1.png" alt="Baby rev" w="400" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_babyrev1.png" alt="Baby rev" /></p>
 
 <blockquote>
   <p><code class="language-plaintext highlighter-rouge">Flag : wctf{Oh10_Stat3_1s_Smelly!}</code></p>
@@ -112,15 +112,15 @@ These are the writeups for the solved challenges.</p>
 
 <h1 id="we-will-rock-you">We Will Rock You</h1>
 
-<p><img src="/assets/img/post_img/wolv_rockyou.png" alt="We wil rock you" w="400" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_rockyou.png" alt="We wil rock you" /></p>
 
 <p>We have to crack password protected <a href="/assets/files/wolvctf23/we_will_rock_you.zip" download="">zip file</a></p>
 
 <p>Creating hashes from zip file to make john understands it.
-<img src="/assets/img/post_img/wolv_rockyou1.png" alt="We will rock you" w="500" h="400" /></p>
+<img src="/assets/img/post_img/wolv_rockyou1.png" alt="We will rock you" /></p>
 
 <p>Cracking the hashes with the john
-<img src="/assets/img/post_img/wolv_rockyou2.png" alt="We will rock you" w="500" h="400" /></p>
+<img src="/assets/img/post_img/wolv_rockyou2.png" alt="We will rock you" /></p>
 
 <p>Password : michigan4ever</p>
 
@@ -132,7 +132,7 @@ These are the writeups for the solved challenges.</p>
 
 <h1 id="yowhatsthepassword">yowhatsthepassword</h1>
 
-<p><img src="/assets/img/post_img/wolv_yowhats.png" alt="yowhatsathepassword" w="400" h="200" /></p>
+<p><img src="/assets/img/post_img/wolv_yowhats.png" alt="yowhatsathepassword" /></p>
 
 <p><a href="/assets/files/wolvctf23/main.py" download="">main.py</a></p>
 
@@ -163,11 +163,11 @@ These are the writeups for the solved challenges.</p>
 </code></pre></div></div>
 <p>A simple condition check was done here. The password of should be <code class="language-plaintext highlighter-rouge">int(base64.b64decode(secret).hex(), 16)</code></p>
 
-<p><img src="/assets/img/post_img/wolv_yowhats1.png" alt="yowhatsathepassword" w="500" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_yowhats1.png" alt="yowhatsathepassword" /></p>
 
 <p>So, the password is <code class="language-plaintext highlighter-rouge">2536466855</code></p>
 
-<p><img src="/assets/img/post_img/wolv_yowhats2.png" alt="yowhatsathepassword" w="400" h="200" /></p>
+<p><img src="/assets/img/post_img/wolv_yowhats2.png" alt="yowhatsathepassword" /></p>
 
 <blockquote>
   <p><code class="language-plaintext highlighter-rouge">Flag : wctf{ywtp}</code></p>
@@ -175,7 +175,7 @@ These are the writeups for the solved challenges.</p>
 
 <h1 id="escaped">escaped</h1>
 
-<p><img src="/assets/img/post_img/wolv_escaped.png" alt="escaped" w="400" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_escaped.png" alt="escaped" /></p>
 
 <p>The challenge file <a href="/assets/files/wolvctf23/jail.py" download="">jail.py</a></p>
 
@@ -192,17 +192,17 @@ These are the writeups for the solved challenges.</p>
 
 <p><code class="language-plaintext highlighter-rouge">eval()</code> function is capable of evaluating the code what we pass to it. But the <code class="language-plaintext highlighter-rouge">print("' + eval(code) + '")</code> is generating the string not the execution of our input code.</p>
 
-<p><img src="/assets/img/post_img/wolv_escaped1.png" alt="escaped" w="500" h="400" /></p>
+<p><img src="/assets/img/post_img/wolv_escaped1.png" alt="escaped" /></p>
 
 <p>Now we have to escape the <code class="language-plaintext highlighter-rouge">"</code> in the <code class="language-plaintext highlighter-rouge">print()</code> to generate the executed output of the passed input.Out input shouldn’t contain <code class="language-plaintext highlighter-rouge">"</code> in the string except at the beginning and end.</p>
 
 <p>The payload can be in this form</p>
 
-<p><img src="/assets/img/post_img/wolv_escaped2.png" alt="escaped" w="500" h="400" /></p>
+<p><img src="/assets/img/post_img/wolv_escaped2.png" alt="escaped" /></p>
 
 <p>The payload to get the flag is <code class="language-plaintext highlighter-rouge">"\x22,__import__('os').system('cat flag.txt'),\x22"</code>. Here <code class="language-plaintext highlighter-rouge">\x22</code> is interpreted as <code class="language-plaintext highlighter-rouge">"</code> this will become <code class="language-plaintext highlighter-rouge">print("",__import__('os').system('cat flag.txt'),""</code>. Therefore it will prints the flag.</p>
 
-<p><img src="/assets/img/post_img/wolv_escaped3.png" alt="escaped" w="500" h="400" /></p>
+<p><img src="/assets/img/post_img/wolv_escaped3.png" alt="escaped" /></p>
 
 <blockquote>
   <p><code class="language-plaintext highlighter-rouge">Flag : wctf{m30w_uwu_:3}</code></p>
@@ -210,7 +210,7 @@ These are the writeups for the solved challenges.</p>
 
 <h1 id="elytra">elytra</h1>
 
-<p><img src="/assets/img/post_img/wolv_elytra.png" alt="elytra" w="400" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_elytra.png" alt="elytra" /></p>
 
 <p>A text file is given <a href="/assets/files/wolvctf23/iwon.txt" download="">iwon.txt</a></p>
 
@@ -242,7 +242,7 @@ These are the writeups for the solved challenges.</p>
 	<span class="nf">print</span><span class="p">(</span><span class="nf">chr</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="s">""</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p><img src="/assets/img/post_img/wolv_elytra1.png" alt="elytra" w="500" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_elytra1.png" alt="elytra" /></p>
 
 <blockquote>
   <p><code class="language-plaintext highlighter-rouge">Flag : wctf{ggwp}</code></p>
@@ -250,31 +250,31 @@ These are the writeups for the solved challenges.</p>
 
 <h1 id="dino-trading">Dino Trading</h1>
 
-<p><img src="/assets/img/post_img/wolv_dino.png" alt="dino trading" w="400" h="200" /></p>
+<p><img src="/assets/img/post_img/wolv_dino.png" alt="dino trading" /></p>
 
 <p>This is from forensics category. A pcap file is provided <a href="/assets/files/wolvctf23/download.pcapng" download="">download.pcapng</a></p>
 
 <p>Analysing traffic with Wireshark. If we follow TCP stream we can see that the parties shared a <code class="language-plaintext highlighter-rouge">epicfight.png</code> file.</p>
 
-<p><img src="/assets/img/post_img/wolv_dino1.png" alt="dino trading" w="500" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_dino1.png" alt="dino trading" /></p>
 
 <p>Exporting FTP-DATA of the packet in which the file has been shared as <code class="language-plaintext highlighter-rouge">png</code></p>
 
-<p><img src="/assets/img/post_img/wolv_dino2.png" alt="dino trading" w="500" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_dino2.png" alt="dino trading" /></p>
 
-<p><img src="/assets/img/post_img/wolv_dino3.png" alt="dino trading" w="500" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_dino3.png" alt="dino trading" /></p>
 
 <p>This is the image which was shared on network.</p>
 
-<p><img src="/assets/img/post_img/wolv_dino4.png" alt="dino trading" w="500" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_dino4.png" alt="dino trading" /></p>
 
 <p>Extracting data from image with <code class="language-plaintext highlighter-rouge">steghide</code></p>
 
-<p><img src="/assets/img/post_img/wolv_dino5.png" alt="dino trading" w="500" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_dino5.png" alt="dino trading" /></p>
 
 <p>Reading <code class="language-plaintext highlighter-rouge">hidden.txt</code> and decoding it from <code class="language-plaintext highlighter-rouge">base64</code></p>
 
-<p><img src="/assets/img/post_img/wolv_dino6.png" alt="dino trading" w="500" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_dino6.png" alt="dino trading" /></p>
 
 <blockquote>
   <p><code class="language-plaintext highlighter-rouge">Flag : wctf{an_1mage_in_a_peecap_b64}</code></p>
@@ -282,19 +282,19 @@ These are the writeups for the solved challenges.</p>
 
 <h1 id="wannaflag-i-an-introduction">WannaFlag I: An Introduction</h1>
 
-<p><img src="/assets/img/post_img/wolv_wannaflag-1.png" alt="wannaflag" w="450" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_wannaflag-1.png" alt="wannaflag" /></p>
 
 <p>This challenge is from OSINT challenge series WannaFlag.
 The given image
-<img src="/assets/img/post_img/wolv_wannaflag-11.png" alt="wannaflag" w="300" h="200" /></p>
+<img src="/assets/img/post_img/wolv_wannaflag-11.png" alt="wannaflag" /></p>
 
 <p>Reverse image search on google.</p>
 
-<p><img src="/assets/img/post_img/wolv_wannaflag-12.png" alt="wannaflag" w="500" h="400" /></p>
+<p><img src="/assets/img/post_img/wolv_wannaflag-12.png" alt="wannaflag" /></p>
 
 <p>As the challenge says “read the reviews on google maps”. Reading reviews of image <a href="https://www.google.com/search?q=The+Cube&amp;kgmid=/g/1yg6ngznr&amp;hl=en-GB&amp;gl=GB#lrd=0x883cae3897494825:0xb2adec7980125508,1,,,,">https://www.google.com/search?q=The+Cube&amp;kgmid=/g/1yg6ngznr&amp;hl=en-GB&amp;gl=GB#lrd=0x883cae3897494825:0xb2adec7980125508,1,,,,</a></p>
 
-<p><img src="/assets/img/post_img/wolv_wannaflag-13.png" alt="wannaflag" w="500" h="400" /></p>
+<p><img src="/assets/img/post_img/wolv_wannaflag-13.png" alt="wannaflag" /></p>
 
 <p><code class="language-plaintext highlighter-rouge">netcat wanna-flag-i dot wolvctf dot io one three three seven</code> can be converted as <code class="language-plaintext highlighter-rouge">nc wanna-flag-i.wolvctf.io 1337</code>.</p>
 
@@ -433,7 +433,7 @@ Also all of you John OSINTs on twitter need to leave us alone
 <p>When we scroll to the last we have <code class="language-plaintext highlighter-rouge">John OSINTs on twitter</code> and <code class="language-plaintext highlighter-rouge">#YourFlagsBelongToUs</code>.
 I did a quick twitter search,</p>
 
-<p><img src="/assets/img/post_img/wolv_wannaflag-14.png" alt="wannaflag" w="500" h="300" /></p>
+<p><img src="/assets/img/post_img/wolv_wannaflag-14.png" alt="wannaflag" /></p>
 
 <p>Decoding from <code class="language-plaintext highlighter-rouge">base64</code> will give us flag.</p>
 

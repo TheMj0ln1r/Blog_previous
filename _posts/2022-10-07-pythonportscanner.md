@@ -1,8 +1,6 @@
 ---
 layout: post
-title:  "Python Port Scanner"
-tags: [python,networking,portscanner]
-categories: [Projects,Python]
+title:  "Port Scanner"
 ---
 
 Hi guys!,

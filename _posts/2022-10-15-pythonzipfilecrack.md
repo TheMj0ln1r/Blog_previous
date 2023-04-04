@@ -1,8 +1,6 @@
 ---
 layout: post
-title:  "Python Zip File Cracker"
-tags: [python,zipfilecracker]
-categories: [Projects,Python]
+title:  "Zip Cracker"
 ---
 
 Hi mates!,

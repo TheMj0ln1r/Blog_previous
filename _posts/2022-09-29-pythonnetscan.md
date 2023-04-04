@@ -1,8 +1,6 @@
 ---
 layout: post
 title:  "NetScan"
-tags: [python,networking,netscan]
-categories: [Projects,Python]
 ---
 
 Hi guys!,
