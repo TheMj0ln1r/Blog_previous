@@ -11,9 +11,9 @@ I played **m0lecon CTF 2022** with my CTF team [TEAM-ASGARD](https://ctftime.org
 
 The challenge contains these two images.
 
-![challenge](/assets/img/post_img/m0lecon_unrecognizable1.png){: width="200" height="200"}
+![challenge](/assets/img/post_img/m0lecon_unrecognizable1.png)
 
-![whoami](/assets/img/post_img/m0lecon_unrecognizable2.png){: width="200" height="200"}
+![whoami](/assets/img/post_img/m0lecon_unrecognizable2.png)
 
 Immediately i wrote this script to make `xor` of these two images.
 
@@ -27,7 +27,7 @@ im3.save("im3.png")
 ```
 Which gives new image consist of the flag in it.
 
-![flag](/assets/img/post_img/m0lecon_unrecognizable3.png){: width="200" height="200"}
+![flag](/assets/img/post_img/m0lecon_unrecognizable3.png)
 
 > `Flag: ptm{y0u_r34lly_7r4c3d_m3}`
 
@@ -37,7 +37,7 @@ Which gives new image consist of the flag in it.
 
 The challenge contains this selfie.jpeg image.
 
-![feelingCut3](/assets/img/post_img/m0lecon_selfie.jpeg){: width="300" height="300"}
+![feelingCut3](/assets/img/post_img/m0lecon_selfie.jpeg)
 
 Used `exiftool` to read metadata. `exiftool selfie.jpeg` and found this comment in metadata.
 
@@ -61,7 +61,7 @@ In this challenge a `capture.pcap` is attached.
 
 By analyzing it in wireshark. I found that in one packet large size of data has been transmitted. I exported the packet data as the Image. The image contains the flag we need.
 
-![pcap](/assets/img/post_img/m0lecon_pcap){: width="300" height="300"}
+![pcap](/assets/img/post_img/m0lecon_pcap)
 
 > `Flag : n37w0rk_ch4ll3n935_4r3_fun_2`
 

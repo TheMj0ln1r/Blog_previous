@@ -15,7 +15,7 @@ Let me explain the challs i solved in Cryptoverse CTF 2022.
 
 This is a basic reverse challenge.
 
-![baby_reverse](/assets/img/post_img/babyreverse1.png){: w="600" h="600"}
+![baby_reverse](/assets/img/post_img/babyreverse1.png)
 
 This can be solved by using strings command in linux
 
@@ -28,7 +28,7 @@ $ strings chall
 
 # Crypto/Warmup 1
 
-![crypto/warmup1](/assets/img/post_img/cryptowarmup1.png){: w="600" h="600"}
+![crypto/warmup1](/assets/img/post_img/cryptowarmup1.png)
 
 The task is to decode the base64 cipher "cGlwZ3N7cG5yZm5lXzY0X3Nnan0=".
 
@@ -47,7 +47,7 @@ $ cvctf{caesar_64_ftw}
 
 # Crypto/Warmup 2
 
-![crypto/warmup2](/assets/img/post_img/cryptowarmup2.png){: w="600" h="600"}
+![crypto/warmup2](/assets/img/post_img/cryptowarmup2.png)
 
 The cipher is fzvxw{hqtegmfr_lw_msf_scrslg_kvwlhyk_fpr_kxg?} which is a vegener cipher and the key to decrypt the cipher is determination. 
 I used [this](https://www.dcode.fr/vigenere-cipher) site to do it.
@@ -58,7 +58,7 @@ I used [this](https://www.dcode.fr/vigenere-cipher) site to do it.
 
 # Crypto/Warmup 3
 
-![crypto/warmup3](/assets/img/post_img/cryptowarmup3.png){: w="600" h="600"}
+![crypto/warmup3](/assets/img/post_img/cryptowarmup3.png)
 
 -.-. ...- -.-. - ..-. -- ----- .-. ..... ...-- .. ... -. ----- - ..... ----- ..-. ..- -. is the morse code. I used [CyberChef](https://gchq.github.io/CyberChef/) to convert morse code to plaintext.
 
@@ -67,7 +67,7 @@ I used [this](https://www.dcode.fr/vigenere-cipher) site to do it.
 
 # Crypto/Substitution
 
-![crypto/Substitution](/assets/img/post_img/cryptosubstitution.png){: w="600" h="600"}
+![crypto/Substitution](/assets/img/post_img/cryptosubstitution.png)
 
 I used [This](https://www.guballa.de/substitution-solver) website to solve this.
 
@@ -76,7 +76,7 @@ I used [This](https://www.guballa.de/substitution-solver) website to solve this.
 
 # Crypto/RSA 1
 
-![crypto/RSA1](/assets/img/post_img/cryptorsa1.png){: w="600" h="600"}
+![crypto/RSA1](/assets/img/post_img/cryptorsa1.png)
 
 This is a RSA challenge with small e. And i used factordb to find the primes of N, then i computed the phi to find the d which can be used to decrypt the cipher.
 
