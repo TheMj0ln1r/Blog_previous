@@ -1,0 +1,23 @@
+<footer>
+  <a href="/">
+    <span>
+        <b>{{ site.owner}}</b>
+    </span>
+    {% capture currentyear %}{{ 'now' | date: "%Y" }}{% endcapture %}
+    <span>© {{ currentyear }}
+  </a>
+
+  <a href="{{ site.social.links[0] }}" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="{{ site.social.links[1] }}" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="{{ site.social.links[2] }}" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href="{{ /posts/:title }}"><span style="color:red;">^TOP</span></a>
+
+</footer>
