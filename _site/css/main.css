@@ -147,6 +147,10 @@ header h2 {
   color: #f0f8ff;
 }
 
+.head-parent {
+  overflow: hidden;
+}
+
 /* Main Content
 */
 #main_content {

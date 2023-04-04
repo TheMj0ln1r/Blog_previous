@@ -25,7 +25,6 @@ body {
   max-width: 1000px;
   margin: 0 auto;
   overflow-wrap: break-word; //added
-
 }
 
 
@@ -49,7 +48,6 @@ li {
 */
 
 header {
-  //background: rgba(0, 0, 0, 0.1);
   border-bottom: 1px dashed $conifer; //header;
   padding: 10px;
   margin: 0 0 20px 0;
@@ -95,6 +93,10 @@ header h2 {
   font-size: 18px;
   font-weight: 300;
   color: #f0f8ff;
+}
+//added
+.head-parent{
+  overflow:hidden;
 }
 
 /* Main Content
