@@ -7,7 +7,6 @@ $body-foreground: $gallery !default;
 $header: $conifer !default;
 $blockquote-color: $silver-chalice !default;
 $blockquote-border: $dove-grey !default;
-
 body {
   margin: 0;
   padding: 0;
@@ -16,6 +15,7 @@ body {
   font-size: 16px;
   line-height: 1.5;
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  background-attachment: fixed; //added
 }
 
 /* General & 'Reset' Stuff */
