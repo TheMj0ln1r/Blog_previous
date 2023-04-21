@@ -76,6 +76,7 @@ body {
   font-size: 16px;
   line-height: 1.5;
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  background-attachment: fixed;
 }
 
 /* General & 'Reset' Stuff */
@@ -164,7 +165,7 @@ section img {
   margin-left: auto;
   margin-right: auto;
   display: block;
-  width: 80%;
+  width: 70%;
 }
 
 h1, h2, h3, h4, h5, h6 {
