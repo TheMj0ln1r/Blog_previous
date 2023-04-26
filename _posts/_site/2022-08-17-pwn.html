@@ -1,0 +1,217 @@
+<p>Hi guys!,</p>
+
+<p>This is Mj0ln1r and this is my first blog, writeup and first CTF as well. All new ? haha.</p>
+
+<p>I started learning new skills and playing CTF’s as well to gain hands on experience in the security field. Coming to this blog, its all about my solved challenges in InvaderCTF 2022.</p>
+
+<p>InvaderCTF is a CTF competion which was organized by our collenge[RGUKTN] alumni those are working at great positions with the skills learned through CTF’s.
+There is a list of categories in this CTF such as “web”, “pwn”, “reverse”, “cryptography”, and “miscellaneous”.
+And i solved some challenges from each category.</p>
+
+<p>In this post i am going to explain about the procedure i followed to solve <code class="language-plaintext highlighter-rouge">PWN</code> challenges.</p>
+
+<h1 id="pwn-challenges">PWN Challenges</h1>
+
+<h2 id="format-strings">Format Strings</h2>
+
+<p>Can you exploit echo file to get the FLAG. nc 198.199.123.169 9003</p>
+
+<p>Provided source code <code class="language-plaintext highlighter-rouge">echo.c</code></p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span><span class="kt">void</span> <span class="nf">initialize</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">alarm</span><span class="p">(</span><span class="mi">60</span><span class="p">);</span>
+  <span class="n">setvbuf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">_IONBF</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">setvbuf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">_IONBF</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">setvbuf</span><span class="p">(</span><span class="n">stdin</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">_IONBF</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">echo</span><span class="p">(){</span>
+  <span class="kt">char</span> <span class="n">FLAG</span><span class="p">[]</span> <span class="o">=</span> <span class="s">"InvaderCTF{this_is_not_flag_flag_is_on_the_remote_server}"</span><span class="p">;</span>
+  <span class="kt">char</span> <span class="n">buffer</span><span class="p">[</span><span class="mh">0x20</span><span class="p">];</span>
+  <span class="n">puts</span><span class="p">(</span><span class="s">"Can you leak the flag?"</span><span class="p">);</span>
+  <span class="n">puts</span><span class="p">(</span><span class="s">"Enter input to echo back:</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+  <span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">buffer</span><span class="p">,</span> <span class="mh">0x20</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="n">buffer</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">initialize</span><span class="p">();</span>
+  <span class="n">echo</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>First of all i executed the provided binary file <code class="language-plaintext highlighter-rouge">echo</code>.The program asks for a input. Observe the source program the input is going to be stored in <code class="language-plaintext highlighter-rouge">buffer[0x20]</code>.The <code class="language-plaintext highlighter-rouge">0x20</code> is equals to 32 in decimal.</p>
+
+<p>If i gave more than 32 characters as input a <code class="language-plaintext highlighter-rouge">bufferoverflow</code> will occur it may leads to an unintend outputs.
+lets see,</p>
+
+<p><img src="/assets/img/post_img/format.png" alt="Format Strings" /></p>
+
+<p>DOOOONE…..!</p>
+
+<p>So, this is a simple bufferoverflow problem. In this way i got this flag <code class="language-plaintext highlighter-rouge">^_^</code></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : InvaderCTF{EZy_PZy_format_strings}</code></p>
+</blockquote>
+
+<hr />
+
+<h2 id="foodcourt-overflow">FoodCourt Overflow</h2>
+
+<p><img src="/assets/img/post_img/fc.png" alt="Format Strings" w="400" h="400" /></p>
+
+<p>The name itself says that its a overflow problem again <code class="language-plaintext highlighter-rouge">^_~</code></p>
+
+<p>The source code of the program running in the remote server is as follows</p>
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="n">wallet</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="nf">order</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="n">item</span><span class="p">,</span> <span class="kt">int</span> <span class="n">cost</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">n</span><span class="p">;</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"Input the number of %s you want to buy?</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">item</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"&gt; "</span><span class="p">);</span>
+    <span class="n">scanf</span><span class="p">(</span><span class="s">"%d"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">n</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="n">cost</span> <span class="o">*</span> <span class="n">n</span><span class="p">;</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"That will cost Rs%d.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">cost</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cost</span> <span class="o">&lt;=</span> <span class="n">wallet</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">puts</span><span class="p">(</span><span class="s">"Order placed!"</span><span class="p">);</span>
+            <span class="n">wallet</span> <span class="o">-=</span> <span class="n">cost</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">puts</span><span class="p">(</span><span class="s">"Ah man, you don't have enough money to buy this order"</span><span class="p">);</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"Nah, buy something."</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">initialize</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="n">alarm</span><span class="p">(</span><span class="mi">60</span><span class="p">);</span>
+  <span class="n">setvbuf</span><span class="p">(</span><span class="n">stdout</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">_IONBF</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">setvbuf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">_IONBF</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">setvbuf</span><span class="p">(</span><span class="n">stdin</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">_IONBF</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">item</span><span class="p">;</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Welcome to RGUKT Food Court!"</span><span class="p">);</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"We are giving free 200 RS wallet amount to our online customers."</span><span class="p">);</span>
+    <span class="n">puts</span><span class="p">(</span><span class="s">"Sadly, you don't have enough money to buy the tastiest dish named Flag :/? Or is it? </span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="n">printf</span><span class="p">(</span><span class="s">"Wallet Amount Rs%d.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">wallet</span><span class="p">);</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"Menu: "</span><span class="p">);</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"1. Noodles: 50"</span><span class="p">);</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"2. Biryani: 100"</span><span class="p">);</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"3. Soft Drink: 20"</span><span class="p">);</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"4. Flag: Rs 1000"</span><span class="p">);</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"0. Logout</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="n">puts</span><span class="p">(</span><span class="s">"Which item would you like to Order?"</span><span class="p">);</span>
+
+        <span class="n">printf</span><span class="p">(</span><span class="s">"&gt; "</span><span class="p">);</span>
+        <span class="n">scanf</span><span class="p">(</span><span class="s">"%d"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">item</span><span class="p">);</span>
+
+        <span class="k">switch</span> <span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">printf</span><span class="p">(</span><span class="s">"Logging out"</span><span class="p">);</span>
+                <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">order</span><span class="p">(</span><span class="s">"Nooooodles"</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">order</span><span class="p">(</span><span class="s">"Dum Biryani"</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">order</span><span class="p">(</span><span class="s">"Soft Drink"</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">order</span><span class="p">(</span><span class="s">"buy the today's special dish - flag"</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="kt">FILE</span> <span class="o">*</span><span class="n">fp</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="s">"flag.txt"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">);</span>
+                    <span class="kt">char</span> <span class="n">flag</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">fp</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">puts</span><span class="p">(</span><span class="s">"Create flag.txt in the current working directory"</span><span class="p">);</span>
+                        <span class="n">puts</span><span class="p">(</span><span class="s">"Please report to admin if you saw this error on remote"</span><span class="p">);</span>
+                        <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+                    <span class="p">}</span>
+
+                    <span class="n">fgets</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">flag</span><span class="p">),</span> <span class="n">fp</span><span class="p">);</span>
+                    <span class="n">puts</span><span class="p">(</span><span class="n">flag</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="nl">default:</span>
+                <span class="n">puts</span><span class="p">(</span><span class="s">"Please select a valid item."</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The Main method is printing the menu and asking the user for the choice.Initially my <code class="language-plaintext highlighter-rouge">wallet = 200</code>.i.e balance. I am able to buy anything from the foodcourt except flag, cause it costs 1000. In order function i have to enter number of items i want to buy,i.e <code class="language-plaintext highlighter-rouge">n</code>. The cost is going to be multiplied with the number of items <code class="language-plaintext highlighter-rouge">cost = cost * n</code>. My balance then its going to place my order. i.e <code class="language-plaintext highlighter-rouge">cost &lt;= wallet</code>. Then my balance is going to be update. <code class="language-plaintext highlighter-rouge">wallet = wallet - cost</code>.</p>
+
+<p>Here i got an ideaaaa.. I see noodles costs 50 and it substracts the total cost from the wallet.but what if the cost is negative? Then the cost is going to be added to the wallet, and if cost is negative enough, then we can get a huge wallet balance.</p>
+
+<p>How do we get a negative cost? Notice the cost is multiplied with n. <code class="language-plaintext highlighter-rouge">cost = cost * n</code>. So, that if we make the n as negative the cost becomes negative.</p>
+
+<p><code class="language-plaintext highlighter-rouge">n</code> is declared as integer , specially a signed integer. So i have to give a number out of signed int range.</p>
+
+<p>signed int range for</p>
+<ul>
+  <li>2 bytes(-32,768 to 32,767)</li>
+  <li>4 bytes(-2,147,483,648 to 2,147,483,647)</li>
+</ul>
+
+<p>The input is multiplied with 1000 and to get an overflow we have to enter a number which gives the result greater than 2,147,483,647.
+So, if i enter number greater than 21474835 the result will be in out of range.</p>
+
+<p>Lets Get That Fa Fa Flag .. <code class="language-plaintext highlighter-rouge">*_~</code></p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>gcc food-court-overflow.c
+<span class="nv">$ </span>./a.out
+Welcome to RGUKT Food Court!
+We are giving free 200 RS wallet amount to our online customers.
+Sadly, you dont have enough money to buy the tastiest dish named Flag :/? Or is it? 
+
+Wallet Amount Rs200.
+Menu: 
+1. Noodles: 50
+2. Biryani: 100
+3. Soft Drink: 20
+4. Flag: Rs 1000
+0. Logout
+
+Which item would you like to Order?
+<span class="o">&gt;</span> 4
+Input the number of buy the todays special dish - flag you want to buy?
+<span class="o">&gt;</span> 21474836
+That will cost Rs-480.
+Order placed!
+InvaderCTF<span class="o">{</span>this_is_not_flag_flag_is_on_the_remote_server<span class="o">}</span>
+Wallet Amount Rs680.
+Menu: 
+1. Noodles: 50
+2. Biryani: 100
+3. Soft Drink: 20
+4. Flag: Rs 1000
+0. Logout
+
+Which item would you like to Order?
+<span class="o">&gt;</span>
+</code></pre></div></div>
+<p>I got the flag here but it says we have to do same process in the remote server to get the original flag.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">The original flag : InvaderCTF{Enjoy_the_fine_F1aG_d1sh_01212124}</code></p>
+</blockquote>
+
+<hr />

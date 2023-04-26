@@ -1,0 +1,165 @@
+<p>Hi mates!,</p>
+
+<p>Mj0ln1r is here, this time with another simple project named “PythonZipCracker” developed with python.</p>
+
+<p>As you know i am learning and building some simple python automated tools. PythonZipCracker is my third tool which is programmed by my own knowledge.</p>
+
+<p>I wrote this script called <code class="language-plaintext highlighter-rouge">PythonZipCracker</code> in python. I learned <code class="language-plaintext highlighter-rouge">pyzipper and zipfile</code> modules in python.</p>
+
+<p>So, here’s a brief information about my simple PythonZipCracker.</p>
+
+<h1 id="pythonzipcracker">PythonZipCracker</h1>
+
+<p>This is a multiway password protected zip file cracker. The script is developed using python which can perform following tasks.</p>
+
+<ol>
+  <li>It can crack the password of a zip file with the rockyou.txt</li>
+  <li>It can crack the password of a zip file using your own password list</li>
+  <li>It can crack the password of a zip file with the bruteforcing of digits</li>
+</ol>
+
+<p>Let’s explore the main()</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+	<span class="n">zfile</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter absolute path of the zip file : "</span><span class="p">)</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isfile</span><span class="p">(</span><span class="n">zfile</span><span class="p">):</span>
+		<span class="nf">print</span><span class="p">(</span><span class="n">zfile</span><span class="p">,</span><span class="s">" is not found.."</span><span class="p">)</span>
+		<span class="nf">exit</span><span class="p">()</span>
+	<span class="nb">dir</span> <span class="o">=</span> <span class="n">zfile</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nf">len</span><span class="p">(</span><span class="n">zfile</span><span class="p">)</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+	<span class="k">if</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isdir</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
+		<span class="nf">print</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="s">"is already present.. extracting may leads to overwrite of old files."</span><span class="p">)</span>
+		<span class="nf">exit</span><span class="p">()</span>
+	<span class="nf">print</span><span class="p">(</span><span class="s">"""
+Select method 
+	1. Crack using built-in wordlist
+	2. Crack with custom wordlist
+	3. Crack using bruteforce method
+	0. Exit
+		"""</span><span class="p">)</span>
+	<span class="n">choice</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="nf">input</span><span class="p">(</span><span class="s">"Enter your choice[1/2/3/0] : "</span><span class="p">))</span>
+	<span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">:</span>
+		<span class="nf">rocku</span><span class="p">(</span><span class="n">zfile</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">2</span> <span class="p">:</span>
+		<span class="n">wfile</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter the absolute path of your password list: "</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="p">.</span><span class="n">path</span><span class="p">.</span><span class="nf">isfile</span><span class="p">(</span><span class="n">wfile</span><span class="p">):</span>
+			<span class="nf">print</span><span class="p">(</span><span class="n">wfile</span><span class="p">,</span><span class="s">" is not found.."</span><span class="p">)</span>
+			<span class="nf">exit</span><span class="p">()</span>
+		<span class="nf">custom_passwd</span><span class="p">(</span><span class="n">zfile</span><span class="p">,</span><span class="n">wfile</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">3</span> <span class="p">:</span>
+		<span class="nf">print</span><span class="p">(</span><span class="s">"""
+----------------------------------------------------------------------------
+Bruteforcing method takes too much of time and system resources to perform..
+Use this method to crack the passwords of length upto 4 only.
+And the passwords are combination of digits only.
+----------------------------------------------------------------------------
+			"""</span><span class="p">)</span>
+		<span class="n">passlen</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="nf">input</span><span class="p">(</span><span class="s">"Enter the length of password[Note: &lt;5] : "</span><span class="p">))</span>
+		<span class="nf">bruteforce</span><span class="p">(</span><span class="n">zfile</span><span class="p">,</span><span class="n">passlen</span><span class="p">)</span>
+	<span class="k">else</span> <span class="p">:</span>
+		<span class="nf">exit</span><span class="p">()</span>
+</code></pre></div></div>
+<p>The main() function is printing the menu of the script and performing the input files are validations.
+If the user chooses built-in wordlist method to crack the zip file then the <code class="language-plaintext highlighter-rouge">rocku()</code> function will be invoked.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">rocku</span><span class="p">(</span><span class="n">zfile</span><span class="p">):</span>
+	<span class="n">wordlist</span> <span class="o">=</span> <span class="nf">open</span><span class="p">(</span><span class="s">"rockyou.txt"</span><span class="p">,</span><span class="s">"r"</span><span class="p">)</span>
+	<span class="k">with</span> <span class="n">pyzipper</span><span class="p">.</span><span class="nc">AESZipFile</span><span class="p">(</span><span class="n">zfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">wordlist</span><span class="p">:</span>
+			<span class="n">pwd</span> <span class="o">=</span> <span class="nf">bytes</span><span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="nf">strip</span><span class="p">(),</span><span class="s">"utf-8"</span><span class="p">)</span>
+			<span class="nf">print</span><span class="p">(</span><span class="s">"[-] Checking password : "</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+			<span class="k">try</span><span class="p">:</span>
+				<span class="n">zf</span><span class="p">.</span><span class="nf">extractall</span><span class="p">(</span><span class="n">pwd</span> <span class="o">=</span> <span class="n">pwd</span><span class="p">)</span>
+				<span class="nf">print</span><span class="p">(</span><span class="mi">50</span><span class="o">*</span><span class="s">"*"</span><span class="p">)</span>
+				<span class="nf">print</span><span class="p">(</span><span class="s">"[+] Password is found : "</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+				<span class="nf">print</span><span class="p">(</span><span class="s">"Files in "</span><span class="p">,</span><span class="n">zfile</span><span class="p">)</span>
+				<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">zf</span><span class="p">.</span><span class="nf">namelist</span><span class="p">():</span>
+					<span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\t</span><span class="s">"</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
+				<span class="nf">print</span><span class="p">(</span><span class="mi">50</span><span class="o">*</span><span class="s">"*"</span><span class="p">)</span>
+				<span class="k">break</span>
+		
+			<span class="k">except</span><span class="p">:</span>
+				<span class="k">continue</span>
+</code></pre></div></div>
+<p>The rocku() function is opening the rockyou.txt file in read mode and the zip file is opened using the pyzipper module. Then it is iterating over the each password in the rockyou.txt file and converting it into bytes. The password bytes is given as arguement to the extractall() function. If the password is found then the files will be extracted and the list of files and the password will be printed on screen.</p>
+
+<p>If the user chooses custom wordlist method to crack zip file the <code class="language-plaintext highlighter-rouge">custom_password()</code> function will be invoked.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">custom_passwd</span><span class="p">(</span><span class="n">zfile</span><span class="p">,</span><span class="n">wfile</span><span class="p">):</span>
+	<span class="n">wordlist</span> <span class="o">=</span> <span class="nf">open</span><span class="p">(</span><span class="n">wfile</span><span class="p">,</span><span class="s">"r"</span><span class="p">)</span>
+	<span class="k">with</span> <span class="n">pyzipper</span><span class="p">.</span><span class="nc">AESZipFile</span><span class="p">(</span><span class="n">zfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">wordlist</span><span class="p">:</span>
+			<span class="n">pwd</span> <span class="o">=</span> <span class="nf">bytes</span><span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="nf">strip</span><span class="p">(),</span><span class="s">"utf-8"</span><span class="p">)</span>
+			<span class="nf">print</span><span class="p">(</span><span class="s">"[-] Checking password : "</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+			<span class="k">try</span><span class="p">:</span>
+				<span class="n">zf</span><span class="p">.</span><span class="nf">extractall</span><span class="p">(</span><span class="n">pwd</span> <span class="o">=</span> <span class="n">pwd</span><span class="p">)</span>
+				<span class="nf">print</span><span class="p">(</span><span class="mi">50</span><span class="o">*</span><span class="s">"*"</span><span class="p">)</span>
+				<span class="nf">print</span><span class="p">(</span><span class="s">"[+] Password is found : "</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+				<span class="nf">print</span><span class="p">(</span><span class="s">"Files in "</span><span class="p">,</span><span class="n">zfile</span><span class="p">)</span>
+				<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">zf</span><span class="p">.</span><span class="nf">namelist</span><span class="p">():</span>
+					<span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\t</span><span class="s">"</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
+				<span class="nf">print</span><span class="p">(</span><span class="mi">50</span><span class="o">*</span><span class="s">"*"</span><span class="p">)</span>
+				<span class="k">break</span>
+		
+			<span class="k">except</span><span class="p">:</span>
+				<span class="k">continue</span>
+
+</code></pre></div></div>
+<p>The custom_password() function is doing the same thing as the rocku() function. Along with the zipfile the custom wordlist is needed to proceed.</p>
+
+<p>If the user chooses bruteforce method the <code class="language-plaintext highlighter-rouge">bruteforce()</code> method will be invoked.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">bruteforce</span><span class="p">(</span><span class="n">zfile</span><span class="p">,</span><span class="n">passlen</span><span class="p">):</span>
+
+	<span class="k">with</span> <span class="n">pyzipper</span><span class="p">.</span><span class="nc">AESZipFile</span><span class="p">(</span><span class="n">zfile</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+		<span class="n">total_passwords</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">passlen</span><span class="o">*</span> <span class="s">"9"</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">total_passwords</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+			<span class="n">pwd</span> <span class="o">=</span> <span class="nf">bytes</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="s">"utf-8"</span><span class="p">)</span>
+			<span class="nf">print</span><span class="p">(</span><span class="s">"[-] Checking password : "</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+			<span class="k">try</span><span class="p">:</span>
+				<span class="n">zf</span><span class="p">.</span><span class="nf">extractall</span><span class="p">(</span><span class="n">pwd</span> <span class="o">=</span> <span class="n">pwd</span><span class="p">)</span>
+				<span class="nf">print</span><span class="p">(</span><span class="mi">50</span><span class="o">*</span><span class="s">"*"</span><span class="p">)</span>
+				<span class="nf">print</span><span class="p">(</span><span class="s">"[+] Password is found : "</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+				<span class="nf">print</span><span class="p">(</span><span class="s">"Files in "</span><span class="p">,</span><span class="n">zfile</span><span class="p">)</span>
+				<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">zf</span><span class="p">.</span><span class="nf">namelist</span><span class="p">():</span>
+					<span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\t</span><span class="s">"</span><span class="p">,</span><span class="n">f</span><span class="p">)</span>
+				<span class="nf">print</span><span class="p">(</span><span class="mi">50</span><span class="o">*</span><span class="s">"*"</span><span class="p">)</span>
+				<span class="k">break</span>
+		
+			<span class="k">except</span><span class="p">:</span>
+				<span class="k">continue</span>
+
+</code></pre></div></div>
+<p>A brute force attack is a hacking method that uses trial and error to crack passwords, login credentials, and encryption keys. It is a simple yet reliable tactic for gaining unauthorized access to individual accounts and organizations’ systems and networks. The hacker tries multiple usernames and passwords, often using a computer to test a wide range of combinations, until they find the correct login information.
+The brute force approach is inefficient. For real-time problems, algorithm analysis often goes above the O(N!) order of growth.</p>
+
+<p>As it is very time consuming for the long passwords i recommend to use this method for the passwords upto the length of 6. And this passwords are the combination of digits only.</p>
+
+<h3 id="requirements">Requirements</h3>
+
+<p>You require these additional modules</p>
+
+<ol>
+  <li>pyzipper</li>
+</ol>
+
+<p>These modules will be pre installed on every system, if not then install them with <code class="language-plaintext highlighter-rouge">pip3 or pip</code></p>
+
+<p><strong>You need to download rockyou.txt and paste it in PythonZipCracker folder</strong></p>
+<blockquote>
+  <p>Rockyou.txt : <a href="https://www.kaggle.com/datasets/wjburns/common-password-list-rockyoutxt">https://www.kaggle.com/datasets/wjburns/common-password-list-rockyoutxt</a></p>
+</blockquote>
+
+<h3 id="installation">Installation</h3>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/TheMj0ln1r/PythonZipCracker.git
+cd PythonZipCracker
+python3 crack.py
+</code></pre></div></div>
+<h3 id="preview">Preview</h3>
+
+<p><img src="/assets/img/project_img/pythonzipcrack.png" alt="Preview" w="600&quot;,h=&quot;600" /></p>
+
+<blockquote class="prompt-info">
+  <p>If anything should be modified in the script please let me know.</p>
+</blockquote>
+
+<p>You can find complete source code of PythonZipCracker here : <a href="https://github.com/TheMj0ln1r/PythonZipCracker">https://github.com/TheMj0ln1r/PythonZipCracker</a></p>

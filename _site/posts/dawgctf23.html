@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-DawgCTF 2023</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>DawgCTF 2023 | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="DawgCTF 2023" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hello Matesssss! I played DawgCTF 2023 which was happened from 21 Apr to 23 Apr. I played it with the team Invaders0x1." />
+<meta property="og:description" content="Hello Matesssss! I played DawgCTF 2023 which was happened from 21 Apr to 23 Apr. I played it with the team Invaders0x1." />
+<link rel="canonical" href="http://localhost:8000/posts/dawgctf23" />
+<meta property="og:url" content="http://localhost:8000/posts/dawgctf23" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-04-24T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="DawgCTF 2023" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2023-04-24T00:00:00+05:30","datePublished":"2023-04-24T00:00:00+05:30","description":"Hello Matesssss! I played DawgCTF 2023 which was happened from 21 Apr to 23 Apr. I played it with the team Invaders0x1.","headline":"DawgCTF 2023","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/posts/dawgctf23"},"url":"http://localhost:8000/posts/dawgctf23"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div class="head-parent">
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat DawgCTF</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>DawgCTF 2023</h2>
+  <time datetime="2023-04-24T00:00:00+05:30" class="by-line">24 Apr 2023</time>
+  <p>Hello Matesssss! 
+I played <a href="https://ctftime.org/event/1974" target="_blank">DawgCTF 2023</a> which was happened from  21 Apr to 23 Apr. I played it with the team <a href="https://ctftime.org/team/217079">Invaders0x1</a>.</p>
+
+<p>This time its a BANGG… Yes, we ranked <strong><code class="language-plaintext highlighter-rouge">Top 6</code></strong> globally. Yes, we <strong><code class="language-plaintext highlighter-rouge">Invaders0x1</code></strong> got 6th in <strong>DawgCTF2023</strong>. I got one first blood 🩸 and we are in the top solvers list in many challenges.</p>
+
+<p><img src="/assets/img/post_img/dawg_progress.png" class="autoimg" /></p>
+
+<h1 id="crypto">Crypto</h1>
+
+<h1 id="you-step-away-for-just-one-minute-">You step away for just ONE minute! 🩸</h1>
+
+<p><img src="/assets/img/post_img/dawg_youstep.png" alt="step away" /></p>
+
+<p>Cipher text : <code class="language-plaintext highlighter-rouge">wTw13!!5aC{_vs1gDgF30_bn}</code></p>
+
+<p>I know this is a transposition cipher. Immediately I used <a href="https://www.dcode.fr/transposition-cipher" target="_blank">this site</a> and bruteforced the cipher to get the flag.</p>
+
+<p>I saw someone(smart) used this program to solve.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scramble</span> <span class="o">=</span> <span class="s">"wTw13!!5aC{_vs1gDgF30_bn}"</span>
+<span class="n">idx</span><span class="o">=</span> <span class="n">scramble</span><span class="p">.</span><span class="nf">index</span><span class="p">(</span><span class="s">'D'</span><span class="p">)</span>
+<span class="n">flag</span> <span class="o">=</span> <span class="s">""</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">scramble</span><span class="p">)):</span>
+    <span class="n">flag</span> <span class="o">+=</span> <span class="n">scramble</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">idx</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)</span><span class="o">%</span> <span class="nf">len</span><span class="p">(</span><span class="n">scramble</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span> 
+</code></pre></div></div>
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DawgCTF{w3_10v3_s!b1!ng5}</code></p>
+</blockquote>
+
+<h1 id="birds">Birds!</h1>
+
+<p><img src="/assets/img/post_img/dawg_birds.png" alt="birds" /></p>
+
+<p>And a quick search on google results <code class="language-plaintext highlighter-rouge">bird on the wire cipher</code></p>
+
+<p>Solved the chall using  <a href="https://www.dcode.fr/birds-on-a-wire-cipher" target="_blank">this site</a></p>
+
+<p><img src="/assets/img/post_img/dawg_birds1.png" alt="birds" /></p>
+
+<p>Plain text : ONEINHANDORTWOINBUSH</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : ONEINHANDORTWOINBUSH</code></p>
+</blockquote>
+
+<h1 id="choo-choo">Choo Choo!</h1>
+
+<p><img src="/assets/img/post_img/dawg_choo.png" alt="choo" /></p>
+
+<p>Cipher text : D1<em>a4nrCwrs30gt_poC_tu1T3h5!Fk3</em>}{1y31l_r_4</p>
+
+<p>They are talking about rail and i know its <code class="language-plaintext highlighter-rouge">reil fence cipher</code>. And they are hinted that 10, so I used 10 as the key for reilfence cipher.</p>
+
+<p>Using <a href="https://www.boxentriq.com/code-breaking/rail-fence-cipher" target="_blank">this site</a> will be helpful.</p>
+
+<p><img src="/assets/img/post_img/dawg_choo1.png" alt="choo solve" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DawgCTF{1_l1k3_tr41ns_th3y_4r3_5up3r_C0o1!}</code></p>
+</blockquote>
+
+<h1 id="chucks-code">Chuck’s Code</h1>
+
+<p><img src="/assets/img/post_img/dawg_chucks.png" alt="chucks" /></p>
+
+<p>The attached file contains these 0’s</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0 0 00 000 0 0 00 00 0 00 00 0000 0 0000 00 0 0 00000 00 00 0 0000 00 0000 0 000 00 0 0 0 00 0 0 0 00 00 0 0 00 000 0 00 00 0 0 0000 00 0 0 0000 00 000 0 0000 00 0 0 0 00 000 0 000 00 0 0 0 00 0 0 000 00 000 0 0000 00 0 0 0 00 0 0 000 00 0 0 0000000 00 0 0 000 00 00 0 00 00 0000 0 000 00 00 0 0 00 0 0 000 00 00 0 0 00 00 0 00 00 000 0 0000 00 00 0 000 00 0 0 00000000 00 00000 0 00 00 0000 0 000 00 0 0 000 00 0 0 00 00 00 0 00000 00 00 0 0 00 0 0 000 00 00 0 00 00 0 0 0 00 0000 0 000000 00 0 0 0
+</code></pre></div></div>
+<p>Searched on google for <code class="language-plaintext highlighter-rouge">chucks cipher</code> to confirm wheather it is existed or not. Found that it is existed! Used <a href="https://www.dcode.fr/chuck-norris-code" target="_blank">this site</a> and selected 7-bit ASCII encoding. And decrypted the flag.</p>
+
+<p><img src="/assets/img/post_img/dawg_chucks1.png" alt="chuckssolve" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag: DawgCTF{chuck_n0rr1s_p0w3rs!}</code></p>
+</blockquote>
+
+<h1 id="thermodynamic-analysis">Thermodynamic Analysis</h1>
+
+<p><img src="/assets/img/post_img/dawg_thermo.png" alt="thermo" /></p>
+
+<p>The attached file contains these physics formales.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>D=1/2mv^2 (force * displacement) = 1/2 * mass * velocity^2 + alpha
+w=fd (force * displacement) with respect to displacement lag
+Cp=20.79 J/K/Mol for a constant pressure ONLY FOR OUTPUT
+FINAL TEMPERATURE ALWAYS COMES FIRST BECAUSE THE TEMPERATURE DELTA IS INSIDE {
+temperature min, temperature max}, like with
+e=u+pVr
+m=0
+dU=mcdT and remember that sometimes mcdT can be a dy
+nA is number of moles of gas A/B^4
+mA*cA*∆T=cB*cB*∆T when two things are equalizing i.e and indirect carnot cycli
+c, such as with the following equation: 2500kg*cA*(500-400)=cB*cB*∆T*5
+s=ksubb * ln * omega * tau
+cv=12.47J/K/Mol for a constant vol, Klevin is k
+s=integral from vi to vf of (1/T *dU) for a general delta!
+}]\d\wa\dT
+h=W/ti (Power) = Work / time elapsed in seconds i
+sv=dx/dm, aka momentum i
+singleton particles are usually carrying a charged ion
+0*pe=mgh aka potential energy with respect to gravity zeroed to t
+p=x^8/fd+a
+radial work=fd force * displacement
+overall pv=nrt (pressure * volume) = (quantity of gas) * (avagadro's num) * temp f
+the equilibrium pos of a container filled with ideal gas h
+extended to a near symmetrical distribution of constant mass f
+less than with uniform distribution=(nA/(na+nB))*L where L=na
+g+nA is number of moles of gas A/B!
+Total num of states = (Volf/Voli)^n
+mA*cA*∆T=cB*cB*∆T when two things are equalizing via direct conduction
+Qa=Qb (heat lost equals heat gained, because of conservation of energy,
+ use this to solve for etc)
+∆T=(Tf-Ti) (when temperature is decreasing, this becomes (Ti - Tf))
+When we have a material that changes states, i.e ice to water,
+our equation should look something like this:
+Q=m*cA*(Tm-Ti) + m*cB*(T-Tm) + m*L (where cA is the specific heat of the initi
+al state, cB is the specific heat of the state it transforms into, and
+L is the latent heat of fusion for that state change, and Tm is the temp
+at which the state change occurs)
+REMEMBER - YOU CAN SET FUNCTIONS EQUAL TO ANOTHER AND CANCEL LIKE TERMS
+(for instance, if kinetic energy is converted completely to heat, you can
+set K=mC∆T and solve even without knowing m)
+REMEMBER - When a material is initially at it's state change point, and
+then is equalized or heated, you ignore 
+U = f/2nRT where R is the gas constant and f is the degrees of freedom
+p is pascals, v is volume in m, n is moles, R is 8.314, T is kelvin temp
+∆S = Change in entropy
+∆U = n Cp ∆T where U is internal energy of an ideal gas
+KE=3/2nRT
+Avg Kinetic Energy per Molecule
+KE=3/2KbT
+Average velocity of atoms in an ideal gas
+V = sqrt(3RT/m) (Where R is 8.314, and m is atomic mass * Avagadro)
+∆L=L0α(∆T) 
+∆Q = m * Csteel * (∆T)
+W=P*∆V
+Cv=12.47J/K/Mol for a constant vol
+Cp=20.79 J/K/Mol for a constant pressure
+avagadro's number - 8.314
+In general, ∆S=integral from vi to vf of (1/T *dU)
+for constant temp, this is ∆S = ∆U/T
+for changing temp, this is ∆S = m*c*ln(Tf/Ti)
+USE KELVIN FOR ENTROPY
+∆U=Q=mc∆T
+dU=mcdT
+
+Lice*Mice+MiWater*CiWater*(T-273.15)=Mwater*Cwater*(363.15-T)
+100*333500+100*4200*(T-273.15)=500*4200*(363.15-T)
+
+Eice=33350000/273=122000
+Eiwater=100*4200*ln(334.9/273.15)=85600.5716825
+Ewater=500*4200*ln(334.9/363.15)=-510199.151188
+T=334.915873016
+</code></pre></div></div>
+
+<p>When I closesly observed the text, I found that the first line starts with <code class="language-plaintext highlighter-rouge">D</code> and ends with <code class="language-plaintext highlighter-rouge">a</code> , Seconds line starts with <code class="language-plaintext highlighter-rouge">w</code> ends with <code class="language-plaintext highlighter-rouge">g</code>. It is the flag format nd thats the solution, I wrote this simple<br />
+<code class="language-plaintext highlighter-rouge">solve.py</code> to print the flag.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="s">"STUDYME.txt"</span><span class="p">,</span><span class="s">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">readlines</span><span class="p">()</span>
+<span class="c1"># print(l)
+</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">i</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">end</span><span class="o">=</span><span class="s">""</span><span class="p">)</span>
+
+<span class="c1"># DawgCTF{therm0dyn4mic5sucks!}
+</span></code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag: DawgCTF{therm0dyn4mic5sucks!}</code></p>
+</blockquote>
+
+<h1 id="table-for-you">Table for you</h1>
+
+<p><img src="/assets/img/post_img/dawg_table.png" alt="table" /></p>
+
+<p>Attached file : <a href="https://drive.google.com/drive/folders/1e3dbEyP17r7jjPAqTp7_i0ZfaSn0PDA1" target="_blank">ahahahwhatsthemagicword(notgoodbytes).zip</a></p>
+
+<p>I didnt solved it during CTF. I was 10 min late to solve it :(</p>
+
+<p>The zip file given is password encrypted, I tried to crack it using <code class="language-plaintext highlighter-rouge">john</code> its not worked. Then i searched for <code class="language-plaintext highlighter-rouge">ahahah whats the magic word</code> on google, found that it was a dialogue from Jurassic Park movie. After reading few articles, I found that the magic word is <code class="language-plaintext highlighter-rouge">please</code>.</p>
+
+<p>With <code class="language-plaintext highlighter-rouge">please</code> as password the zip is extracted <code class="language-plaintext highlighter-rouge">ahahahwhatsthemagicword.db</code>. Opened it using <a href="https://inloop.github.io/sqlite-viewer/" target="_blank">sqlite online viewer</a>.</p>
+
+<p><img src="/assets/img/post_img/dawg_table1.png" alt="tablesql" /></p>
+
+<p>The database had a table with garbage values. Actually all are not garbage, one row has the flag. I used online cipher identifier to identify the cipher type. The result is <code class="language-plaintext highlighter-rouge">base62</code> so i bruteforced all the 1024 lines of data with base62 decode. And the CTF was ended <code class="language-plaintext highlighter-rouge">-_-</code></p>
+
+<p>Later I got to know about it was <code class="language-plaintext highlighter-rouge">bas64</code> and the <code class="language-plaintext highlighter-rouge">==</code> was removed by the challenge auther. <code class="language-plaintext highlighter-rouge">^_^</code></p>
+
+<p>I found that the row with id <code class="language-plaintext highlighter-rouge">64545</code> has the base64 encoded strings</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RUVFRUVFRUVFZUVFRWVFRUVFRUVFRUVFRWVlRUVFRWVFRUVFRUVFRUVlZWVFZWVlRUVFRUVFRUVFZWVFRWVlZUVFRUVFRUVFRWVFRUVFZWVFRUVFRUVFRUVlRWVFZUVFRUVFRUVFRUVFZUVFRWVlRUVFRUVFRUVFRWVlZWVFZWVFRUVFRUVFRUVlZWVlRUVlRUVFRUVFRUVFRWVlRUVFRUVFRUVFRUVFRWVlZUVlRWVFRUVFRUVFRUVlRWVlZWVlRUVFRUVFRUVFZWVFZUVlZUVFRUVFRUVFRWVlRWVlZUVFRUVFRUVFRUVFZWVFRWVlRUVFRUVFRUVFZWVlRWVlZUVFRUVFRUVFRWVFZWVlZWVFRUVFRUVFRUVlZWVFZUVFRUVFRUVFRUVFZWVFZUVFRUVFRUVFRUVFRUVlZUVFZWVFRUVFRUVFRUVlRWVlZWVlRUVFRUVFRUVFZWVFZWVFZUVFRUVFRUVFRUVlZUVlRUVFRUVFRUVFRUVlZUVFZWVlRUVFRUVFRUVFRWVlRUVFZUVFRUVFRUVFRWVlRUVFZWVFRUVFRUVFRUVlRWVlZWVlRUVFRUVFRUVFZWVlRWVlZUVFRUVFRUVFRUVlZUVFRUVFRUVFRUVFRUVlZWVFRWVFRUVFRUVFRUVFZWVFRWVFRUVFRUVFRUVFRUVlRUVFRWVFRUVFRUVFRUVlZWVlZUVl
+</code></pre></div></div>
+<p>Added <code class="language-plaintext highlighter-rouge">==</code> at the end and decoded it from base64.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>EEEEEEEEEeEEEeEEEEEEEEEEEeeEEEEeEEEEEEEEEeeeEeeeEEEEEEEEEeeEEeeeEEEEEEEEEeEEEEeeEEEEEEEEEeEeEeEEEEEEEEEEEeEEEeeEEEEEEEEEEeeeeEeeEEEEEEEEEeeeeEEeEEEEEEEEEEeeEEEEEEEEEEEEEeeeEeEeEEEEEEEEEeEeeeeeEEEEEEEEEeeEeEeeEEEEEEEEEeeEeeeEEEEEEEEEEEeeEEeeEEEEEEEEEeeeEeeeEEEEEEEEEeEeeeeeEEEEEEEEEeeeEeEEEEEEEEEEEeeEeEEEEEEEEEEEEEeeEEeeEEEEEEEEEeEeeeeeEEEEEEEEEeeEeeEeEEEEEEEEEEeeEeEEEEEEEEEEEeeEEeeeEEEEEEEEEEeeEEEeEEEEEEEEEeeEEEeeEEEEEEEEEeEeeeeeEEEEEEEEEeeeEeeeEEEEEEEEEEeeEEEEEEEEEEEEEeeeEEeEEEEEEEEEEeeEEeEEEEEEEEEEEEeEEEEeEEEEEEEEEeeeeeEe
+</code></pre></div></div>
+
+<p>Marked <code class="language-plaintext highlighter-rouge">E = 0</code> and <code class="language-plaintext highlighter-rouge">e = 1</code> Then converted binary to ascii and got the flag.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>000000000100010000000000011000010000000001110111000000000110011100000000010000110000000001010100000000000100011000000000011110110000000001111001000000000011000000000000011101010000000001011111000000000110101100000000011011100000000000110011000000000111011100000000010111110000000001110100000000000110100000000000001100110000000001011111000000000110110100000000001101000000000001100111000000000011000100000000011000110000000001011111000000000111011100000000001100000000000001110010000000000110010000000000001000010000000001111101
+</code></pre></div></div>
+
+<p>Converting this binary string to ASCII will give us the flag.</p>
+
+<hr />
+
+<h1 id="fwn">FWN</h1>
+
+<p>Lets get into <strong>ForensicsWebNetwork</strong> Challenges. We solved all the challenges from <strong>FWN</strong> category, these are the challenges i solved in CTF.</p>
+
+<h1 id="reapeter-never-heard-of-er">Reapeter? Never heard of ‘er!</h1>
+
+<p><img src="/assets/img/post_img/dawg_repeater.png" alt="repeater" /></p>
+
+<p>Searched for <code class="language-plaintext highlighter-rouge">MD repeater database</code> on google and found <a href="https://levinecentral.com/repeaters/google_mapping.php" target="_blank">this site</a>.</p>
+
+<p>As the challenge description says that we have to find the closest maryland MD repeater to Green Ridge Forest on 6m channel.</p>
+
+<p><img src="/assets/img/post_img/dawg_repeater1.png" class="autoimg" /></p>
+
+<p>As we can see the repeater located in Cumberland has the closest distance from Green Ridge Forest. And the flag is the call sign of this tower i.e, <code class="language-plaintext highlighter-rouge">N8YIB</code></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DawgCTF{N8YIB}</code></p>
+</blockquote>
+
+<h1 id="these-names">These Names</h1>
+
+<p><img src="/assets/img/post_img/dawg_thesenames.png" alt="these names" /></p>
+
+<p>Again I had no clue on this challenge, searched these options on google. I got to know that they are talking about <code class="language-plaintext highlighter-rouge">ldap</code> connection. After searching a while I found a way to connect ldap server using these creds.</p>
+
+<p>Connetion to ldap server.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/thesenames<span class="nv">$ </span>ldapsearch <span class="nt">-x</span> <span class="nt">-D</span> <span class="s2">"cn=guest,dc=initech,dc=com"</span> <span class="nt">-W</span> <span class="nt">-H</span> ldap://130.85.56.42:4389 <span class="nt">-b</span> <span class="s2">"cn=guest,dc=initech,dc=com"</span> <span class="o">&gt;&gt;</span> guest_result.txt
+</code></pre></div></div>
+<p>This will save the output of the ladap server in <code class="language-plaintext highlighter-rouge">guest_result.txt</code>.</p>
+
+<p>Sample data in guest_result.txt</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># extended LDIF
+#
+# LDAPv3
+# base &lt;cn=guest,dc=initech,dc=com&gt; with scope subtree
+# filter: (objectclass=*)
+# requesting: ALL
+#
+
+# guest, , initech.com
+dn: cn=guest,ou=,dc=initech,dc=com
+cn: guest
+uid: guest
+ou:
+uidNumber: 0
+accountStatus: active
+objectClass: posixAccount
+objectClass: shadowAccount
+loginShell: /bin/bash
+homeDirectory: /home/guest
+description: guest
+gecos: guest
+gidNumber: 0
+shadowExpire: -1
+shadowFlag: 134538308
+shadowInactive: -1
+shadowLastChange: 11000
+shadowMax: 99999
+shadowMin: -1
+shadowWarning: 7
+
+# blumbergh, executives, initech.com
+dn: cn=blumbergh,ou=executives,dc=initech,dc=com
+cn: blumbergh
+uid: blumbergh
+givenName: Bill
+ou: executives
+uidNumber: 0
+accountStatus: active
+objectClass: posixAccount
+objectClass: shadowAccount
+loginShell: /bin/bash
+homeDirectory: /home/blumbergh
+description: blumbergh
+gecos: blumbergh
+gidNumber: 100
+memberOf: ou=executives,ou=groups,dc=initech,dc=com
+shadowExpire: -1
+shadowFlag: 134538308
+shadowInactive: -1
+shadowLastChange: 11000
+shadowMax: 99999
+shadowMin: -1
+shadowWarning: 7
+</code></pre></div></div>
+
+<p>There are thounsands of similar entries are available in guest_result.txt. The challenge said that I have to find <code class="language-plaintext highlighter-rouge">George</code> from <code class="language-plaintext highlighter-rouge">Engineering</code> department.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># gdingley, engineering, initech.com
+dn: cn=gdingley,ou=engineering,dc=initech,dc=com
+cn: gdingley
+uid: gdingley
+givenName: George
+ou: engineering
+uidNumber: 0
+accountStatus: active
+objectClass: posixAccount
+objectClass: shadowAccount
+loginShell: /bin/bash
+homeDirectory: /home/gdingley
+description: gdingley
+gecos: gdingley
+gidNumber: 400
+memberOf: ou=engineering,ou=groups,dc=initech,dc=com
+shadowExpire: -1
+shadowFlag: 134538308
+shadowInactive: -1
+shadowLastChange: 11000
+shadowMax: 99999
+shadowMin: -1
+shadowWarning: 7
+secretemployeeinformation: RGF3Z0NURntpX2FpbnRfbm9fbGlnaHR3ZWlnaHR9
+</code></pre></div></div>
+
+<p>The secretemployeeinformation looks like a <code class="language-plaintext highlighter-rouge">base64</code> encode. Decoded it and I got the flag.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/thesenames<span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"RGF3Z0NURntpX2FpbnRfbm9fbGlnaHR3ZWlnaHR9"</span> <span class="nb">base64</span> <span class="nt">-d</span>
+DawgCTF<span class="o">{</span>i_aint_no_lightweight<span class="o">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DawgCTF{i_aint_no_lightweight}</code></p>
+</blockquote>
+
+<h1 id="subjectumbcurgent">Subject:UMBC[‘Urgent’]</h1>
+
+<p><img src="/assets/img/post_img/dawg_umbc.png" alt="umbs" /></p>
+
+<p>Attached file: <a href="https://drive.google.com/drive/folders/1EV6IJ4swPBjUBeCnGWfOxunqm8ZdQP2M" target="_blank">UMBC.jpg</a></p>
+
+<p>Checked the hex of image, at the end of image binary bits are present.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/UMBC<span class="nv">$ </span>xxd UMBC.jpg | <span class="nb">tail
+    </span>000a6960: d29e f5d5 14ab 2b41 ebd9 ff00 999f 2d9d  ......+A......-.
+    000a6970: cbf6 0d25 bcc0 2dc4 8d18 fba8 e725 3fdd  ...%..-......%?.
+    000a6980: 6eb8 f639 ab1a ae87 06a7 134a c064 1e66  n..9.......J.d.f
+    000a6990: 45fb a7fd a5ed f515 7a7b 0b2d 6fc3 a7c4  E.......z<span class="o">{</span>.-o...
+    000a69a0: 7a64 4d66 b19d b2db 31ca 839e aa7d 3eb5  zdMf....1....<span class="o">}&gt;</span><span class="nb">.</span>
+    000a69b0: 474c 96f2 16f3 9665 d8c7 e518 e7dc 1f51  GL.....e.......Q
+    000a69c0: 5cb5 2927 b16a 76d4 0110 0011 0100 0111  <span class="se">\.</span><span class="o">)</span><span class="s1">'.jv.........
+    000a69d0: 0100 0110 0111 1010 0110 0011 0011 0001  ................
+    000a69e0: 0100 1110 0011 0000 0101 1010 0101 0111  ................
+    000a69f0: 0110 0011 0011 1101 ffd9                 ..........
+</span></code></pre></div></div>
+
+<p>Tried to convert these bits into ASCII, <a href="https://resources.infosecinstitute.com/topicdefeating-steganography-solutions-to-net-force-ctf-challenges-using-practical-steganalysis/" target="_blank">this writeup</a> have a perl line to convert ascii. (A bit interested on using perl)</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/UMBC<span class="nv">$ </span><span class="nb">echo </span>011000110100011101000110011110100110001100110001010011100011000001011010010101110110001100111101 | perl <span class="nt">-lpe</span> <span class="s1">'$_=pack"B*",$_'</span>
+<span class="nv">cGFzc1N0ZWc</span><span class="o">=</span>
+mj0ln1r@Linux:~/UMBC<span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"cGFzc1N0ZWc="</span> | <span class="nb">base64</span> <span class="nt">-d</span>
+passSteg
+</code></pre></div></div>
+
+<p>Now I tried steghide if there is any data hidden inside image. And before that removed binary bits from the image with <a href="https://hexed.it/" target="_blank">this website</a>. The steghide prompted for password used <code class="language-plaintext highlighter-rouge">passSteg</code> for it and it extracted <code class="language-plaintext highlighter-rouge">f.txt</code> which contains the flag.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/UMBC<span class="nv">$ </span>steghide extract <span class="nt">-sf</span> UMBC_edited.jpg 
+    Enter passphrase: passSteg
+    wrote extracted data to <span class="s2">"f.txt"</span><span class="nb">.</span>
+mj0ln1r@Linux:~/UMBC<span class="nv">$ </span><span class="nb">cat </span>f.txt
+DawgCTF<span class="o">{</span>b1n4ry_64_p4ssw0rd<span class="o">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DawgCTF{b1n4ry_64_p4ssw0rd}</code></p>
+</blockquote>
+
+<h1 id="crags-hardware-challenge">Crags Hardware Challenge</h1>
+
+<p><img src="/assets/img/post_img/dawg_crag.png" alt="crags" /></p>
+
+<p>Attached Files : <a href="https://drive.google.com/drive/folders/1PxzCb__1IlS5I7_FfNLyZig392_VeDaG" target="_blank">hardwarechallenge.wav</a></p>
+
+<p>There is a wav file present in challenge and they are talking about <code class="language-plaintext highlighter-rouge">oscilloscope</code> I dont know what is it. Again a quick google search results it is an intrument to analyze audio. So I searched for online oscilloscope viewer found this site <a href="https://dood.al/oscilloscope/" target="_blank">oscilloscope</a>.</p>
+
+<p>And used the above site to view wav file in oscilloscope and immediately it resulted me the flag.</p>
+
+<p><img src="/assets/img/post_img/dawg_crag1.png" class="autoimg" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DawgCTF{analog_horror}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="misc">Misc</h1>
+
+<h1 id="a-normal-binary-tree">A Normal Binary Tree</h1>
+
+<p><img src="/assets/img/post_img/dawg_normalbinary.png" alt="binary tree" /></p>
+
+<p>Attached File : <a href="https://drive.google.com/file/d/1QWC7HPg2llfFAFBZY9vntYazPfPY-Bg4/view" target="_blank">problem.txt</a></p>
+
+<p>So, we need to build a binary tree with these nodes and the post order traversal of this binary tree will be the flag.</p>
+
+<p>I tried many binary tree programs to do this in online, sadly no one works fine. So I went back to geeksforgeeks and learned binary tree from it and constructed the binary tree, traversed it by hand.</p>
+
+<p>I used <a href="https://kanaka.github.io/rbt_cfs/trees.html" target="_blank">this tool </a>to simulate the binary tree.</p>
+
+<p><img src="/assets/img/post_img/dawg_normalbinary1.png" alt="binary tree sim" /></p>
+
+<p>Noted the post order travesal of nodes in a list and printed the corresponding characters of it.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">18</span><span class="p">,</span> <span class="s">'}'</span><span class="p">),</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="s">'!'</span><span class="p">),</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="s">'_'</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="s">'s'</span><span class="p">),</span> <span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="s">'t'</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="s">'1'</span><span class="p">),</span> <span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="s">'3'</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="s">'t'</span><span class="p">),</span> <span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s">'r'</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s">'F'</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="s">'n'</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s">'C'</span><span class="p">),</span> <span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="s">'0'</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">'a'</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="s">'0'</span><span class="p">),</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="s">'m'</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s">'g'</span><span class="p">),</span> <span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="s">'s'</span><span class="p">),</span> <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="s">'f'</span><span class="p">),</span> <span class="p">(</span><span class="mi">19</span><span class="p">,</span> <span class="s">'3'</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">'D'</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="s">'h'</span><span class="p">),</span> <span class="p">(</span><span class="mi">27</span><span class="p">,</span> <span class="s">'r'</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">'w'</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s">'T'</span><span class="p">),</span> <span class="p">(</span><span class="mi">29</span><span class="p">,</span> <span class="s">'s'</span><span class="p">),</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="s">'_'</span><span class="p">),</span> <span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="s">'_'</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">'{'</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s">'D'</span><span class="p">),</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="s">'t'</span><span class="p">)]</span>
+<span class="n">sorted_data</span> <span class="o">=</span> <span class="nf">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">chars</span> <span class="o">=</span> <span class="s">''</span><span class="p">.</span><span class="nf">join</span><span class="p">([</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">sorted_data</span><span class="p">])</span>
+<span class="n">ans</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">13</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">17</span><span class="p">,</span><span class="mi">16</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">19</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">23</span><span class="p">,</span><span class="mi">27</span><span class="p">,</span><span class="mi">26</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="mi">29</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">18</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ans</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">sorted_data</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">end</span><span class="o">=</span><span class="s">""</span><span class="p">)</span>
+<span class="c1">#DawgCTF{D0nt_m1ss_th3_f0rr3st!}
+</span></code></pre></div></div>
+<p>Later I wrote this complete automated script which doesn’t need paper work by hand.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">class</span> <span class="nc">Node</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">left</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">right</span> <span class="o">=</span> <span class="bp">None</span>
+
+<span class="k">def</span> <span class="nf">insert</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">char</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">node</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nc">Node</span><span class="p">((</span><span class="n">value</span><span class="p">,</span> <span class="n">char</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">node</span><span class="p">.</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">node</span><span class="p">.</span><span class="n">left</span> <span class="o">=</span> <span class="nf">insert</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">left</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">char</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">node</span><span class="p">.</span><span class="n">right</span> <span class="o">=</span> <span class="nf">insert</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">right</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">char</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">node</span>
+
+<span class="k">def</span> <span class="nf">postorder_traversal</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">node</span><span class="p">:</span>
+        <span class="nf">postorder_traversal</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">left</span><span class="p">)</span>
+        <span class="nf">postorder_traversal</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">right</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">end</span><span class="o">=</span><span class="s">''</span><span class="p">)</span>
+
+<span class="c1"># Sample input values
+</span><span class="n">values</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">18</span><span class="p">,</span> <span class="s">'}'</span><span class="p">),</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="s">'!'</span><span class="p">),</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="s">'_'</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="s">'s'</span><span class="p">),</span> <span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="s">'t'</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="s">'1'</span><span class="p">),</span> <span class="p">(</span><span class="mi">22</span><span class="p">,</span> <span class="s">'3'</span><span class="p">),</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="s">'t'</span><span class="p">),</span> <span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s">'r'</span><span class="p">),</span> 
+          <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s">'F'</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="s">'n'</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s">'C'</span><span class="p">),</span> <span class="p">(</span><span class="mi">23</span><span class="p">,</span> <span class="s">'0'</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">'a'</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="s">'0'</span><span class="p">),</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="s">'m'</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s">'g'</span><span class="p">),</span> <span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="s">'s'</span><span class="p">),</span> 
+          <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="s">'f'</span><span class="p">),</span> <span class="p">(</span><span class="mi">19</span><span class="p">,</span> <span class="s">'3'</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">'D'</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="s">'h'</span><span class="p">),</span> <span class="p">(</span><span class="mi">27</span><span class="p">,</span> <span class="s">'r'</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s">'w'</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="s">'T'</span><span class="p">),</span> <span class="p">(</span><span class="mi">29</span><span class="p">,</span> <span class="s">'s'</span><span class="p">),</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="s">'_'</span><span class="p">),</span> 
+          <span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="s">'_'</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">'{'</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="s">'D'</span><span class="p">),</span> <span class="p">(</span><span class="mi">21</span><span class="p">,</span> <span class="s">'t'</span><span class="p">)]</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="bp">None</span>
+<span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="nf">insert</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="nf">postorder_traversal</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>  <span class="c1"># Output: DawgCTF{D0nt_m1ss_th3_f0rr3st!}
+</span></code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag :  DawgCTF{D0nt_m1ss_th3_f0rr3st!}</code></p>
+</blockquote>
+
+<h1 id="ring-ring">Ring Ring</h1>
+
+<p><img src="/assets/img/post_img/dawg_ring.png" alt="ring" /></p>
+
+<p>We have find the state and town of the call made by <code class="language-plaintext highlighter-rouge">(227-759-4976)</code></p>
+
+<p>After surfing the web for a while I found this number on <a href="https://wiki-phones.com/phone/12277594976" target="_blank">this site</a>.</p>
+
+<p><img src="/assets/img/post_img/dawg_ring1.png" alt="ring" /></p>
+
+<p>I observed that the call originated from <code class="language-plaintext highlighter-rouge">USA</code> Now I used USA <code class="language-plaintext highlighter-rouge">country code(+1)</code> to search about phone number.</p>
+
+<p>I got to know about that <code class="language-plaintext highlighter-rouge">227</code> is area code of the number location. Searched for the State of the area code 227. After visiting many sites, I found <a href="https://www.zipdatamaps.com/area-code-227" target="_blank">this map</a>.</p>
+
+<p><img src="/assets/img/post_img/dawg_ring2.png" alt="ring" /></p>
+
+<p>The State is <code class="language-plaintext highlighter-rouge">maryland</code> and the Town is <code class="language-plaintext highlighter-rouge">Cumberland</code>.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DawgCTF{cumberland_maryland}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="pwn">PWN</h1>
+
+<h1 id="strings-things">Strings Things</h1>
+
+<p><img src="/assets/img/post_img/dawg_strings.png" alt="strings" /></p>
+
+<p>Attached file : <a href="https://drive.google.com/drive/folders/1ktBUj4BHeIOu-1WIjdoHcynDkHQPvq0X" target="_blank">secrets</a></p>
+
+<p>As the challenge name suggests, the <code class="language-plaintext highlighter-rouge">strings</code> done the things.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/strings<span class="nv">$ </span>strings secrets
+/lib64/ld-linux-x86-64.so.2
+gE%<span class="k">*</span>
+0?<span class="o">{</span>H
+libstdc++.so.6
+__gmon_start__
+_ITM_deregisterTMCloneTable
+_ITM_registerTMCloneTable
+libm.so.6
+libgcc_s.so.1
+libc.so.6
+puts
+stdin
+<span class="nb">printf
+</span>fgets
+strcspn
+strcmp
+__libc_start_main
+GLIBC_2.2.5
+<span class="o">=</span>m   
+&lt;<span class="o">=</span>t9H
+struct fH
+getsf
+<span class="o">[]</span>A<span class="se">\A</span><span class="o">]</span>A^A_
+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
+RGF3Z0NURntzdHIxbmc1X3cxbmc1fQ
+supers3cr3tpassword
+Enter the password: 
+You did it!
+ The flag is: %s
+Incorrect password. Try again.
+<span class="p">;</span><span class="k">*</span>3<span class="s2">$"
+GCC: (GNU) 8.5.0 20210514 (Red Hat 8.5.0-15)
+GCC: (GNU) 8.5.0 20210514 (Red Hat 8.5.0-16)
+3p1067
+</span></code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">supers3cr3tpassword</code> got my eyes. Normally I started running the binary file and it prompted for password and I used <code class="language-plaintext highlighter-rouge">supers3cr3tpassword</code> and it resulted the flag.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/strings<span class="nv">$.</span>/secrets 
+        Enter the password: supers3cr3tpassword
+        You did it!
+        The flag is: DawgCTF<span class="o">{</span>str1ng5_w1ng5<span class="o">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DawgCTF{str1ng5_w1ng5}</code></p>
+</blockquote>
+
+<h1 id="hello-world">Hello World?</h1>
+
+<p><img src="/assets/img/post_img/dawg_helloworld.png" alt="hello" /></p>
+
+<p>Attached File : <a href="https://drive.google.com/drive/folders/1bYhjapu2xvJhbvwpc0VReuOC64uSkEHv" target="_blank">HelloWorld</a></p>
+
+<p>They said the program workd for any name! I thought that what about if the name is toooo long.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/helloworld<span class="nv">$ </span>./HelloWorld
+    What is Your Name?
+    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    DawgCTF<span class="o">{</span>n4m3_0v3rfl0w<span class="o">}</span>
+</code></pre></div></div>
+<p>The <code class="language-plaintext highlighter-rouge">thought --&gt; flag</code></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DawgCTF{n4m3_0v3rfl0w}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="rev">Rev</h1>
+
+<h1 id="dm-bot">DM Bot!</h1>
+
+<p><img src="/assets/img/post_img/dawg_dmbot1.png" alt="DM" /></p>
+
+<p>Attached File : <a href="https://drive.google.com/drive/folders/1X1oZRNJ1tRWBDn__Z0IGrpzkjZ8z4THp" target="_blank">unclaimed_bot.py</a></p>
+
+<p>The unclaimed_bot.py</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">discord</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">discord</span><span class="p">.</span><span class="nc">Client</span><span class="p">(</span><span class="n">intents</span><span class="o">=</span><span class="n">discord</span><span class="p">.</span><span class="n">Intents</span><span class="p">.</span><span class="nf">default</span><span class="p">())</span>
+
+    <span class="nd">@client.event</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">on_ready</span><span class="p">():</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">'We have logged in as {0.user}'</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">client</span><span class="p">))</span>
+
+    <span class="n">klist</span> <span class="o">=</span> <span class="p">[</span><span class="s">"TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaX"</span><span class="p">,</span><span class="s">"Bpc2NpbmcgZWxpdCwgc2VkIGRvIGVpdXNtb2QgdGVtcG9yIGluY2lkaWR1bnQgdXQgbGFib3JlIGV0IGRvbG9yZSBtYWduYSBhbGlxdWEuIFVybmEgY29uZGltZW50dW0gbWF0dGlzIHBlbGxlbnRlc3F1ZSBpZCBuaWJoIHRvcnRvciBpZCBhbGlxdWV0LiBGYW=="</span><span class="p">,</span><span class="s">"NpbGlzaXMgbWFnbmEgZXRpYW0gdGVtcG9yIG9yY2kgZXUH607JkNwW8rNqyEwI0KsHSXavqGb3iXl0PnPvpa72f8=uIFNhcGllbiBldCBsaWd1bGEgdWxsYW1jb3JwZXIgbWFsZXN1YWRhLiBUcmlzdGlxdWUgbnVsbGE"</span><span class="p">,</span><span class="s">"gYWxpcXVldCBlbmltIHRvcnRvciBhdC4gUXVpcyByaXN1cb'kpXpSMY0j53jg-b-WFChVOmcn5r20RktR66SB3_BYwE='yBzZWQgdnVscHV0YXRlIG9kaW8uIFNhZ2l0dGlzIGFsaXF1YW0gbWFsZXN1YWRhIGJpYmVuZHVt"</span><span class="p">,</span><span class="s">"IGFyY3Ugdml0YWUgZWxlbWRGF3Z0NURns1dDR0MWNfMHJfZHluNG0xYz99VudHVtIGN1cmFiaXR1ci4gSGFiaXRhc3NlIHBsYXRlYSBkaWN0dW1zdCBxdW="</span><span class="p">,</span><span class="s">"lzcXVlIHNhZ2l0dGlzIHB1cnVzIHNpdCBhbWV0LiBQdXJ1cyBncmF2aWRhIHF1aXMgYmxhbmRpdCB0dXJwaXMgY3Vyc3VzIGluIGhhYyBoYWJpdGFzc2UuIFZvbHV0cGF0IGFjIHRpbmNpZHVudCB2aXRhZSBzZW1wZXIuIFF1YW0gZWxlbWVudHVtIHB1b=="</span><span class="p">,</span><span class="s">"HZpbmFyIGV0aWFtIG5vbiBxdWFtIGxhY3VzLiBBbWV0IHRlbGx1cyBjcmFzIGFkaXBpc2NpbmcgZW5pbSBldSB0dXJwaXMgZWdlc3Rhcy4KCkZldWdpYXQgbmlzbCBwcmV0aXVtIGZ1c2NlIGlkIHZlbGl0IHV0IHRvcnRvciBwcmV0aXVtIHZpdmVycmEuIEVuaW0gZGlhbSB2dWxwdXRhdGUgdXQgcGhhcmV0cmEgc2l0IGFtZ"</span><span class="p">,</span><span class="s">"XQuIEZldWdpYXQgcHJldGl1bSBuaWJoIGlwc3VtIGNvbnNlcXVhdCBuaXNsLiBCaWJlbmR1bSB1dCB0cmlzdGlxdWUgZXQgZWdlc3RhcyBxdWlzIGlwc3VtIHN1c3BlbmRpc3NlIHVsdHJpY2VzLiBWaXZlcnJhIGlwc3VtIG51bmMgYWxpcXVldCBi"</span><span class="p">,</span><span class="s">"aWJlbmR1bSBlbmltIGZhY2lsaXNpcyBncmF2aWRhIG5lcXVlLiBDb25zZWN0ZXR1ciBhZGlwaXNjaW5nIGVsaXQgdXQgYWxpcXVhbSBwdXJ1cyBzaXQgYW1ldCBsdWN0dXMuIEVyYXQgdmVsaXQgc2NlbG"</span><span class="p">,</span><span class="s">"VyaXNxdWUgaW4gZGljdHVtIG5vbiBjb25zZWN0ZXR1ciBhIGVyYXQuIERpYW0gc29sbGljaXR1ZGluIHRlbXBvciBpZCBldSBuaXNsIG51bmMgbWkgaXBzdW0uIFJpc3VzIHF1aXMgdmFyaXVzIHF1YW0gcXVpc3F1ZSBpZCBkaWFtIHZlbCBxdWFtIGV"</span><span class="p">,</span><span class="s">"sZW1lbnR1bS4gUG9zdWVyZSBsb3JlbSBpcHN1bSBkb2xvciBzaXQgYW1ldCBjb25zZWN0ZXR1ci4gVWxsYW1jb3JwZXIgbW9yYmkgdGluY2lkdW50IG9ybmFyZSBtYXNzYS4gUXVhbSBhZGlwaXNjaW5nIHZpdGFlIHByb2luIHNhZ2l0dGlzIG5pc2wgcmhvbmN1cy4gRXUgY29uc2VxdWF0IGFjIGZlbGlzIGRvbmVjIGV0IG9kaW8gcGVsbGVudGVzcX"</span><span class="p">,</span><span class="s">"VlIGRpYW0gdm9sdXRwYXQuIEV0IG1hZ25pcyBkaXMgcGFydHVyaWVudCBtb250ZXMgbmFzY2V0dXIuIEFsaXF1YW0gbWFsZXN1YWRhIGJpYmVuZHVtIGFyY3Ugdml0YWUuIEluIG51bGxhIHBvc3VlcmUgc29sbGljaXR1ZGluIGFsaXF1YW0u"</span><span class="p">]</span>
+    <span class="n">mlist</span> <span class="o">=</span> <span class="p">[</span><span class="s">"TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaX"</span><span class="p">,</span><span class="s">"Bpc2NpbmcgZWxpdCwgc2VkIGRvIGVpdXNtb2QgdGVtcG9yIGluY2lkaWR1bnQgdXQgbGFib3JlIGV0IGRvbG9yZSBtYWduYSBhbGlxdWEuIFVybmEgY29uZGltZW50dW0gbWF0dGlzIHBlbGxlbnRlc3F1ZSBpZCBuaWJoIHRvcnRvciBpZCBhbGlxdWV0LiBGYW=="</span><span class="p">,</span><span class="s">"NpbGlzaXMgbWFnbmEgZXRpYW0gdGVtcG9yIG9yY2kgZXUH607Jb'gAAAAABkQfn3TpdZBGFeG4VfZObYKIL3f25CVBupi27swEARiUnK6c6ry6951JgI9lPqbPa3MkJ0Yg5huinb6_SNoTVZp1wdvYiIo3QZd-qb1p-nDsOeX_I='kNwW8rNqyEwI0KsHSXavqGb3iXl0PnPvpa72f8=uIFNhcGllbiBldCBsaWd1bGEgdWxsYW1jb3JwZXIgbWFsZXN1YWRhLiBUcmlzdGlxdWUgbnVsbGE"</span><span class="p">,</span><span class="s">"gYWxpcXVldCBlbmltIHRvcnRvciBhdC4gUXVpcyByaXN1ckpXpSMY0j53jg-b-WFChVOmcn5r20RktR66SB3_BYwE=yBzZWQgdnVscHV0YXRlIG9kaW8uIFNhZ2l0dGlzIGFsaXF1YW0gbWFsZXN1YWRhIGJpYmVuZHVt"</span><span class="p">,</span><span class="s">"IGFyY3Ugdml0YWUgZWxlbWRGF3Z0NURns1dDR0MWNfMHJfZHluNG0xYz99VudHVtIGN1cmFiaXR1ci4gSGFiaXRhc3NlIHBsYXRlYSBkaWN0dW1zdCBxdW="</span><span class="p">,</span><span class="s">"lzcXVlIHNhZ2l0dGlzIHB1cnVzIHNpdCBhbWV0LiBQdXJ1cyBncmF2aWRhIHF1aXMgYmxhbmRpdCB0dXJwaXMgY3Vyc3VzIGluIGhhYyBoYWJpdGFzc2UuIFZvbHV0cGF0IGFjIHRpbmNpZHVudCB2aXRhZSBzZW1wZXIuIFF1YW0gZWxlbWVudHVtIHB1b=="</span><span class="p">,</span><span class="s">"HZpbmFyIGV0aWFtIG5vbiBxdWFtIGxhY3VzLiBBbWV0IHRlbGx1cyBjcmFzIGFkaXBpc2NpbmcgZW5pbSBldSB0dXJwaXMgZWdlc3Rhcy4KCkZldWdpYXQgbmlzbCBwcmV0aXVtIGZ1c2NlIGlkIHZlbGl0IHV0IHRvcnRvciBwcmV0aXVtIHZpdmVycmEuIEVuaW0gZGlhbSB2dWxwdXRhdGUgdXQgcGhhcmV0cmEgc2l0IGFtZ"</span><span class="p">,</span><span class="s">"XQuIEZldWdpYXQgcHJldGl1bSBuaWJoIGlwc3VtIGNvbnNlcXVhdCBuaXNsLiBCaWJlbmR1bSB1dCB0cmlzdGlxdWUgZXQgZWdlc3RhcyBxdWlzIGlwc3VtIHN1c3BlbmRpc3NlIHVsdHJpY2VzLiBWaXZlcnJhIGlwc3VtIG51bmMgYWxpcXVldCBi"</span><span class="p">,</span><span class="s">"aWJlbmR1bSBlbmltIGZhY2lsaXNpcyBncmF2aWRhIG5lcXVlLiBDb25zZWN0ZXR1ciBhZGlwaXNjaW5nIGVsaXQgdXQgYWxpcXVhbSBwdXJ1cyBzaXQgYW1ldCBsdWN0dXMuIEVyYXQgdmVsaXQgc2NlbG"</span><span class="p">,</span><span class="s">"VyaXNxdWUgaW4gZGljdHVtIG5vbiBjb25zZWN0ZXR1ciBhIGVyYXQuIERpYW0gc29sbGljaXR1ZGluIHRlbXBvciBpZCBldSBuaXNsIG51bmMgbWkgaXBzdW0uIFJpc3VzIHF1aXMgdmFyaXVzIHF1YW0gcXVpc3F1ZSBpZCBkaWFtIHZlbCBxdWFtIGV"</span><span class="p">,</span><span class="s">"sZW1lbnR1bS4gUG9zdWVyZSBsb3JlbSBpcHN1bSBkb2xvciBzaXQgYW1ldCBjb25zZWN0ZXR1ci4gVWxsYW1jb3JwZXIgbW9yYmkgdGluY2lkdW50IG9ybmFyZSBtYXNzYS4gUXVhbSBhZGlwaXNjaW5nIHZpdGFlIHByb2luIHNhZ2l0dGlzIG5pc2wgcmhvbmN1cy4gRXUgY29uc2VxdWF0IGFjIGZlbGlzIGRvbmVjIGV0IG9kaW8gcGVsbGVudGVzcX"</span><span class="p">,</span><span class="s">"VlIGRpYW0gdm9sdXRwYXQuIEV0IG1hZ25pcyBkaXMgcGFydHVyaWVudCBtb250ZXMgbmFzY2V0dXIuIEFsaXF1YW0gbWFsZXN1YWRhIGJpYmVuZHVtIGFyY3Ugdml0YWUuIEluIG51bGxhIHBvc3VlcmUgc29sbGljaXR1ZGluIGFsaXF1YW0u"</span><span class="p">]</span>
+    <span class="n">blist</span> <span class="o">=</span> <span class="p">[</span><span class="s">"YzNSbmMyUnlaMlJoWm1kbVJsZEdWMFJFUkVaWFpIZG1Da1pGUmtWSFptUmxaM0puUmtWR1JVZG1aR1ZuY21kemR3cEdSVVpGUjJaa1pXZHlaM04zUmtSRlIwWkhaM05uWkdnS1pXZHlaMFpIVjBaRVJVZEdSMmR6WjJSb1JuTjNSa1JGQ25KblpHVmxSMFpIWjNObmMyVmxSMFpIWjNOblpHaEdjd3BuYzJka2FFVkdSVWRtWkdWbmNrWkdaM05uWkdoeVoyUUtaR1ZuY2taR1ozTm5aR2h5WjJSbFpVZEdSMmRuWkdoeUNtUm9SVVpGUjJaeloyUm9Sbk4zUmtSRlpHZG5kMFpFUlFweVoyUmxaVWRHUjJkelozTmxaVWRHUjJkeloyUm9Sbk1LWjNOblpHaEZSa1ZIWm1SbFozSkdSbWR6WjJSb2NtZGtDbkpuWkdWbFIwWkhaM05uYzJWbFIwWkhaM05uWkdoR2N3cG5jMmRrYUVWR1JVZG1aR1ZuY2taR1ozTm5aR2h5WjJRS1pHVm5ja1pHWjNOblpHaHlaMlJsWlVkR1IyZG5aR2h5Q21Sb1JVWkZSMlp6WjJSb1JuTjNSa1JGWkdkbmQwWkVSUXB5WjJSbFpVZEdSMmR6WjNObFpVZEdSMmR6WjJSb1JuTUtaM05uWkdoRlJrVkhabVJsWjNKR1JtZHpaMlJvY21ka0NtZHpaMlJvY21ka1pXVkhSa2RuYzJka2FFWnpkMFpFUlFweVoyUmxaVWRHUjJkeloyUm9aM05uWkdoR2MzZEdSRVVLY21ka1pXVkhSa2RsWlVkR1IyZHpaMlJvUm5OM1JrUkZDbkpuWkdWbFIwWkhaM05uWkdoRlJrVkhabVJsWjNKR1JncEVZWGRuUTFSR2Uwd3pORkpPWDFRd1gwUXpVRXd3V1gwS2NtZGtaV1ZIUmtkbmMyZGthRVZHUlVkSFJrZG5jMmRrQ25KblpHVmxSMFpIWjNOblpHaEhjMmRrYUVaemQwWkVSUXB5WjJSbFpVZEdSMmR6WjNObFpVZEdSMmR6WjJSb1JuTUtaM05uWkdoRlJrVkhabVJsWjNKR1JtZHpaMlJvY21ka0NtUmxaM0pHUm1keloyUm9jbWRrWldWSFJrZG5aMlJvY2dwa2FFVkdSVWRtYzJka2FFWnpkMFpFUldSblozZEdSRVVLWm1SbFozSkdSbWR6WjJSb2NtZGtaV1ZIUmtkblJVWkZDbVprWldkeVJrWm5jMmRrYUhKblpHVmxhRVp6ZDBaRVJRcHlaMlJsWlVkR1IyZHpaM05sWlVkR1IyZHpaMlJvUm5NS1ozTm5aR2hGUmtWSFptUmxaM0pHUm1keloyUm9jbWRrQ21SbFozSkdSbWR6WjJSb2NtZGtaV1ZIUmtkbloyUm9jZ3BrYUVWR1JVZG1jMmRrYUVaemQwWkVSV1JuWjNkR1JFVUtjbWRrWldWSFJrZG5jMmR6WldWSFJrZG5jMmRrYUVaekNtZHpaMlJvUlVaRlIyWmtaV2R5UmtabmMyZGthSEpuWkFweVoyUmxaVWRHUjJkelozTmxaVWRHUjJkeloyUm9Sbk1LWjNOblpHaEZSa1ZIWm1SbFozSkdSbWR6WjJSb2NtZGtDbVJsWjNKR1JtZHpaMlJvY21ka1pXVkhSa2RuWjJSb2NncGthRVZHUlVkbWMyZGthRVp6ZDBaRVJXUm5aM2RHUkVVS2NtZGtaV1ZIUmtkbmMyZHpaV1ZIUmtkbmMyZGthRVp6Q21keloyUm9SVVpGUjJaa1pXZHlSa1puYzJka2FISm5aQXBrWldkeVJrWm5jMmRrYUhKblpHVmxSMFpIWjJka2FISUtaR2hGUmtWSFpuTm5aR2hHYzNkR1JFVmtaMmQzUmtSRg=="</span><span class="p">]</span>
+ 
+    <span class="nd">@client.event</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">message</span><span class="p">.</span><span class="n">author</span> <span class="o">==</span> <span class="n">client</span><span class="p">.</span><span class="n">user</span><span class="p">:</span>
+            <span class="k">return</span>
+        
+        <span class="k">if</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="s">'Yo'</span><span class="p">)</span> <span class="ow">or</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="s">'yo'</span><span class="p">):</span>
+            <span class="k">await</span> <span class="n">message</span><span class="p">.</span><span class="n">channel</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="n">blist</span><span class="p">[</span><span class="nf">ord</span><span class="p">(</span><span class="n">mlist</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">12</span><span class="p">])</span><span class="o">-</span><span class="mi">70</span><span class="p">][</span><span class="nf">ord</span><span class="p">(</span><span class="n">klist</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span><span class="o">-</span><span class="mi">112</span><span class="p">:])</span>
+
+    <span class="n">client</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s">'BOT_ID'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">blist</code> has the longest base64 string which got my eyes again. Saved the blist string in <code class="language-plaintext highlighter-rouge">base.txt</code>. And Decoded it from <code class="language-plaintext highlighter-rouge">base64</code> multiple times.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/dmbot1<span class="nv">$ </span><span class="nb">cat </span>base.txt | <span class="nb">base64</span> <span class="nt">-d</span>| <span class="nb">base64</span> <span class="nt">-d</span>
+gsgdhEFEGfdegrFFgsgdhrgd
+rgdeeGFGgsgseeGFGgsgdhFs
+gsgdhEFEGfdegrFFgsgdhrgd
+degrFFgsgdhrgdeeGFGggdhr
+dhEFEGfsgdhFswFDEdggwFDE
+rgdeeGFGgsgseeGFGgsgdhFs
+gsgdhEFEGfdegrFFgsgdhrgd
+gsgdhrgdeeGFGgsgdhFswFDE
+rgdeeGFGgsgdhgsgdhFswFDE
+rgdeeGFGeeGFGgsgdhFswFDE
+rgdeeGFGgsgdhEFEGfdegrFF
+DawgCTF<span class="o">{</span>L34RN_T0_D3PL0Y<span class="o">}</span>
+rgdeeGFGgsgdhEFEGGFGgsgd
+rgdeeGFGgsgdhGsgdhFswFDE
+rgdeeGFGgsgseeGFGgsgdhFs
+gsgdhEFEGfdegrFFgsgdhrgd
+degrFFgsgdhrgdeeGFGggdhr
+dhEFEGfsgdhFswFDEdggwFDE
+fdegrFFgsgdhrgdeeGFGgEFE
+
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DawgCTF{L34RN_T0_D3PL0Y}</code></p>
+</blockquote>
+
+<h1 id="dm-bot-1">DM Bot?</h1>
+
+<p><img src="/assets/img/post_img/dawg_dmbot2.png" alt="DM2" /></p>
+
+<p>Attached File : <a href="https://drive.google.com/drive/folders/1s-aiDz8D0gtYTt5GpjNoWH0dcHNPL6to" target="_blank">bot.py</a></p>
+
+<p>bot.py</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#BY: J4NU5
+</span><span class="kn">import</span> <span class="n">discord</span>
+
+<span class="n">STRING</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">START</span> <span class="o">=</span> <span class="mi">22</span>
+<span class="n">STOP</span> <span class="o">=</span> <span class="mi">58</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">discord</span><span class="p">.</span><span class="nc">Client</span><span class="p">(</span><span class="n">intents</span><span class="o">=</span><span class="n">discord</span><span class="p">.</span><span class="n">Intents</span><span class="p">.</span><span class="nf">default</span><span class="p">())</span>
+
+    <span class="nd">@client.event</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">on_ready</span><span class="p">():</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">'We have logged in as {0.user}'</span><span class="p">.</span><span class="nf">format</span><span class="p">(</span><span class="n">client</span><span class="p">))</span>
+
+    <span class="n">msglist</span> <span class="o">=</span> <span class="p">[</span><span class="s">"TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaX"</span><span class="p">,</span><span class="s">"Bpc2NpbmcgZWxpdCwgc2VkIGRvIGVpdXNtb2QgdGVtcG9yIGluY2lkaWR1bnQgdXQgbGFib3JlIGV0IGRvbG9yZSBtYWduYSBhbGlxdWEuIFVybmEgY29uZGltZW50dW0gbWF0dGlzIHBlbGxlbnRlc3F1ZSBpZCBuaWJoIHRvcnRvciBpZCBhbGlxdWV0LiBGYW=="</span><span class="p">,</span><span class="s">"NpbGlzaXMgbWFnbmEgZXRpYW0gdGVtcG9yIG9yY2kgZXUuIFNhcGllbiBldCBsaWd1bGEgdWxsYW1jb3JwZXIgbWFsZXN1YWRhLiBUcmlzdGlxdWUgbnVsbGE"</span><span class="p">,</span><span class="s">"gYWxpcXVldCBlbmltIHRvcnRvciBhdC4gUXVpcyByaXN1cyBzZWQgdnVscHV0YXRlIG9kaW8uIFNhZ2l0dGlzIGFsaXF1YW0gbWFsZXN1YWRhIGJpYmVuZHVt"</span><span class="p">,</span><span class="s">"IGFyY3Ugdml0YWUgZWxlbWRGF3Z0NURns1dDR0MWNfMHJfZHluNG0xYz99VudHVtIGN1cmFiaXR1ci4gSGFiaXRhc3NlIHBsYXRlYSBkaWN0dW1zdCBxdW="</span><span class="p">,</span><span class="s">"lzcXVlIHNhZ2l0dGlzIHB1cnVzIHNpdCBhbWV0LiBQdXJ1cyBncmF2aWRhIHF1aXMgYmxhbmRpdCB0dXJwaXMgY3Vyc3VzIGluIGhhYyBoYWJpdGFzc2UuIFZvbHV0cGF0IGFjIHRpbmNpZHVudCB2aXRhZSBzZW1wZXIuIFF1YW0gZWxlbWVudHVtIHB1b=="</span><span class="p">,</span><span class="s">"HZpbmFyIGV0aWFtIG5vbiBxdWFtIGxhY3VzLiBBbWV0IHRlbGx1cyBjcmFzIGFkaXBpc2NpbmcgZW5pbSBldSB0dXJwaXMgZWdlc3Rhcy4KCkZldWdpYXQgbmlzbCBwcmV0aXVtIGZ1c2NlIGlkIHZlbGl0IHV0IHRvcnRvciBwcmV0aXVtIHZpdmVycmEuIEVuaW0gZGlhbSB2dWxwdXRhdGUgdXQgcGhhcmV0cmEgc2l0IGFtZ"</span><span class="p">,</span><span class="s">"XQuIEZldWdpYXQgcHJldGl1bSBuaWJoIGlwc3VtIGNvbnNlcXVhdCBuaXNsLiBCaWJlbmR1bSB1dCB0cmlzdGlxdWUgZXQgZWdlc3RhcyBxdWlzIGlwc3VtIHN1c3BlbmRpc3NlIHVsdHJpY2VzLiBWaXZlcnJhIGlwc3VtIG51bmMgYWxpcXVldCBi"</span><span class="p">,</span><span class="s">"aWJlbmR1bSBlbmltIGZhY2lsaXNpcyBncmF2aWRhIG5lcXVlLiBDb25zZWN0ZXR1ciBhZGlwaXNjaW5nIGVsaXQgdXQgYWxpcXVhbSBwdXJ1cyBzaXQgYW1ldCBsdWN0dXMuIEVyYXQgdmVsaXQgc2NlbG"</span><span class="p">,</span><span class="s">"VyaXNxdWUgaW4gZGljdHVtIG5vbiBjb25zZWN0ZXR1ciBhIGVyYXQuIERpYW0gc29sbGljaXR1ZGluIHRlbXBvciBpZCBldSBuaXNsIG51bmMgbWkgaXBzdW0uIFJpc3VzIHF1aXMgdmFyaXVzIHF1YW0gcXVpc3F1ZSBpZCBkaWFtIHZlbCBxdWFtIGV"</span><span class="p">,</span><span class="s">"sZW1lbnR1bS4gUG9zdWVyZSBsb3JlbSBpcHN1bSBkb2xvciBzaXQgYW1ldCBjb25zZWN0ZXR1ci4gVWxsYW1jb3JwZXIgbW9yYmkgdGluY2lkdW50IG9ybmFyZSBtYXNzYS4gUXVhbSBhZGlwaXNjaW5nIHZpdGFlIHByb2luIHNhZ2l0dGlzIG5pc2wgcmhvbmN1cy4gRXUgY29uc2VxdWF0IGFjIGZlbGlzIGRvbmVjIGV0IG9kaW8gcGVsbGVudGVzcX"</span><span class="p">,</span><span class="s">"VlIGRpYW0gdm9sdXRwYXQuIEV0IG1hZ25pcyBkaXMgcGFydHVyaWVudCBtb250ZXMgbmFzY2V0dXIuIEFsaXF1YW0gbWFsZXN1YWRhIGJpYmVuZHVtIGFyY3Ugdml0YWUuIEluIG51bGxhIHBvc3VlcmUgc29sbGljaXR1ZGluIGFsaXF1YW0u"</span><span class="p">]</span>
+
+    <span class="nd">@client.event</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">message</span><span class="p">.</span><span class="n">author</span> <span class="o">==</span> <span class="n">client</span><span class="p">.</span><span class="n">user</span><span class="p">:</span>
+            <span class="k">return</span>
+        
+        <span class="k">if</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="s">'hello'</span><span class="p">)</span> <span class="ow">or</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="s">'Hello'</span><span class="p">)</span> <span class="ow">or</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="s">'hi'</span><span class="p">)</span> <span class="ow">or</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">.</span><span class="nf">startswith</span><span class="p">(</span><span class="s">'Hi'</span><span class="p">):</span>
+            <span class="k">await</span> <span class="n">message</span><span class="p">.</span><span class="n">channel</span><span class="p">.</span><span class="nf">send</span><span class="p">(</span><span class="n">msglist</span><span class="p">[</span><span class="n">STRING</span><span class="p">][</span><span class="n">START</span><span class="p">:</span><span class="n">STOP</span><span class="p">])</span>
+
+    <span class="n">client</span><span class="p">.</span><span class="nf">run</span><span class="p">(</span><span class="s">'THIS_SHOULD_PROBABLY_BE_A_PROPER_BOT_ID'</span><span class="p">)</span>
+</code></pre></div></div>
+<p>Again some base64 encodes! This time observed the program. The message which is sending to the user is <code class="language-plaintext highlighter-rouge">message.channel.send(msglist[STRING][START:STOP])</code></p>
+
+<p>The <code class="language-plaintext highlighter-rouge">msglist</code> is the list given, <code class="language-plaintext highlighter-rouge">STRING = 4</code> <code class="language-plaintext highlighter-rouge">START = 22</code> <code class="language-plaintext highlighter-rouge">STOP = 58</code>.
+So I tried to decode the string from 22 to 58th character of 4th index string list. This solve.py will print the flag.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">base64</span>
+<span class="c1">#msglist[4][22:58]
+</span><span class="n">msg</span> <span class="o">=</span> <span class="s">"IGFyY3Ugdml0YWUgZWxlbWRGF3Z0NURns1dDR0MWNfMHJfZHluNG0xYz99VudHVtIGN1cmFiaXR1ci4gSGFiaXRhc3NlIHBsYXRlYSBkaWN0dW1zdCBxdW"</span>
+<span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="mi">22</span><span class="p">:</span><span class="mi">58</span><span class="p">]</span>
+<span class="n">decoded_string</span> <span class="o">=</span> <span class="n">base64</span><span class="p">.</span><span class="nf">b64decode</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">decoded_string</span><span class="p">)</span>
+<span class="c1"># DawgCTF{5t4t1c_0r_dyn4m1c?}
+</span></code></pre></div></div>
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DawgCTF{5t4t1c_0r_dyn4m1c?}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="binary-bomb-phase-1">Binary Bomb Phase 1</h1>
+
+<p><img src="/assets/img/post_img/dawg_binarybomb1.png" alt="BB1" /></p>
+
+<p>Attached File : <a href="https://drive.google.com/drive/folders/18swPwtmBfTU-9-5onuzlX52JCSUJQf3F" target="_blank">dawg_bbomb</a></p>
+
+<p>I used the <code class="language-plaintext highlighter-rouge">ltrace</code> to execute this binary file.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/Desktop/CYBER/CTF/CTFTime/17_DawgCTF/binary_bomb/phase-2<span class="nv">$ </span>ltrace ./dawg_bbomb 
+sysconf<span class="o">(</span>30, 0x7fff11d7a628, 0x7fff11d7a638, 0x5593c3601dc0<span class="o">)</span> <span class="o">=</span> 4096
+mprotect<span class="o">(</span>0x5593c35fb000, 389, 7, 389<span class="o">)</span>                <span class="o">=</span> 0
+getppid<span class="o">()</span>                                            <span class="o">=</span> 27043
+snprintf<span class="o">(</span><span class="s2">"/proc/27043/status"</span>, 24, <span class="s2">"/proc/%d/status"</span>, 27043<span class="o">)</span> <span class="o">=</span> 18
+fopen<span class="o">(</span><span class="s2">"/proc/27043/status"</span>, <span class="s2">"r"</span><span class="o">)</span>                     <span class="o">=</span> 0x5593c3c032a0
+fgets<span class="o">(</span><span class="s2">"Name:</span><span class="se">\t</span><span class="s2">ltrace</span><span class="se">\n</span><span class="s2">"</span>, 16, 0x5593c3c032a0<span class="o">)</span>         <span class="o">=</span> 0x7fff11d7a580
+fclose<span class="o">(</span>0x5593c3c032a0<span class="o">)</span>                               <span class="o">=</span> 0
+strstr<span class="o">(</span><span class="s2">"Name:</span><span class="se">\t</span><span class="s2">ltrace</span><span class="se">\n</span><span class="s2">"</span>, <span class="s2">"gdb"</span><span class="o">)</span>                     <span class="o">=</span> nil
+strstr<span class="o">(</span><span class="s2">"Name:</span><span class="se">\t</span><span class="s2">ltrace</span><span class="se">\n</span><span class="s2">"</span>, <span class="s2">"ltrace"</span><span class="o">)</span>                  <span class="o">=</span> <span class="s2">"ltrace</span><span class="se">\n</span><span class="s2">"</span>
+<span class="nb">time</span><span class="o">(</span>0<span class="o">)</span>                                              <span class="o">=</span> 1682156350
+srand<span class="o">(</span>0x6443ab3e, 0x5593c35fe022, 0, 0<span class="o">)</span>              <span class="o">=</span> 1
+rand<span class="o">(</span>0xffffffff, 0x7f41b6e19860, 0x7f41b6e19204, 0x7f41b6e19280<span class="o">)</span> <span class="o">=</span> 0x3ee147ca
+<span class="nb">time</span><span class="o">(</span>0<span class="o">)</span>                                              <span class="o">=</span> 1682156350
+srand<span class="o">(</span>0x6443ab3e, 0x7fff11d7a628, 0, 0x5593c3601dc8<span class="o">)</span> <span class="o">=</span> 1
+setlocale<span class="o">(</span>LC_ALL, <span class="s2">""</span><span class="o">)</span>                                <span class="o">=</span> <span class="s2">"en_IN"</span>
+sigaction<span class="o">(</span>SIGINT, <span class="o">{</span> 0x5593c35fd707, &lt;<span class="o">&gt;</span>, 0, 0 <span class="o">}</span>, nil<span class="o">)</span> <span class="o">=</span> 0
+puts<span class="o">(</span><span class="s2">"Welcome to the DawgCTF Binary Bo"</span>...Welcome to the DawgCTF Binary Bomb!
+<span class="o">)</span>          <span class="o">=</span> 36
+<span class="nb">printf</span><span class="o">(</span><span class="s2">"Type HELP for help."</span><span class="o">)</span>                        <span class="o">=</span> 19
+<span class="nb">printf</span><span class="o">(</span><span class="s2">"</span><span class="se">\0</span><span class="s2">33[33m</span><span class="se">\n</span><span class="s2">s</span><span class="se">\n\0</span><span class="s2">33[0m"</span>, <span class="s2">"Starting off with small strings."</span>...Type HELP <span class="k">for </span>help.
+Starting off with small strings...
+<span class="o">)</span> <span class="o">=</span> 45
+<span class="nb">printf</span><span class="o">(</span><span class="s2">"Enter round %d input: "</span>, 1<span class="o">)</span>                  <span class="o">=</span> 21
+getline<span class="o">(</span>0x7fff11d7a3f8, 0x7fff11d7a400, 0x7f41b6e19aa0, 0x7fff11d7a400Enter round 1 input: pass
+<span class="o">)</span> <span class="o">=</span> 5
+realloc<span class="o">(</span>0, 5<span class="o">)</span>                                        <span class="o">=</span> 0x5593c3c04e70
+strncpy<span class="o">(</span>0x5593c3c04e70, <span class="s2">"pass"</span>, 5<span class="o">)</span>                   <span class="o">=</span> 0x5593c3c04e70
+strncmp<span class="o">(</span><span class="s2">"pass"</span>, <span class="s2">"SKIP"</span>, 4<span class="o">)</span>                           <span class="o">=</span> 29
+strncmp<span class="o">(</span><span class="s2">"pass"</span>, <span class="s2">"HELP"</span>, 4<span class="o">)</span>                           <span class="o">=</span> 40
+strncmp<span class="o">(</span><span class="s2">"pass"</span>, <span class="s2">"BabYs_F1rS7_RE"</span>, 4<span class="o">)</span>                 <span class="o">=</span> 46
+rand<span class="o">(</span>1, 0x5593c35fe1dc, 0, 66<span class="o">)</span>                       <span class="o">=</span> 0x3ee147ca
+calloc<span class="o">(</span>160, 1<span class="o">)</span>                                       <span class="o">=</span> 0x5593c3c04e90
+sprintf<span class="o">(</span><span class="s2">"Round 1 EXPLODED!"</span>, <span class="s2">"Round %d EXPLODED!"</span>, 1<span class="o">)</span> <span class="o">=</span> 17
+<span class="nb">printf</span><span class="o">(</span><span class="s2">"</span><span class="se">\0</span><span class="s2">33[31m%s</span><span class="se">\n\0</span><span class="s2">33[0m"</span>, <span class="s2">"Round 1 EXPLODED!"</span>Round 1 EXPLODED!
+<span class="o">)</span>   <span class="o">=</span> 27
+free<span class="o">(</span>0x5593c3c04e90<span class="o">)</span>                                 <span class="o">=</span> &lt;void&gt;
+<span class="nb">printf</span><span class="o">(</span><span class="s2">"</span><span class="se">\0</span><span class="s2">33[33m</span><span class="se">\n</span><span class="s2">%s</span><span class="se">\n\0</span><span class="s2">33[0m"</span>, <span class="s2">"Starting off with small strings."</span>...
+Starting off with small strings...
+<span class="o">)</span> <span class="o">=</span> 45
+<span class="nb">printf</span><span class="o">(</span><span class="s2">"Enter round %d input: "</span>, 1<span class="o">)</span>                  <span class="o">=</span> 21
+getline<span class="o">(</span>0x7fff11d7a3f8, 0x7fff11d7a400, 0x7f41b6e19aa0, 0x7fff11d7a400Enter round 1 input: BabYs_F1rS7_RE
+<span class="o">)</span> <span class="o">=</span> 15
+realloc<span class="o">(</span>0x5593c3c04e70, 15<span class="o">)</span>                          <span class="o">=</span> 0x5593c3c04e70
+strncpy<span class="o">(</span>0x5593c3c04e70, <span class="s2">"BabYs_F1rS7_RE"</span>, 15<span class="o">)</span>        <span class="o">=</span> 0x5593c3c04e70
+strncmp<span class="o">(</span><span class="s2">"BabYs_F1rS7_RE"</span>, <span class="s2">"SKIP"</span>, 14<span class="o">)</span>                <span class="o">=</span> <span class="nt">-17</span>
+strncmp<span class="o">(</span><span class="s2">"BabYs_F1rS7_RE"</span>, <span class="s2">"HELP"</span>, 14<span class="o">)</span>                <span class="o">=</span> <span class="nt">-6</span>
+strncmp<span class="o">(</span><span class="s2">"BabYs_F1rS7_RE"</span>, <span class="s2">"BabYs_F1rS7_RE"</span>, 14<span class="o">)</span>      <span class="o">=</span> 0
+strlen<span class="o">(</span><span class="s2">"BabYs_F1rS7_RE"</span><span class="o">)</span>                             <span class="o">=</span> 14
+rand<span class="o">(</span>1, 0x5593c35fe1dc, 0x4000, 476<span class="o">)</span>                 <span class="o">=</span> 0x578116f8
+calloc<span class="o">(</span>100, 1<span class="o">)</span>                                       <span class="o">=</span> 0x5593c3c04f40
+sprintf<span class="o">(</span><span class="s2">"Defused phase 1"</span>, <span class="s2">"Defused phase %d"</span>, 1<span class="o">)</span>    <span class="o">=</span> 15
+<span class="nb">printf</span><span class="o">(</span><span class="s2">"</span><span class="se">\0</span><span class="s2">33[32m%s</span><span class="se">\n\0</span><span class="s2">33[0m"</span>, <span class="s2">"Defused phase 1"</span>Defused phase 1
+<span class="o">)</span>     <span class="o">=</span> 25
+free<span class="o">(</span>0x5593c3c04f40<span class="o">)</span>                                 <span class="o">=</span> &lt;void&gt;
+<span class="nb">printf</span><span class="o">(</span><span class="s2">"</span><span class="se">\0</span><span class="s2">33[35mFlag: DawgCTF{s}</span><span class="se">\n\0</span><span class="s2">33[0m"</span>, <span class="s2">"BabYs_F1rS7_RE"</span>Flag: DawgCTF<span class="o">{</span>BabYs_F1rS7_RE<span class="o">}</span>
+<span class="o">)</span> <span class="o">=</span> 39
+<span class="nb">printf</span><span class="o">(</span><span class="s2">"</span><span class="se">\0</span><span class="s2">33[33m</span><span class="se">\n</span><span class="s2">%s</span><span class="se">\n\0</span><span class="s2">33[0m"</span>, <span class="s2">"Can you help me? I lost my key a"</span>...
+Can you <span class="nb">help </span>me? I lost my key and can<span class="s1">'t read my string
+) = 66
+printf("Enter round %d input: ", 2)                  = 21
+getline(0x7fff11d7a3f8, 0x7fff11d7a400, 0x7f41b6e19aa0, 0x7fff11d7a400Enter round 2 input: 
+
+</span></code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">printf("Enter round %d input: ", 1)</code> For this I entered a test value <code class="language-plaintext highlighter-rouge">pass</code> Then I observer in ltrace that it is compared with <code class="language-plaintext highlighter-rouge">BabYs_F1rS7_RE</code> If the input matched with <code class="language-plaintext highlighter-rouge">BabYs_F1rS7_RE</code> The program is going to print the flag for us. So I inputted the <strong>BabYs_F1rS7_RE</strong> and got the flag.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DawgCTF{BabYs_F1rS7_RE}</code></p>
+</blockquote>
+
+<h1 id="binary-bomb-phase-2">Binary Bomb Phase 2</h1>
+
+<p><img src="/assets/img/post_img/dawg_binarybomb2.png" alt="BB2" /></p>
+
+<p>Attached File : <a href="https://drive.google.com/drive/folders/18swPwtmBfTU-9-5onuzlX52JCSUJQf3F" target="_blank">dawg bbomb</a></p>
+
+<p>I used the <code class="language-plaintext highlighter-rouge">ltrace</code> to execute this binary file again and It prompted for the first round input I already solved it so by giving it to the program we can move to next phase or we can use <code class="language-plaintext highlighter-rouge">SKIP</code> to move to the next phase.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/Desktop/CYBER/CTF/CTFTime/17_DawgCTF/binary_bomb/phase-2<span class="nv">$ </span>ltrace ./dawg_bbomb 
+Enter round 2 input: pass
+<span class="o">)</span> <span class="o">=</span> 5
+realloc<span class="o">(</span>0x559057ff4e70, 5<span class="o">)</span>                <span class="o">=</span> 0x559057ff4e70
+strncpy<span class="o">(</span>0x559057ff4e70, <span class="s2">"pass"</span>, 5<span class="o">)</span>        <span class="o">=</span> 0x559057ff4e70
+strncmp<span class="o">(</span><span class="s2">"pass"</span>, <span class="s2">"SKIP"</span>, 4<span class="o">)</span>                <span class="o">=</span> 29
+strncmp<span class="o">(</span><span class="s2">"pass"</span>, <span class="s2">"HELP"</span>, 4<span class="o">)</span>                <span class="o">=</span> 40
+strncmp<span class="o">(</span><span class="s2">"yhzz"</span>, <span class="s2">"]a=gbVPf</span><span class="se">\\</span><span class="s2">VO9{VA:ey8gn"</span>, 4<span class="o">)</span> <span class="o">=</span> 28
+rand<span class="o">(</span>2, 0x559057ce01eb, 0, 93<span class="o">)</span>            <span class="o">=</span> 0x280e2a51
+calloc<span class="o">(</span>160, 1<span class="o">)</span>                            <span class="o">=</span> 0x559057ff4e90
+</code></pre></div></div>
+
+<p>Again I passed the test value <code class="language-plaintext highlighter-rouge">pass</code> to the round 2 input. This time the <code class="language-plaintext highlighter-rouge">pass</code> is converted as <code class="language-plaintext highlighter-rouge">yhzz</code> and compared with <code class="language-plaintext highlighter-rouge">a=gbVPf\\VO9{VA:ey8gn</code> I copied this string and inputed this value to the round 2 program.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/Desktop/CYBER/CTF/CTFTime/17_DawgCTF/binary_bomb/phase-2<span class="nv">$ </span>ltrace ./dawg_bbomb 
+Enter round 2 input: <span class="o">]</span><span class="nv">a</span><span class="o">=</span>gbVPf<span class="se">\\</span>VO9<span class="o">{</span>VA:ey8gn
+<span class="o">)</span> <span class="o">=</span> 23
+realloc<span class="o">(</span>0x559057ff4e70, 23<span class="o">)</span>               <span class="o">=</span> 0x559057ff4e70
+strncpy<span class="o">(</span>0x559057ff4e70, <span class="s2">"]a=gbVPf</span><span class="se">\\\\</span><span class="s2">VO9{VA:ey8gn"</span>, 23<span class="o">)</span> <span class="o">=</span> 0x559057ff4e70
+strncmp<span class="o">(</span><span class="s2">"]a=gbVPf</span><span class="se">\\\\</span><span class="s2">VO9{VA:ey8gn"</span>, <span class="s2">"SKIP"</span>, 22<span class="o">)</span> <span class="o">=</span> 10
+strncmp<span class="o">(</span><span class="s2">"]a=gbVPf</span><span class="se">\\\\</span><span class="s2">VO9{VA:ey8gn"</span>, <span class="s2">"HELP"</span>, 22<span class="o">)</span> <span class="o">=</span> 21
+strncmp<span class="o">(</span><span class="s2">"Th4nk_YoUU_F0r_H3lp1ng"</span>, <span class="s2">"]a=gbVPf</span><span class="se">\\</span><span class="s2">VO9{VA:ey8gn"</span>, 22<span class="o">)</span> <span class="o">=</span> <span class="nt">-9</span>
+rand<span class="o">(</span>2, 0x559057ce01eb, 0, 93<span class="o">)</span>            <span class="o">=</span> 0x39aba478
+calloc<span class="o">(</span>160, 1<span class="o">)</span>     
+</code></pre></div></div>
+
+<p>So, this time the <code class="language-plaintext highlighter-rouge">]a=gbVPf\\\\VO9{VA:ey8gn</code> is conveted <code class="language-plaintext highlighter-rouge">Th4nk_YoUU_F0r_H3lp1ng</code>. That means if we give <code class="language-plaintext highlighter-rouge">Th4nk_YoUU_F0r_H3lp1ng</code> to the round 2 we this be converted to <code class="language-plaintext highlighter-rouge">]a=gbVPf\\\\VO9{VA:ey8gn</code> and will be compared with <code class="language-plaintext highlighter-rouge">]a=gbVPf\\VO9{VA:ey8gn</code>.</p>
+
+<p>Closely observe that <code class="language-plaintext highlighter-rouge">]a=gbVPf\\\\VO9{VA:ey8gn</code> != <code class="language-plaintext highlighter-rouge">]a=gbVPf\\VO9{VA:ey8gn</code> , Because of the extra <code class="language-plaintext highlighter-rouge">\\</code> These two extra slashes are generated by on extra <code class="language-plaintext highlighter-rouge">U</code> in the <code class="language-plaintext highlighter-rouge">Th4nk_YoUU_F0r_H3lp1ng</code> , So I removed the extra <code class="language-plaintext highlighter-rouge">U</code> and submitted to the round 2 input ultimately the comparision will be successfull, the program will print the flag</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/Desktop/CYBER/CTF/CTFTime/17_DawgCTF/binary_bomb/phase-2<span class="nv">$ </span>ltrace ./dawg_bbomb 
+
+Enter round 2 input: Th4nk_YoU_F0r_H3lp1ng 
+<span class="o">)</span> <span class="o">=</span> 22
+realloc<span class="o">(</span>0x559057ff5150, 22<span class="o">)</span>               <span class="o">=</span> 0x559057ff5150
+strncpy<span class="o">(</span>0x559057ff5150, <span class="s2">"Th4nk_YoU_F0r_H3lp1ng"</span>, 22<span class="o">)</span> <span class="o">=</span> 0x559057ff5150
+strncmp<span class="o">(</span><span class="s2">"Th4nk_YoU_F0r_H3lp1ng"</span>, <span class="s2">"SKIP"</span>, 21<span class="o">)</span> <span class="o">=</span> 1
+strncmp<span class="o">(</span><span class="s2">"Th4nk_YoU_F0r_H3lp1ng"</span>, <span class="s2">"HELP"</span>, 21<span class="o">)</span> <span class="o">=</span> 12
+strncmp<span class="o">(</span><span class="s2">"]a=gbVPf</span><span class="se">\\</span><span class="s2">VO9{VA:ey8gn"</span>, <span class="s2">"]a=gbVPf</span><span class="se">\\</span><span class="s2">VO9{VA:ey8gn"</span>, 21<span class="o">)</span> <span class="o">=</span> 0
+strlen<span class="o">(</span><span class="s2">"]a=gbVPf</span><span class="se">\\</span><span class="s2">VO9{VA:ey8gn"</span><span class="o">)</span>          <span class="o">=</span> 21
+rand<span class="o">(</span>2, 0x559057ce01f0, 0x1fe00000, 11<span class="o">)</span>   <span class="o">=</span> 0x40d2c90b
+calloc<span class="o">(</span>100, 1<span class="o">)</span>                            <span class="o">=</span> 0x559057ff5390
+sprintf<span class="o">(</span><span class="s2">"You did it!!"</span>, <span class="s2">"You did it!!"</span><span class="o">)</span>   <span class="o">=</span> 12
+<span class="nb">printf</span><span class="o">(</span><span class="s2">"</span><span class="se">\0</span><span class="s2">33[32m%s</span><span class="se">\n\0</span><span class="s2">33[0m"</span>, <span class="s2">"You did it!!"</span>You did it!!
+<span class="o">)</span> <span class="o">=</span> 22
+free<span class="o">(</span>0x559057ff5390<span class="o">)</span>                      <span class="o">=</span> &lt;void&gt;
+<span class="nb">printf</span><span class="o">(</span><span class="s2">"</span><span class="se">\0</span><span class="s2">33[35mFlag: DawgCTF{s}</span><span class="se">\n\0</span><span class="s2">33[0m"</span>, <span class="s2">"Th4nk_YoU_F0r_H3lp1ng"</span>Flag: DawgCTF<span class="o">{</span>Th4nk_YoU_F0r_H3lp1ng<span class="o">}</span>
+<span class="o">)</span> <span class="o">=</span> 46
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DawgCTF{Th4nk_YoU_F0r_H3lp1ng}</code></p>
+</blockquote>
+
+<h1 id="binary-bomb-phase-3">Binary Bomb Phase 3</h1>
+
+<p><img src="/assets/img/post_img/dawg_binarybomb3.png" alt="BB3" /></p>
+
+<p>Attached File : <a href="https://drive.google.com/drive/folders/18swPwtmBfTU-9-5onuzlX52JCSUJQf3F" target="_blank">dawg_bbomb</a></p>
+
+<p>This is most frustated challenge I solved in CTF.</p>
+
+<p>I used the <code class="language-plaintext highlighter-rouge">ltrace</code> to execute this binary file again and It prompted for the first two rounds input I already solved them so by giving the answers to the program we can move to next phase or we can use <code class="language-plaintext highlighter-rouge">SKIP</code> to move to the next phase.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/Desktop/CYBER/CTF/CTFTime/17_DawgCTF/binary_bomb/phase-2<span class="nv">$ </span>ltrace ./dawg_bbomb 
+
+<span class="nb">printf</span><span class="o">(</span><span class="s2">"</span><span class="se">\0</span><span class="s2">33[33m</span><span class="se">\n</span><span class="s2">%s</span><span class="se">\n\0</span><span class="s2">33[0m"</span>, <span class="s2">"I've been spun around so much..."</span>...
+I<span class="s1">'ve been spun around so much... my head kinda hurts now :/
+) = 70
+printf("Enter round %d input: ", 3)       = 21
+getline(0x7ffc8245d518, 0x7ffc8245d520, 0x7f0568419aa0, 0x7ffc8245d520Enter round 3 input: pass
+) = 5
+realloc(0x559057ff5150, 5)                = 0x559057ff5150
+strncpy(0x559057ff5150, "pass", 5)        = 0x559057ff5150
+strncmp("pass", "SKIP", 4)                = 29
+strncmp("pass", "HELP", 4)                = 40
+strncmp("iZll", "siDgabDzXZa]XsibaabgMXGa]XlpDgaO"..., 4) = -10
+rand(3, 0x559057ce0208, 0, 115)           = 0x69bce1ad
+calloc(160, 1)                            = 0x559057ff5400
+sprintf("So close, but yet, so far...", "So close, but yet, so far...") = 28
+</span></code></pre></div></div>
+
+<p>As the text of the phase 3 says it is <code class="language-plaintext highlighter-rouge">spun around</code>. So I think the input we given is roted by some value and then compared with <code class="language-plaintext highlighter-rouge">siDgabDzXZa]XsibaabgMXGa]XlpDgaO</code>.</p>
+
+<p>The test value <code class="language-plaintext highlighter-rouge">pass</code> is converted to <code class="language-plaintext highlighter-rouge">iZll</code> the rotated amount is <code class="language-plaintext highlighter-rouge">87</code></p>
+
+<p>When I use <code class="language-plaintext highlighter-rouge">test</code> as input it got converted as <code class="language-plaintext highlighter-rouge">mxml</code> but this isn’t any known rotation. So we cant simply use <code class="language-plaintext highlighter-rouge">rot87</code>.</p>
+
+<p>My aim is to get the string which can be converted to <code class="language-plaintext highlighter-rouge">siDgabDzXZa]XsibaabgMXGa]XlpDgaO</code>. So , I started finding each letter manually(frustrated).</p>
+
+<p>I found that <code class="language-plaintext highlighter-rouge">S</code> is converted to <code class="language-plaintext highlighter-rouge">s</code> and noted the [ rotation amount is <code class="language-plaintext highlighter-rouge">32</code> ]</p>
+
+<p><code class="language-plaintext highlighter-rouge">p</code> is converted to <code class="language-plaintext highlighter-rouge">i</code> [ rotation amount is <code class="language-plaintext highlighter-rouge">87</code>]</p>
+
+<p><code class="language-plaintext highlighter-rouge">1</code> is converted to <code class="language-plaintext highlighter-rouge">D</code> [ rotation amount is <code class="language-plaintext highlighter-rouge">19</code> ]</p>
+
+<p><code class="language-plaintext highlighter-rouge">n</code> is converted to <code class="language-plaintext highlighter-rouge">g</code> [ rotation amount is <code class="language-plaintext highlighter-rouge">87</code> ]</p>
+
+<p>The string recovered <code class="language-plaintext highlighter-rouge">Sp1n</code> is going to be converted to <code class="language-plaintext highlighter-rouge">siDg</code>, and still I have to recover the <code class="language-plaintext highlighter-rouge">abDzXZa]XsibaabgMXGa]XlpDgaO</code></p>
+
+<p>But there is a point to catch, The rotation is done randomly with the amount <code class="language-plaintext highlighter-rouge">[87 or 19 or 32]</code></p>
+
+<p>So, I took the encoded string <code class="language-plaintext highlighter-rouge">abDzXZa]XsibaabgMXGa]XlpDgaO</code> and started rotating each and every character with these three amounts, I noted the recovered string if it has any pattern in it.</p>
+
+<p>By doing this process for an half and hour, I found this strings <code class="language-plaintext highlighter-rouge">Sp1nNi1g_aNd_SpiNNinG_4Nd_sP1nNI</code> This is the string which can be converted to <code class="language-plaintext highlighter-rouge">siDgabDzXZa]XsibaabgMXGa]XlpDgaO</code>.</p>
+
+<p>I thought that this was the right answer to the phase 3, but not.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/Desktop/CYBER/CTF/CTFTime/17_DawgCTF/binary_bomb/phase-2<span class="nv">$ </span>ltrace ./dawg_bbomb 
+
+Enter round 3 input: Sp1nNi1g_aNd_SpiNNinG_4Nd_sP1nNI
+<span class="o">)</span> <span class="o">=</span> 33
+realloc<span class="o">(</span>0x559057ff5150, 33<span class="o">)</span>               <span class="o">=</span> 0x559057ff5150
+strncpy<span class="o">(</span>0x559057ff5150, <span class="s2">"Sp1nNi1g_aNd_SpiNNinG_4Nd_sP1nNI"</span>..., 33<span class="o">)</span> <span class="o">=</span> 0x559057ff5150
+strncmp<span class="o">(</span><span class="s2">"Sp1nNi1g_aNd_SpiNNinG_4Nd_sP1nNI"</span>..., <span class="s2">"SKIP"</span>, 32<span class="o">)</span> <span class="o">=</span> 37
+strncmp<span class="o">(</span><span class="s2">"Sp1nNi1g_aNd_SpiNNinG_4Nd_sP1nNI"</span>..., <span class="s2">"HELP"</span>, 32<span class="o">)</span> <span class="o">=</span> 11
+strncmp<span class="o">(</span><span class="s2">"siDgabDzXZa]XsibaabgMXGa]XlpDgaO"</span>..., <span class="s2">"siDgabDzXZa]XsibaabgMXGa]XlpDgaO"</span>..., 32<span class="o">)</span> <span class="o">=</span> 0
+strlen<span class="o">(</span><span class="s2">"siDgabDzXZa]XsibaabgMXGa]XlpDgaO"</span>...<span class="o">)</span> <span class="o">=</span> 34
+rand<span class="o">(</span>3, 0x559057ce0210, 0x800400000000, 8<span class="o">)</span> <span class="o">=</span> 0xee19b98
+calloc<span class="o">(</span>160, 1<span class="o">)</span>                            <span class="o">=</span> 0x559057ff5400
+sprintf<span class="o">(</span><span class="s2">"Better luck on phase 4"</span>, <span class="s2">"Better luck on phase %d"</span>, 4<span class="o">)</span> <span class="o">=</span> 22
+</code></pre></div></div>
+
+<p>The comparision is done as the <code class="language-plaintext highlighter-rouge">strncmp</code> resulted <code class="language-plaintext highlighter-rouge">0</code> but this didn’t give me any flag. So, after a while I tried to make it meaningfull to read</p>
+
+<p>I changed <code class="language-plaintext highlighter-rouge">Sp1nNi1g_aNd_SpiNNinG_4Nd_sP1nNI</code> to <code class="language-plaintext highlighter-rouge">Sp1nNi1g_aNd_SpiNNinG_4Nd_sP1nNIng</code> added <code class="language-plaintext highlighter-rouge">ng</code> at the end.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/Desktop/CYBER/CTF/CTFTime/17_DawgCTF/binary_bomb/phase-2<span class="nv">$ </span>ltrace ./dawg_bbomb 
+
+Enter round 3 input: Sp1nNi1g_aNd_SpiNNinG_4Nd_sP1nNIng
+<span class="o">)</span> <span class="o">=</span> 35
+realloc<span class="o">(</span>0x559057ff5150, 35<span class="o">)</span>               <span class="o">=</span> 0x559057ff5150
+strncpy<span class="o">(</span>0x559057ff5150, <span class="s2">"Sp1nNi1g_aNd_SpiNNinG_4Nd_sP1nNI"</span>..., 35<span class="o">)</span> <span class="o">=</span> 0x559057ff5150
+strncmp<span class="o">(</span><span class="s2">"Sp1nNi1g_aNd_SpiNNinG_4Nd_sP1nNI"</span>..., <span class="s2">"SKIP"</span>, 34<span class="o">)</span> <span class="o">=</span> 37
+strncmp<span class="o">(</span><span class="s2">"Sp1nNi1g_aNd_SpiNNinG_4Nd_sP1nNI"</span>..., <span class="s2">"HELP"</span>, 34<span class="o">)</span> <span class="o">=</span> 11
+strncmp<span class="o">(</span><span class="s2">"siDgabDzXZa]XsibaabgMXGa]XlpDgaO"</span>..., <span class="s2">"siDgabDzXZa]XsibaabgMXGa]XlpDgaO"</span>..., 34<span class="o">)</span> <span class="o">=</span> 0
+strlen<span class="o">(</span><span class="s2">"siDgabDzXZa]XsibaabgMXGa]XlpDgaO"</span>...<span class="o">)</span> <span class="o">=</span> 34
+rand<span class="o">(</span>3, 0x559057ce0210, 0x800400000000, 8<span class="o">)</span> <span class="o">=</span> 0x48a902d4
+calloc<span class="o">(</span>100, 1<span class="o">)</span>                            <span class="o">=</span> 0x559057ff5400
+sprintf<span class="o">(</span><span class="s2">"Phase 3 locked down"</span>, <span class="s2">"Phase %d locked down"</span>, 3<span class="o">)</span> <span class="o">=</span> 19
+<span class="nb">printf</span><span class="o">(</span><span class="s2">"</span><span class="se">\0</span><span class="s2">33[32m%s</span><span class="se">\n\0</span><span class="s2">33[0m"</span>, <span class="s2">"Phase 3 locked down"</span>Phase 3 locked down
+<span class="o">)</span> <span class="o">=</span> 29
+free<span class="o">(</span>0x559057ff5400<span class="o">)</span>                      <span class="o">=</span> &lt;void&gt;
+<span class="nb">printf</span><span class="o">(</span><span class="s2">"</span><span class="se">\0</span><span class="s2">33[35mFlag: DawgCTF{s}</span><span class="se">\n\0</span><span class="s2">33[0m"</span>, <span class="s2">"Sp1nNi1g_aNd_SpiNNinG_4Nd_sP1nNI"</span>...Flag: DawgCTF<span class="o">{</span>Sp1nNi1g_aNd_SpiNNinG_4Nd_sP1nNIng<span class="o">}</span>
+<span class="o">)</span> <span class="o">=</span> 59
+</code></pre></div></div>
+
+<p>And finally, This gave me the flag.[A long deep breath]</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DawgCTF{Sp1nNi1g_aNd_SpiNNinG_4Nd_sP1nNIng}</code></p>
+</blockquote>
+
+<hr />
+
+<p>And thats a wrap, Thank You for Reading..!</p>
+
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2023
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>

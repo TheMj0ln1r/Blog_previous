@@ -1,0 +1,179 @@
+<p>Hi guys!,</p>
+
+<p>Mj0ln1r is here, back again with a new post this is meta data about my new python script/tool Simple Python Port Scanner.</p>
+
+<p>As you know i am learning and building some simple python automated tools. Port Scanner is my second tool which is programmed by my own knowledge.</p>
+
+<p>I wrote this script called <code class="language-plaintext highlighter-rouge">Port_Scanner</code> in python. I learned <code class="language-plaintext highlighter-rouge">basics of socket programming</code> , little bit about <code class="language-plaintext highlighter-rouge">platform</code> module, <code class="language-plaintext highlighter-rouge">multi-threading in python</code> and a basic tool<code class="language-plaintext highlighter-rouge">ping</code> which is useful in computer networking.</p>
+
+<p>So, here’s a brief information about my simple python port scanner.</p>
+
+<h1 id="port-scanner">Port Scanner</h1>
+
+<p>This is a basic computer networking based project. The script is developed using python which can perform following tasks.</p>
+<ol>
+  <li>Scanning open ports on a single target</li>
+  <li>Scanning open ports in every system in a network
+Let’s start with the main function.</li>
+</ol>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+	<span class="nf">print</span><span class="p">(</span><span class="s">"""
+	1 &gt; Scan one device
+	2 &gt; Scan Entire network
+		"""</span><span class="p">)</span>
+	<span class="n">choice</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="nf">input</span><span class="p">(</span><span class="s">"Enter your choice(1/2) : "</span><span class="p">))</span>
+
+	<span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+
+		<span class="nf">print</span><span class="p">(</span><span class="s">"Scanning only one target.. </span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+		<span class="k">global</span> <span class="n">target_ip</span>
+		<span class="n">target_ip</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter Target IP or URL : "</span><span class="p">)</span>
+
+		<span class="n">start_port</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="nf">input</span><span class="p">(</span><span class="s">"Enter start port : "</span><span class="p">))</span>
+		<span class="n">end_port</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="nf">input</span><span class="p">(</span><span class="s">"Enter end port : "</span><span class="p">))</span>
+		
+		<span class="nf">input_check</span><span class="p">(</span><span class="n">start_port</span><span class="p">,</span><span class="n">end_port</span><span class="p">)</span>
+		<span class="nf">single_host_scan</span><span class="p">(</span><span class="n">start_port</span><span class="p">,</span><span class="n">end_port</span><span class="p">)</span>
+		<span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">()</span>
+	<span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+
+		<span class="nf">print</span><span class="p">(</span><span class="s">"Scanning Entire Network..</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+		<span class="n">target_ip</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"Enter your IP address : "</span><span class="p">)</span>
+		<span class="n">start_host</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="nf">input</span><span class="p">(</span><span class="s">"Enter start host : "</span><span class="p">))</span>
+		<span class="n">end_host</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="nf">input</span><span class="p">(</span><span class="s">"Enter end host : "</span><span class="p">))</span>
+		<span class="n">start_port</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="nf">input</span><span class="p">(</span><span class="s">"Enter start port : "</span><span class="p">))</span>
+		<span class="n">end_port</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="nf">input</span><span class="p">(</span><span class="s">"Enter end port : "</span><span class="p">))</span>
+		
+		<span class="nf">input_check</span><span class="p">(</span><span class="n">start_port</span><span class="p">,</span><span class="n">end_port</span><span class="p">)</span>
+		<span class="nf">host_check</span><span class="p">(</span><span class="n">start_host</span><span class="p">,</span><span class="n">end_host</span><span class="p">)</span>
+		<span class="nf">multi_host_scan</span><span class="p">(</span><span class="n">start_host</span><span class="p">,</span><span class="n">end_host</span><span class="p">,</span><span class="n">start_port</span><span class="p">,</span><span class="n">end_port</span><span class="p">)</span>
+		<span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">()</span>
+	<span class="k">else</span> <span class="p">:</span>
+		<span class="nf">print</span><span class="p">(</span><span class="s">"Invalid choice."</span><span class="p">)</span>
+		<span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">()</span>
+<span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+<p>In the beginning, this tool will asks the users for their choice to perform a specific task.
+i.e, to scan a single target or an entire network. If the user choose 1, then the tool will take start port and end port as an input from the user. Then the program is going to validate the inputs given, this is done by the <code class="language-plaintext highlighter-rouge">input_check</code> function. Next the <code class="language-plaintext highlighter-rouge">single_host_scan</code> will be called. Take look at these two functions.</p>
+
+<p><code class="language-plaintext highlighter-rouge">input_check()</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">input_check</span><span class="p">(</span><span class="n">start_port</span><span class="p">,</span><span class="n">end_port</span><span class="p">):</span>
+	<span class="k">global</span> <span class="n">target_ip</span>
+	<span class="n">ip</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="s">'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'</span><span class="p">,</span><span class="n">target_ip</span><span class="p">)</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">ip</span><span class="p">:</span>
+		<span class="k">try</span> <span class="p">:</span>
+			<span class="n">target_ip</span> <span class="o">=</span> <span class="n">socket</span><span class="p">.</span><span class="nf">gethostbyname</span><span class="p">(</span><span class="n">target_ip</span><span class="p">)</span>
+		<span class="k">except</span> <span class="n">socket</span><span class="p">.</span><span class="n">gaierror</span> <span class="p">:</span>
+			<span class="nf">print</span><span class="p">(</span><span class="s">"Unable resolve host address"</span><span class="p">)</span>
+			<span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">()</span>
+	<span class="nf">if </span><span class="p">((</span><span class="n">start_port</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">end_port</span> <span class="o">&gt;</span> <span class="mi">65535</span><span class="p">)):</span>
+		<span class="nf">print</span><span class="p">(</span><span class="s">"Port numbers are invalid.. </span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+		<span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">()</span>
+</code></pre></div></div>
+<p>In the try block of the input_check function, if a user gave a website as target that url will be changed to IP address here.</p>
+
+<p><code class="language-plaintext highlighter-rouge">single_host_scan()</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">single_host_scan</span><span class="p">(</span><span class="n">start_port</span><span class="p">,</span><span class="n">end_port</span><span class="p">):</span>
+
+	<span class="k">if</span> <span class="nf">islive</span><span class="p">():</span>
+		<span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">start_port</span><span class="p">,</span><span class="n">end_port</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+			<span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="p">.</span><span class="nc">Thread</span><span class="p">(</span><span class="n">target</span> <span class="o">=</span> <span class="n">single_port</span><span class="p">,</span><span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">port</span><span class="p">,))</span>
+			<span class="n">thread</span><span class="p">.</span><span class="nf">start</span><span class="p">()</span>
+			<span class="n">thread</span><span class="p">.</span><span class="nf">join</span><span class="p">()</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\t</span><span class="s"> Not reachable.</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+<p>In the above function the islive function will checks that the given host is live or not. If it is live then it is going to scan every port in a given range of that target host.</p>
+
+<p><code class="language-plaintext highlighter-rouge">islive()</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">islive</span><span class="p">():</span>
+	<span class="k">try</span><span class="p">:</span>
+		<span class="k">if</span> <span class="s">"Linux"</span> <span class="ow">in</span> <span class="nf">system</span><span class="p">():</span>
+			<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="p">.</span><span class="nf">run</span><span class="p">([</span><span class="s">"ping"</span><span class="p">,</span><span class="s">"-c"</span><span class="p">,</span><span class="s">"1"</span><span class="p">,</span><span class="n">target_ip</span><span class="p">],</span><span class="n">capture_output</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">text</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">p</span><span class="p">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="k">return</span> <span class="bp">True</span>
+
+		<span class="k">if</span> <span class="s">"Windows"</span> <span class="ow">in</span> <span class="nf">system</span><span class="p">():</span>
+			<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="p">.</span><span class="nf">run</span><span class="p">([</span><span class="s">"ping"</span><span class="p">,</span><span class="s">"-n"</span><span class="p">,</span><span class="s">"1"</span><span class="p">,</span><span class="n">target_ip</span><span class="p">],</span><span class="n">capture_output</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">text</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">p</span><span class="p">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="k">return</span> <span class="bp">True</span>
+
+	<span class="k">except</span> <span class="n">subprocess</span><span class="p">.</span><span class="n">CalledProcessError</span><span class="p">:</span>
+		<span class="k">return</span> <span class="bp">False</span>
+</code></pre></div></div>
+<p>islive() function uses a ping scan to check the target is live or not.</p>
+
+<p>If the target is live, a thread is created for each port to increase the speed of the scan. In every thread single_port() function is being called.</p>
+
+<p><code class="language-plaintext highlighter-rouge">single_port</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">single_port</span><span class="p">(</span><span class="n">port</span><span class="p">):</span>
+		<span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="p">.</span><span class="nf">socket</span><span class="p">(</span><span class="n">socket</span><span class="p">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="p">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+		<span class="n">socket</span><span class="p">.</span><span class="nf">setdefaulttimeout</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+		<span class="n">status</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="nf">connect_ex</span><span class="p">((</span><span class="n">target_ip</span><span class="p">,</span><span class="n">port</span><span class="p">))</span>
+		<span class="nf">if</span><span class="p">(</span><span class="ow">not</span> <span class="n">status</span><span class="p">):</span>
+			<span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\t</span><span class="s">Open port "</span><span class="p">,</span><span class="n">port</span><span class="p">)</span>
+			<span class="n">s</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+		<span class="n">s</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+</code></pre></div></div>
+<p>By using socket programming the connection request for a port will be sent to the remote host. If the connection was established with a port the status of the port will be printed as open.</p>
+
+<p>Now if the user choose to scan entire network, the same concept is used to check the open ports.The functions involved in entire network scan are <code class="language-plaintext highlighter-rouge">host_check</code> and <code class="language-plaintext highlighter-rouge">multi_host_scan</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">host_check()</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">host_check</span><span class="p">(</span><span class="n">start_host</span><span class="p">,</span><span class="n">end_host</span><span class="p">):</span>
+	<span class="nf">if </span><span class="p">(</span><span class="n">start_host</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">end_host</span> <span class="o">&gt;</span> <span class="mi">255</span><span class="p">):</span>
+		<span class="nf">print</span><span class="p">(</span><span class="s">"Host range in not valid..</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+		<span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">multi_host_scan()</code></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">multi_host_scan</span><span class="p">(</span><span class="n">start_host</span><span class="p">,</span><span class="n">end_host</span><span class="p">,</span><span class="n">start_port</span><span class="p">,</span><span class="n">end_port</span><span class="p">):</span>
+	<span class="k">global</span> <span class="n">target_ip</span>
+	<span class="n">tmp</span> <span class="o">=</span> <span class="n">target_ip</span>
+	<span class="n">ip</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="s">"."</span><span class="p">)</span>
+	<span class="n">ip</span> <span class="o">=</span> <span class="s">"."</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">ip</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span><span class="o">+</span><span class="s">"."</span>
+	<span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">start_host</span><span class="p">,</span><span class="n">end_host</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+		<span class="n">target_ip</span> <span class="o">=</span> <span class="n">ip</span> <span class="o">+</span> <span class="nf">str</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+		<span class="nf">print</span><span class="p">(</span><span class="s">"Scannig Host : "</span><span class="o">+</span><span class="n">target_ip</span><span class="o">+</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+		<span class="nf">single_host_scan</span><span class="p">(</span><span class="n">start_port</span><span class="p">,</span><span class="n">end_port</span><span class="p">)</span>
+	<span class="n">sys</span><span class="p">.</span><span class="nf">exit</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>I devoloped this script with less additional modules this can be executed in any system without any additional requirements.This scanning process will take less time.</p>
+
+<h3 id="requirements">Requirements</h3>
+
+<p>You may require some python modules</p>
+
+<ol>
+  <li>subprocess</li>
+  <li>socket</li>
+  <li>platform</li>
+  <li>threading</li>
+  <li>sys</li>
+</ol>
+
+<p>These modules will be pre installed on every system, if not then install them with <code class="language-plaintext highlighter-rouge">pip3 or pip</code></p>
+<h3 id="installation">Installation</h3>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/TheMj0ln1r/Port_Scanner.git
+cd Port_Scanner
+python3 Port_Scanner.py
+</code></pre></div></div>
+
+<h3 id="preview">Preview</h3>
+<p><img src="/assets/img/project_img/portscanner.png" alt="Preview" w="600&quot;,h=&quot;600" /></p>
+
+<blockquote class="prompt-info">
+  <p>If anything should be modified in the script please let me know.</p>
+</blockquote>
+
+<p>You can find complete source code of Port Scanner here : <a href="https://github.com/TheMj0ln1r/Port_Scanner">https://github.com/TheMj0ln1r/Port_Scanner</a></p>

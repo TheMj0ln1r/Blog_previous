@@ -1,0 +1,517 @@
+<p>Hello mates! I played <a href="https://ctftime.org/event/1904/" target="_blank">VishwaCTF 2023</a> which was happened from 31 Mar to 3 Apr. I played it with the team <a href="https://ctftime.org/team/217079">Invaders0x1</a>.
+These are the challenges i have solved during CTF.</p>
+
+<p><img src="/assets/img/post_img/vishwa_progress.png" alt="Progess" /></p>
+
+<h1 id="web-eeezzy">WEB-Eeezzy</h1>
+
+<p><img src="/assets/img/post_img/vishwa_eezzy1.png" alt="Eeezzy" /></p>
+
+<p>The challenge is at <strong>https://ch41272110703.ch.eng.run.</strong> It is a login page with fields username and password.</p>
+
+<p>First, I did <code class="language-plaintext highlighter-rouge">ctrl+u</code> 😉. It shows a <code class="language-plaintext highlighter-rouge">view.php</code> in onclick function.</p>
+
+<p><img src="/assets/img/post_img/vishwa_eezzy2.png" alt="Eeezzy src" /></p>
+
+<p>Visiting <strong>https://ch41272110703.ch.eng.run/view.php</strong> results the following code</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+    <span class="nb">session_start</span><span class="p">();</span>
+    <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">'status'</span><span class="p">]</span><span class="o">=</span><span class="kc">null</span><span class="p">;</span>
+    <span class="nv">$flag</span><span class="o">=</span><span class="s2">""</span><span class="p">;</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'username'</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="k">isset</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'password'</span><span class="p">]))</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">strcmp</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'username'</span><span class="p">],</span> <span class="nv">$flag</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nb">strcmp</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'password'</span><span class="p">],</span> <span class="nv">$flag</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+                <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">'status'</span><span class="p">]</span><span class="o">=</span><span class="nv">$flag</span><span class="p">;</span>
+            <span class="k">else</span>
+                <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">'status'</span><span class="p">]</span><span class="o">=</span><span class="s2">"Invalid username or password"</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nc">Throwable</span> <span class="nv">$th</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$_SESSION</span><span class="p">[</span><span class="s1">'status'</span><span class="p">]</span><span class="o">=</span><span class="nv">$flag</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="cp">?&gt;</span>
+</code></pre></div></div>
+
+<p>This php code is checking for the username and password parameters which are entered in the login page. The username and flag are compared using <code class="language-plaintext highlighter-rouge">strcmp()</code> and similarly password and flag. If the condition satisfied we can get the flag.</p>
+
+<p>Exploiting strcmp() vulnerabilities.</p>
+
+<p>If I set <code class="language-plaintext highlighter-rouge">$_GET['password']</code> equal to an empty array, then strcmp would return a NULL. Due to some inherent weaknesses in PHP’s comparisons, NULL == 0 will return true.</p>
+
+<p>Tried by inputing some default credentials in the login page. It says incorrect details, then i captured the request headers. I found that this <code class="language-plaintext highlighter-rouge">https://ch41272110703.ch.eng.run/view.php?username=admin&amp;password=1234&amp;submit=Login</code> has been sent to the server for the authentication.</p>
+
+<p>The payload would be : <code class="language-plaintext highlighter-rouge">?username=admin&amp;password[]=34&amp;submit=Login</code></p>
+
+<p><strong>https://ch41272110703.ch.eng.run/view.php??username=admin&amp;password[]=34&amp;submit=Login</strong> returns an error in the login page with the flag.</p>
+
+<p><img src="/assets/img/post_img/vishwa_eezzy3.png" alt="Eeezzy flag" /></p>
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : VishwaCTF{5t0p_c0mp4r1ng}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="steganography-guatemala">Steganography-Guatemala</h1>
+
+<p><img src="/assets/img/post_img/vishwa_guate1.png" alt="Eeezzy flag" /></p>
+
+<p>Attached files : a gif file named <a href="/assets/files/vishwactf23/AV">AV</a></p>
+
+<p>I tried exiftool to view metadata of the gif.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[intruder@parrot]─[/Guatemala]
+└──╼ <span class="nv">$exiftool</span> AV
+ExifTool Version Number         : 12.16
+File Name                       : AV
+Directory                       : <span class="nb">.</span>
+File Size                       : 1086 KiB
+File Modification Date/Time     : 2023:03:31 17:17:04+05:30
+File Access Date/Time           : 2023:04:04 10:58:55+05:30
+File Inode Change Date/Time     : 2023:04:04 10:58:51+05:30
+File Permissions                : rwxrwx---
+File Type                       : GIF
+File Type Extension             : gif
+MIME Type                       : image/gif
+GIF Version                     : 89a
+Image Width                     : 498
+Image Height                    : 498
+Has Color Map                   : Yes
+Color Resolution Depth          : 8
+Bits Per Pixel                  : 8
+Background Color                : 0
+Animation Iterations            : Infinite
+Comment                         : <span class="nv">dmlzaHdhQ1RGe3ByMDczYzdfdXJfM1gxRn0</span><span class="o">=</span>
+Frame Count                     : 17
+Duration                        : 2.04 s
+Image Size                      : 498x498
+Megapixels                      : 0.248
+</code></pre></div></div>
+<p>It looks there is a base64 encoded text in the comments. By decoding it we can get the flag.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[intruder@parrot]─[/Guatemala]
+└──╼ <span class="nv">$echo</span> <span class="s2">"dmlzaHdhQ1RGe3ByMDczYzdfdXJfM1gxRn0="</span> | <span class="nb">base64</span> <span class="nt">-d</span>
+vishwaCTF<span class="o">{</span>pr073c7_ur_3X1F<span class="o">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : vishwaCTF{pr073c7_ur_3X1F}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="steganography-can-you-see-me">Steganography-Can you see me?</h1>
+
+<p><img src="/assets/img/post_img/vishwa_canyousee1.png" alt="can you see me" /></p>
+
+<p>Attached files : <a href="/assets/files/vishwactf23/havealook.jpg">havealook.jpg</a></p>
+
+<p>First of all, lets try to extract if any data is present in the image using steghide.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[✗]─[intruder@parrot]─[/canyouseeme]
+└──╼ <span class="nv">$steghide</span> extract <span class="nt">-sf</span> havealook.jpg 
+Enter passphrase: 
+steghide: could not extract any data with that passphrase!
+</code></pre></div></div>
+<p>Okay, we dont have password. Lets use unzip if we can extract data out of it without password.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>┌─[intruder@parrot]─[/canyouseeme]
+└──╼ <span class="nv">$unzip</span> havealook.jpg
+Archive:  havealook.jpg
+warning <span class="o">[</span>havealook.jpg]:  134855 extra bytes at beginning or within zipfile
+  <span class="o">(</span>attempting to process anyway<span class="o">)</span>
+  inflating: hereissomething.wav     
+</code></pre></div></div>
+
+<p>Yes, we got an audio file <a href="/assets/files/vishwactf23/hereissomething.wav">hereissomething.wav</a>. The audio is not understandable by the humans. It seems to be a morsecode. Then i used <a href="https://morsecode.world/" target="_blank">this site </a> to decode the morse code. In the sonic visualizer i found the flag.</p>
+
+<p><img src="/assets/img/post_img/vishwa_canyousee2.png" alt="Flag" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : vishwaCTF{n0w_y0u_533_m3}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="forensics---the-sender-conundrum">Forensics - The Sender Conundrum</h1>
+
+<p><img src="/assets/img/post_img/vishwa_conundrum1.png" alt="The Sender Conundrum" /></p>
+
+<p>Attached files : <a href="/assets/files/vishwactf23/TheEmail.eml">TheEmail.eml</a> and <a href="/assets/files/vishwactf23/unzipme.zip"> unzipme.zip</a></p>
+
+<p>The zip file is password protected. So, lets analyze email raw data for the password.</p>
+
+<p>There is a riddle sent by the sender.</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;p&gt;&lt;/p&gt;</span>Hello Marcus Cooper,<span class="nt">&lt;br&gt;</span>
+ You are one step behind from finding your flag. <span class="nt">&lt;br&gt;</span>
+ Here is a Riddle: <span class="nt">&lt;br&gt;</span>
+ I am a noun and not a verb or an adverb.<span class="nt">&lt;br&gt;</span>
+ I am given to you at birth and never taken away,<span class="nt">&lt;br&gt;</span>
+ You keep me until you die, come what may.<span class="nt">&lt;br&gt;</span>
+ What am I?<span class="nt">&lt;br&gt;</span>
+</code></pre></div></div>
+
+<p>I am too bad to solve riddles, so I found a solution on google as <code class="language-plaintext highlighter-rouge">Name</code></p>
+
+<p>Tried <strong>Name</strong> as the password to extract zip file. Its the wrong password. Then i tried few names present in the eml file. I found the correct name on this line <strong>Return-Path: BrandonLee@anonymousemail.me</strong>. I extracted the flag file from the zip with the password <strong>BrandonLee</strong>.</p>
+
+<div class="language-console highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="go">┌─[intruder@parrot]─[thesenderconundrum]
+</span><span class="gp">└──╼ $</span>unzip unzipme.zip 
+<span class="go">Archive:  unzipme.zip
+   creating: unzipme/
+[unzipme.zip] unzipme/flag.txt password: 
+ extracting: unzipme/flag.txt        
+┌─[intruder@parrot]─[/thesenderconundrum]
+</span><span class="gp">└──╼ $</span><span class="nb">cat </span>unzipme/flag.txt
+<span class="go">vishwaCTF{1d3n7i7y_7h3f7_is_n0t_4_j0k3}
+</span></code></pre></div></div>
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : vishwaCTF{1d3n7i7y_7h3f7_is_n0t_4_j0k3}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="rev-phi-calculator">REV-Phi-Calculator</h1>
+
+<p><img src="/assets/img/post_img/vishwa_phi1.png" alt="Phi - calc" /></p>
+
+<p>Attached files : <a href="/assets/files/vishwactf23/Phi_Calculator.py"> Phi_Calculator.py</a></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#============================================================================#
+#============================Phi CALCULATOR===============================#
+#============================================================================#
+</span><span class="kn">import</span> <span class="n">hashlib</span>
+<span class="kn">from</span> <span class="n">cryptography.fernet</span> <span class="kn">import</span> <span class="n">Fernet</span>
+<span class="kn">import</span> <span class="n">base64</span>
+
+<span class="c1"># GLOBALS --v
+</span><span class="n">arcane_loop_trial</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">jump_into_full</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">full_version_code</span> <span class="o">=</span> <span class="s">""</span>
+
+<span class="n">username_trial</span> <span class="o">=</span> <span class="s">"vishwaCTF"</span>
+<span class="n">bUsername_trial</span> <span class="o">=</span> <span class="sa">b</span><span class="s">"vishwaCTF"</span>
+
+<span class="n">key_part_static1_trial</span> <span class="o">=</span> <span class="s">"VishwaCTF{m4k3_it_possibl3_"</span>
+<span class="n">key_part_dynamic1_trial</span> <span class="o">=</span> <span class="s">"xxxxxxxx"</span>
+<span class="n">key_part_static2_trial</span> <span class="o">=</span> <span class="s">"}"</span>
+<span class="n">key_full_template_trial</span> <span class="o">=</span> <span class="n">key_part_static1_trial</span> <span class="o">+</span> <span class="n">key_part_dynamic1_trial</span> <span class="o">+</span> <span class="n">key_part_static2_trial</span>
+
+<span class="nf">print</span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">key_full_template_trial</span><span class="p">))</span>
+<span class="n">star_db_trial</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s">"Sharuk Khan"</span><span class="p">:</span> <span class="mf">4.38</span><span class="p">,</span>
+  <span class="s">"Bollywood Star"</span><span class="p">:</span> <span class="mf">5.95</span><span class="p">,</span>
+  <span class="s">"Rohan 16"</span><span class="p">:</span> <span class="mf">6.57</span><span class="p">,</span>
+  <span class="s">"WISH 0855-0714"</span><span class="p">:</span> <span class="mf">7.17</span><span class="p">,</span>
+  <span class="s">"Tiger 007"</span><span class="p">:</span> <span class="mf">7.78</span><span class="p">,</span>
+  <span class="s">"Lalande 21185"</span><span class="p">:</span> <span class="mf">8.29</span><span class="p">,</span>
+  <span class="s">"UV Ceti"</span><span class="p">:</span> <span class="mf">8.58</span><span class="p">,</span>
+  <span class="s">"Sirius"</span><span class="p">:</span> <span class="mf">8.59</span><span class="p">,</span>
+  <span class="s">"Boss 154"</span><span class="p">:</span> <span class="mf">9.69</span><span class="p">,</span>
+  <span class="s">"Yin Sector CL-Y d127"</span><span class="p">:</span> <span class="mf">9.86</span><span class="p">,</span>
+  <span class="s">"Duamta"</span><span class="p">:</span> <span class="mf">9.88</span><span class="p">,</span>
+  <span class="s">"Ross 248"</span><span class="p">:</span> <span class="mf">10.37</span><span class="p">,</span>
+  <span class="s">"WISE 1506+7027"</span><span class="p">:</span> <span class="mf">10.52</span><span class="p">,</span>
+  <span class="s">"Epsilon Eridani"</span><span class="p">:</span> <span class="mf">10.52</span><span class="p">,</span>
+  <span class="s">"Lacaille 9352"</span><span class="p">:</span> <span class="mf">10.69</span><span class="p">,</span>
+  <span class="s">"Ross 128"</span><span class="p">:</span> <span class="mf">10.94</span><span class="p">,</span>
+  <span class="s">"EZ Aquarii"</span><span class="p">:</span> <span class="mf">11.10</span><span class="p">,</span>
+  <span class="s">"61 Cygni"</span><span class="p">:</span> <span class="mf">11.37</span><span class="p">,</span>
+  <span class="s">"Procyon"</span><span class="p">:</span> <span class="mf">11.41</span><span class="p">,</span>
+  <span class="s">"Struve 2398"</span><span class="p">:</span> <span class="mf">11.64</span><span class="p">,</span>
+  <span class="s">"Groombridge 34"</span><span class="p">:</span> <span class="mf">11.73</span><span class="p">,</span>
+  <span class="s">"Epsilon Indi"</span><span class="p">:</span> <span class="mf">11.80</span><span class="p">,</span>
+  <span class="s">"SPF-LF 1"</span><span class="p">:</span> <span class="mf">11.82</span><span class="p">,</span>
+  <span class="s">"Tau Ceti"</span><span class="p">:</span> <span class="mf">11.94</span><span class="p">,</span>
+  <span class="s">"YZ Ceti"</span><span class="p">:</span> <span class="mf">12.07</span><span class="p">,</span>
+  <span class="s">"WISE 0350-5658"</span><span class="p">:</span> <span class="mf">12.09</span><span class="p">,</span>
+  <span class="s">"Luyten's Star"</span><span class="p">:</span> <span class="mf">12.39</span><span class="p">,</span>
+  <span class="s">"Teegarden's Star"</span><span class="p">:</span> <span class="mf">12.43</span><span class="p">,</span>
+  <span class="s">"Kapteyn's Star"</span><span class="p">:</span> <span class="mf">12.76</span><span class="p">,</span>
+  <span class="s">"Talta"</span><span class="p">:</span> <span class="mf">12.83</span><span class="p">,</span>
+  <span class="s">"Lacaille 8760"</span><span class="p">:</span> <span class="mf">12.88</span>
+<span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">intro_trial</span><span class="p">():</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">===============================================</span><span class="se">\n\
+</span><span class="s">Welcome to the Phi Calculator, "</span> <span class="o">+</span> <span class="n">username_trial</span> <span class="o">+</span> <span class="s">"!</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>    
+    <span class="nf">print</span><span class="p">(</span><span class="s">"This is the trial version of Phi Calculator."</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"The full version may be purchased in person near</span><span class="se">\n\
+</span><span class="s">the galactic center of the Milky Way galaxy. </span><span class="se">\n\
+</span><span class="s">Available while supplies last!</span><span class="se">\n\
+</span><span class="s">=====================================================</span><span class="se">\n\n</span><span class="s">"</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">menu_trial</span><span class="p">():</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"___Phi Calculator___</span><span class="se">\n\n\
+</span><span class="s">Menu:</span><span class="se">\n\
+</span><span class="s">(1) Estimate Projection Burn</span><span class="se">\n\
+</span><span class="s">(2) [LOCKED] Estimate  Slingshot Approach Vector</span><span class="se">\n\
+</span><span class="s">(3) Enter License Key</span><span class="se">\n\
+</span><span class="s">(4) Exit Phi Calculator"</span><span class="p">)</span>
+    <span class="n">choice</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"What would you like to do, "</span><span class="o">+</span> <span class="n">username_trial</span> <span class="o">+</span><span class="s">" (1/2/3/4)? "</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nf">validate_choice</span><span class="p">(</span><span class="n">choice</span><span class="p">):</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n\n</span><span class="s">Invalid choice!</span><span class="se">\n\n</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="s">"1"</span><span class="p">:</span>
+        <span class="nf">estimate_burn</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s">"2"</span><span class="p">:</span>
+        <span class="nf">locked_estimate_vector</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s">"3"</span><span class="p">:</span>
+        <span class="nf">enter_license</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s">"4"</span><span class="p">:</span>
+        <span class="k">global</span> <span class="n">arcane_loop_trial</span>
+        <span class="n">arcane_loop_trial</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Bye!"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"That choice is not valid. Please enter a single, valid </span><span class="se">\
+</span><span class="s">lowercase letter choice (1/2/3/4)."</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">validate_choice</span><span class="p">(</span><span class="n">menu_choice</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">menu_choice</span> <span class="o">==</span> <span class="s">"1"</span> <span class="ow">or</span> \
+       <span class="n">menu_choice</span> <span class="o">==</span> <span class="s">"2"</span> <span class="ow">or</span> \
+       <span class="n">menu_choice</span> <span class="o">==</span> <span class="s">"3"</span> <span class="ow">or</span> \
+       <span class="n">menu_choice</span> <span class="o">==</span> <span class="s">"4"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+<span class="k">def</span> <span class="nf">estimate_burn</span><span class="p">():</span>
+  <span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n\n</span><span class="s">SOL is detected as your nearest star."</span><span class="p">)</span>
+  <span class="n">target_system</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"To which system do you want to travel? "</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">target_system</span> <span class="ow">in</span> <span class="n">star_db_trial</span><span class="p">:</span>
+      <span class="n">ly</span> <span class="o">=</span> <span class="n">star_db_trial</span><span class="p">[</span><span class="n">target_system</span><span class="p">]</span>
+      <span class="n">mana_cost_low</span> <span class="o">=</span> <span class="n">ly</span><span class="o">**</span><span class="mi">2</span>
+      <span class="n">mana_cost_high</span> <span class="o">=</span> <span class="n">ly</span><span class="o">**</span><span class="mi">3</span>
+      <span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="o">+</span> <span class="n">target_system</span> <span class="o">+</span><span class="s">" will cost between "</span><span class="o">+</span> <span class="nf">str</span><span class="p">(</span><span class="n">mana_cost_low</span><span class="p">)</span> \
+<span class="o">+</span><span class="s">" and "</span><span class="o">+</span> <span class="nf">str</span><span class="p">(</span><span class="n">mana_cost_high</span><span class="p">)</span> <span class="o">+</span><span class="s">" stone(s) to project to</span><span class="se">\n\n</span><span class="s">"</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+      <span class="c1"># TODO : could add option to list known stars
+</span>      <span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Star not found.</span><span class="se">\n\n</span><span class="s">"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">locked_estimate_vector</span><span class="p">():</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n\n</span><span class="s">You must buy the full version of this software to use this </span><span class="se">\
+</span><span class="s">feature!</span><span class="se">\n\n</span><span class="s">"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">enter_license</span><span class="p">():</span>
+    <span class="n">user_key</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Enter your license key: "</span><span class="p">)</span>
+    <span class="n">user_key</span> <span class="o">=</span> <span class="n">user_key</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span>
+
+    <span class="k">global</span> <span class="n">bUsername_trial</span>
+    
+    <span class="k">if</span> <span class="nf">check_key</span><span class="p">(</span><span class="n">user_key</span><span class="p">,</span> <span class="n">bUsername_trial</span><span class="p">):</span>
+        <span class="nf">decrypt_full_version</span><span class="p">(</span><span class="n">user_key</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Key is NOT VALID. Check your data entry.</span><span class="se">\n\n</span><span class="s">"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">check_key</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">username_trial</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">key_full_template_trial</span>
+    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">!=</span> <span class="nf">len</span><span class="p">(</span><span class="n">key_full_template_trial</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Check static base key part --v
+</span>        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">key_part_static1_trial</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">c</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">False</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># TODO : test performance on toolbox container
+</span>        <span class="c1"># Check dynamic part --v
+</span>        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">4</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">5</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">3</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">6</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">7</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">8</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">True</span>
+<span class="k">def</span> <span class="nf">decrypt_full_version</span><span class="p">(</span><span class="n">key_str</span><span class="p">):</span>
+    <span class="n">key_base64</span> <span class="o">=</span> <span class="n">base64</span><span class="p">.</span><span class="nf">b64encode</span><span class="p">(</span><span class="n">key_str</span><span class="p">.</span><span class="nf">encode</span><span class="p">())</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nc">Fernet</span><span class="p">(</span><span class="n">key_base64</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="s">"keygenme.py"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">fout</span><span class="p">:</span>
+          <span class="k">global</span> <span class="n">full_version</span>
+          <span class="k">global</span> <span class="n">full_version_code</span>
+          <span class="n">full_version_code</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">decrypt</span><span class="p">(</span><span class="n">full_version</span><span class="p">)</span>
+          <span class="n">fout</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="n">full_version_code</span><span class="p">.</span><span class="nf">decode</span><span class="p">())</span>
+          <span class="k">global</span> <span class="n">arcane_loop_trial</span>
+          <span class="n">arcane_loop_trial</span> <span class="o">=</span> <span class="bp">False</span>
+          <span class="k">global</span> <span class="n">jump_into_full</span>
+          <span class="n">jump_into_full</span> <span class="o">=</span> <span class="bp">True</span>
+          <span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Full version written to 'keygenme.py'.</span><span class="se">\n\n</span><span class="s">"</span><span class="o">+</span> \
+                 <span class="s">"Exiting trial version..."</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">FileExistsError</span><span class="p">:</span>
+        <span class="n">sys</span><span class="p">.</span><span class="n">stderr</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="s">"Full version of keygenme NOT written to disk, "</span><span class="o">+</span> \
+                      <span class="s">"ERROR: 'keygenme.py' file already exists.</span><span class="se">\n\n</span><span class="s">"</span><span class="o">+</span> \
+              <span class="s">"ADVICE: If this existing file is not valid, "</span><span class="o">+</span> \
+              <span class="s">"you may try deleting it and entering the "</span><span class="o">+</span> \
+              <span class="s">"license key again. Good luck"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">ui_flow</span><span class="p">():</span>
+    <span class="nf">intro_trial</span><span class="p">()</span>
+    <span class="k">while</span> <span class="n">arcane_loop_trial</span><span class="p">:</span>
+        <span class="nf">menu_trial</span><span class="p">()</span>
+<span class="c1"># Encrypted blob of full version
+</span><span class="n">full_version</span> <span class="o">=</span> \
+<span class="sa">b</span><span class="s">"""
+gAAAAABgT_nvHAwPaWal_64Giubfb7I87ML4ANp4g-eUbMTqsc4asWygnpXcaJ5FLahXXDcul9xPDqIPPytiZ9aMm25S6dgfi4ZPvM5IUSnnNjk6dxYAKsX5Yd72BV4ERrqdNNn2jZrphzlV4a4gY-XV_0ZHovFlHhEpPQnTtG_5RTETId0xAD5K5iActkI9a3P4sx6ExBQ082EuPFlnWtUGl0dsEDHher3xT_lZe9JP5UAcOJsoC9AJ7N3Y1KjWXATzaBkXw6XTnzqDHu9Ycffw-i-GfQP-16hF_f2WBE9nQqniFu6THNuAvqwg0XBnsfvV0Fo3MTpON6HpeI3eIXqd4tLtsfhNcPa99ugrucf0l19Z5eFvrtMMgmfW_9lgvO7UcCft79ShvQWEHjhVeiDKBZo7TgTJ-1wpB92obH_bFGJpMcsp1w42tDEJmavnRSKXl39ph9-cgVXUKTfsjUbJCgtZfR8yj28JFCdmETu2kkt_dW4aLN8BTeRHLUpCEod9xBUFxzQJZNxey6ISn2j-PTR-yxCXrC2_A3TCBcqwUJYviP6emLKPSBRJB8dkRlWmylnMH4aYd6YXPnY457tk6UpGO6Ezw4K4DEhFtMSO4Vq2UhAS85j8kokc9_GG2v315uqVZ-TY7nU7xkhsrtEFK0h-0jiiLbTKLvOb3zpXq0ELdX9_WEK681LsIuFErhsvvPmmXx1K7IDlmjIWkYw--7lqpXPVrl9LalI-7npOF4MYet3jlH9v5Y83K3VDCrNZjH8uqK4pTKo0_I4HOmEtfe8pghAYDldmQ8wvphHRh4UEM34QcgCJa3VH1XAu2MRDwbEWcnXxumt_xL2wXBTFAPZWxrnioRunzw5HnrqW6Nzi871XiJ0OHQzt_ulvgxDmFMxAiSpzm9YJoxspTG1hpSqLe5IUICBXEhofgTAhHePGff-Qi20rDYQMQio8zoyV2ZPRjKVk8YDGZdhuSQaKLx-DRdvKBzmAYqjbvmbC_4Tt3_amXlqxeLRLA9YP7vtxv9Y65WZ-8DeGdZTinUgjh6xqJH0xJvfEhXITOEiFGZseX2kPPG4pX1nDCZ8R9ksgHxkpnW24sQSVGmx5DP0xGihfmABc98bag-qrs-QIb7YqwJqK0-0N0t7hFKF671doX07XWcIGLJuFZ0MHxPOIjVIWN8Xb7mKJiL7goQH8xuy9FcE6w8_GVw5N9nfWUCFdZKENYJ5WY3iX20OtJgiYTwvCTetf-wDWj_FH6z_hpufI1sDh9lO9EnAhxpoNo4jMjC3eZUKPkkUf_gfvjWmnA89Gvsuxj70lzwZ1650isi0_JPtDIWKaksprzIW8YN-MeuBYy_f3JJOtU4cCg5sInTM3YW5GupJMO4h6Y6vk1QPxWYM5Nr5_cB7i2FSyt7DY72L_ede8YNJxcRCBkf3eD-3aO6KmPAbbf_48aaM3L1axNVKwubW9Mec6YRoV0JwgJM0Km3YAGL_ybtYX5JeoPQzoOQBw_Vue2k8PsnbO6n2p3acaY8Y-6ZhKnrSBaeuACSZtTqJT4_WXYslQyX-Pgl-ljcq84H0AAPNnJ9AlNZwvGL6fKbdcxpcQ7RN8fdoU6bJ2q2XecXred2XfE2UHK-QTacm-amF5Mt4WrNlF8RGRuCagny7o6XyEYO_-xyowpUYsOA9c5j6u8qpju0donhdr0OWWKHpIWvOsDdzX-YEcQvfdXfLdDLDSDqGJUyB5giQK3IVqUeBAN2ZHdKyFAACUog4U0RJLJ3tEedF_PLZ5eqHyo_jwfBmqRi_bK2cwuYU_psxTBB6o2a2o1vx-nprP4QFVxdWD7by4VTFKCVW2yAGkL1OHPAc6hcoVhysAIMQhhqJF0SXXdqeXzFrM7pexr3sV9uL_R_CcknOk28VE0IyrvJLMj1sI-MkXqRFTdwjump6fneQizBHAy2Kk7GgU7JLwSvgUVGBS581ITxuQ-jeZW5od1m9z6xYLMKXNSV-EUZXhGPOz4kd87gTRxDMd9S5pkSqfiBQgrIrEuNtaDYJsc22r5MAGNpe-ouGhE_QRMPDaEVP8CibNu0wnjgrt_4Qf8M6ZURy6fzssBsqIjfFymJDe8uSmz5yosvTuRfsjcC_mhyeVFrjiHSzH5OEfNS0ihPMI6H9j4vdid0Wk3ewjfT3rpsadbuHBJTRxPcBN-dc8vaLvLzcJehyGQhvEVwmiycjAJ16pgOT5-rR0-ZLKoiaaa3OHcs8RB3ZXLe9LkJHsqCvjGeI4qqlkLfAhG08gNsAxtcbYAEVzKDvNDPdbWOsioIX3lKKiiGNztZMruThMwycUQ1zRN_5sRC5DTQDv0l3ka0OELW2U04Og5Sj5x1u2rdWSBa9nEI6LJ7nnp-pLTGo-C7tsq1boTz4WdHNMvAP2GWv99NFN37pa8UY6mjmdMAg0Ppw9rfxeGKq60jh-VcBuY3Yvu1g2_Ntv1e8CeK1jNXl06zLGLBO35hLwix4UcQmU_9M0v1QsYfjYBRW5sUnjcB3lGF8KJg6PYGbHcvAEDlqw12ZtITFOaIqhkpvSzbfG1LQF7e_NfhXijgBMhJBug9tTayv0g5U2CPuZ-B4z_SkmEvN_eU5G1rht3Zv0ygTuOXW0Iig0XxFO02QugZSqIRg7fGRj6fxDVWXvQT6k3zXlXxN6LrHYHbcW7Irs0pLxm7pfAPBYlnFwRTHXI4HhnMUsPiK3v0oPU7IB67y4XCUMncMcGstRB4zqnaZI7dR8YPQfAZQ0CUjT5Z_H52Qp9ek5H_G48vb0DFC1qzgpNlfHcXrBLuhf_Gcc_1dzn9E4ZwoiF16aJhHPHSAGhOwclLy7xxy22ZenZVeKXcXrA7jUbPGcS-SWmUjF1IPe_Pkpfcgi5rIaxUhCWX5jK0c_n0_q2UAv9KAKJBaWstjcYBxtuUtHTFJD0ky9VDOqVJx1-V6tD1lNsnF1FfNrfIpB9YkoCxRIXDuBiCSagiwa830S6-1bREZMZug-etzjr1Wf7cO1PTDd61JSM252DWqHVVLQs8yYKmhzsZxfeI_uV5G7Y8fvwIYBB4krFRjpFR4-fGwF4Vma-xZlr6y9ziILNUyqz2u4FBmMjc1V8YgeqqXsLIuSHF6GDhvGXq-mEqLTWnxSAE-G_zeX7qPDAlsSv_dRLByQ0ZekBEQ1YbCpmnbZIPTJ_IyZLX0ZBOz3oc0ju5mFUFAzN8sJlwuZFH2GQeC9T2GJO8lJEhn4NqiudzmXVMerdRaL1C9ZbJfGSEkuEKQL2I2NeW5Nm7d4MStHdtZhO190_lXP2PQ8Tuz5BrPlYKgGf76NZshAU0XKXglyTWQKzONVv6251qh4wpMgWWFm8Va_zGlXNFd8QmQWpbhkWTLmo9ixI4W92hkw4oheJVE5n9LB1HWz50oSajV_2jJW_5Bd5Gtz6S3Q2X_xfA_TgRyeT0DXgbQ8mYx_N_43S_D94ud66-NnRA_A1KG-uu31KH5btUg6f3-oxoO4waPW8-hM0arNlGjREg0_LhAMALknhfJlno2VnQo2ExgXj6v-kaBlTuh4jt5vbhepD5EgtGvbXT4mypQbS49LA3SxCxEq7vDSxHfnLKWI84IlAeU8NQE6drQd9IGQ9lRWZDzHgvz7dO6Og4pIt7Q6UA2NEIc6ZNDTsghtKFVep19d7nGJDt-4-UCFJSHWBhTKeqb_A34XO4T5U7x-CXqphsBwIdMoPXHrWxhoFYaP6lPJVOryz8TEYDLsHbVdmhYJtA0bPgMPC1rNI-SqcyUqvZFGpIJwDcGghTTS1u8XjMlRkxOxuEMDO364AdLtruslkXjpd2NuUBUFwNWbQbfYIC5mePqxc_PhcaVxMXHYrFh2CLqXX7UhcZxHT9C8RQ==
+"""</span>
+<span class="c1"># Enter main loop
+</span><span class="nf">ui_flow</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">jump_into_full</span><span class="p">:</span>
+    <span class="nf">exec</span><span class="p">(</span><span class="n">full_version_code</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>By looking at the challenge code. The first part of the flag is present in the code as plaintext. <code class="language-plaintext highlighter-rouge">key_part_static1_trial = "VishwaCTF{m4k3_it_possibl3_"</code></p>
+
+<p>The remaining part of the flag is stored in <code class="language-plaintext highlighter-rouge">key_part_dynamic1_trial</code>. The full version of the flag is in <code class="language-plaintext highlighter-rouge">key_full_template_trial = key_part_static1_trial + key_part_dynamic1_trial + key_part_static2_trial</code>. We have the full version and the initial part of the flag.</p>
+
+<p>Lets look at the decryption function. This is going to print the decrypted full version if we enter the license which is the middle part of the flag.</p>
+
+<p>Okay, lets see how the key/license has been validated here.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">check_key</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">username_trial</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">key_full_template_trial</span>
+    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">!=</span> <span class="nf">len</span><span class="p">(</span><span class="n">key_full_template_trial</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Check static base key part --v
+</span>        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">key_part_static1_trial</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">c</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">False</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># TODO : test performance on toolbox container
+</span>        <span class="c1"># Check dynamic part --v
+</span>        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">4</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">5</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">3</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">6</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">7</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">key</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="mi">8</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="bp">True</span>
+</code></pre></div></div>
+<p>The key/license characters are compared with the hash characters of the <code class="language-plaintext highlighter-rouge">username_trail</code>.</p>
+
+<p><code class="language-plaintext highlighter-rouge">username_trail = username_trial = b"vishwaCTF"
+hashlib.sha256(username_trial).hexdigest() = a1ccb7d574518024795268ab284efdd93787b7cb741038437f24bff749a7aa0c
+</code>
+Now the <code class="language-plaintext highlighter-rouge">key[0] = hashlib.sha256(username_trial).hexdigest()[4] = b</code></p>
+
+<p>So, i wrote this script to print the flag rather than doing it manually.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">hashlib</span>
+<span class="kn">from</span> <span class="n">cryptography.fernet</span> <span class="kn">import</span> <span class="n">Fernet</span>
+<span class="kn">import</span> <span class="n">base64</span>
+
+<span class="n">username_trial</span> <span class="o">=</span> <span class="sa">b</span><span class="s">"vishwaCTF"</span>
+<span class="n">key_part_static1_trial</span> <span class="o">=</span> <span class="s">"VishwaCTF{m4k3_it_possibl3_"</span>
+<span class="n">key_part_dynamic1_trial</span> <span class="o">=</span> <span class="s">"xxxxxxxx"</span>
+<span class="n">key_part_static2_trial</span> <span class="o">=</span> <span class="s">"}"</span>
+
+<span class="n">key</span> <span class="o">=</span><span class="p">[]</span>
+<span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">index</span><span class="p">:</span>
+    <span class="n">key</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">hashlib</span><span class="p">.</span><span class="nf">sha256</span><span class="p">(</span><span class="n">username_trial</span><span class="p">).</span><span class="nf">hexdigest</span><span class="p">()[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="n">key_part_dynamic1_trial</span> <span class="o">=</span> <span class="s">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+<span class="n">key_full_template_trial</span> <span class="o">=</span> <span class="n">key_part_static1_trial</span> <span class="o">+</span> <span class="n">key_part_dynamic1_trial</span> <span class="o">+</span> <span class="n">key_part_static2_trial</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">key_full_template_trial</span><span class="p">)</span>
+<span class="c1">#output
+#VishwaCTF{m4k3_it_possibl3_b7cdc517}
+</span></code></pre></div></div>
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : VishwaCTF{m4k3_it_possibl3_b7cdc517}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="web-alive">WEB-aLive</h1>
+
+<p><img src="/assets/img/post_img/vishwa_alive1.png" alt="Alive" /></p>
+
+<p>The website that is given in challenge is checking the live hosts.</p>
+
+<p>I tried to insert some html code in the input.</p>
+
+<p><img src="/assets/img/post_img/vishwa_alive2.png" alt="Alive" /></p>
+
+<p>As i expected the site was processed the html code.</p>
+
+<p><img src="/assets/img/post_img/vishwa_alive3.png" alt="Alive" /></p>
+
+<p>So , it seems to have a <code class="language-plaintext highlighter-rouge">Reflected XSS</code> vulnerability. I tried multiple payloads to done my work.</p>
+
+<p><code class="language-plaintext highlighter-rouge">');&lt;/script&gt;&lt;script&gt;alert(document.cookie)&lt;/script&gt;&lt;b&gt;</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">',&lt;/script&gt;&lt;script&gt;x=new XMLHttpRequest; alert(this.responseText); x.open("GET","file:///etc/passwd"); x.send()&lt;/script&gt;;</code></p>
+
+<p>Sadly, They are not worked. But I just tried to access <code class="language-plaintext highlighter-rouge">/flag.txt</code> of the site from the searchbar. And surprisingly it returned the flag.</p>
+
+<p><img src="/assets/img/post_img/vishwa_alive4.png" alt="Alive" /></p>
+
+<p>I dont know wheather it is intended or not, but many teams solved it in this way only!</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : VishwaCTF{blinD_cmd-i}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="crypto-indecipherable-cipher">Crypto-Indecipherable Cipher</h1>
+
+<p><img src="/assets/img/post_img/vishwa_indecipher1.png" alt="Indecipherable" /></p>
+
+<p>First, I used <a href="https://www.dcode.fr/cipher-identifier" target="_blank">this site</a> to identify the cipher type. It shows that it is mostly a vigenere cipher. Then i used <a href="https://www.dcode.fr/vigenere-cipher" target="_blank">this site</a> to decode the cipher.</p>
+
+<p><img src="/assets/img/post_img/vishwa_indecipher2.png" alt="Indecipherable" />
+<img src="/assets/img/post_img/vishwa_indecipher3.png" alt="Indecipherable" /></p>
+
+<p>The flag is the decrypted text in format.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : VishwaCTF{friedrichwilhelmkasiskiwastheonewhodesignedtheaaakasiskiexaminationtodecodevignerecipher}</code></p>
+</blockquote>
+
+<hr />
