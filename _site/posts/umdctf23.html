@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-UMDCTF 2023</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>UMDCTF 2023 | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="UMDCTF 2023" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hi Readers! I played UMDCTF 2023 which was happened from 29 Apr to 01 May. I played it with the team Invaders0x1." />
+<meta property="og:description" content="Hi Readers! I played UMDCTF 2023 which was happened from 29 Apr to 01 May. I played it with the team Invaders0x1." />
+<link rel="canonical" href="http://localhost:8000/posts/umdctf23" />
+<meta property="og:url" content="http://localhost:8000/posts/umdctf23" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-05-01T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="UMDCTF 2023" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2023-05-01T00:00:00+05:30","datePublished":"2023-05-01T00:00:00+05:30","description":"Hi Readers! I played UMDCTF 2023 which was happened from 29 Apr to 01 May. I played it with the team Invaders0x1.","headline":"UMDCTF 2023","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/posts/umdctf23"},"url":"http://localhost:8000/posts/umdctf23"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div class="head-parent">
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat UMDCTF</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>UMDCTF 2023</h2>
+  <time datetime="2023-05-01T00:00:00+05:30" class="by-line">01 May 2023</time>
+  <p>Hi Readers! 
+I played <a href="https://ctftime.org/event/1949" target="_blank">UMDCTF 2023</a> which was happened from  29 Apr to 01 May. I played it with the team <a href="https://ctftime.org/team/217079">Invaders0x1</a>.</p>
+
+<p>These are the writeups for the challenges I solved.</p>
+
+<h1 id="crypto">Crypto</h1>
+
+<h1 id="cbc-mac1">CBC-MAC1</h1>
+
+<p><img src="/assets/img/post_img/umdctf23_cbcmac1.png" alt="cbcmac1" /></p>
+
+<p>Attached Files : <a>cbc-mac1.py</a></p>
+
+<p><strong>cbc-mac1.py</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">socket</span>
+<span class="kn">import</span> <span class="n">threading</span>
+<span class="kn">from</span> <span class="n">_thread</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="n">Crypto</span> <span class="kn">import</span> <span class="n">Random</span>
+<span class="kn">from</span> <span class="n">Crypto.Cipher</span> <span class="kn">import</span> <span class="n">AES</span>
+<span class="kn">from</span> <span class="n">binascii</span> <span class="kn">import</span> <span class="n">hexlify</span><span class="p">,</span> <span class="n">unhexlify</span>
+<span class="n">HOST</span> <span class="o">=</span> <span class="s">'0.0.0.0'</span>  <span class="c1"># Standard loopback interface address (localhost)
+</span><span class="n">PORT</span> <span class="o">=</span> <span class="mi">60001</span>        <span class="c1"># Port to listen on (non-privileged ports are &gt; 1023)
+</span><span class="n">FLAG</span> <span class="o">=</span> <span class="nf">open</span><span class="p">(</span><span class="s">'flag.txt'</span><span class="p">,</span> <span class="s">'r'</span><span class="p">).</span><span class="nf">read</span><span class="p">().</span><span class="nf">strip</span><span class="p">()</span>
+<span class="n">MENU</span> <span class="o">=</span> <span class="s">"</span><span class="se">\n</span><span class="s">What would you like to do?</span><span class="se">\n\t</span><span class="s">(1) MAC Query</span><span class="se">\n\t</span><span class="s">(2) Forgery</span><span class="se">\n\t</span><span class="s">(3) Exit</span><span class="se">\n\n</span><span class="s">Choice: "</span>
+<span class="n">INITIAL</span> <span class="o">=</span> <span class="s">"Team Rocket told me CBC-MAC with arbitrary-length messages is safe from forgery. If you manage to forge a message you haven't queried using my oracle, I'll give you something in return.</span><span class="se">\n</span><span class="s">"</span>
+<span class="n">BS</span> <span class="o">=</span> <span class="mi">16</span> <span class="c1"># Block Size
+</span><span class="n">MAX_QUERIES</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="k">def</span> <span class="nf">cbc_mac</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="n">iv</span> <span class="o">=</span> <span class="sa">b</span><span class="s">'</span><span class="se">\x00</span><span class="s">'</span><span class="o">*</span><span class="n">BS</span>
+    <span class="n">cipher</span> <span class="o">=</span> <span class="n">AES</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">AES</span><span class="p">.</span><span class="n">MODE_CBC</span><span class="p">,</span> <span class="n">iv</span><span class="o">=</span><span class="n">iv</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">cipher</span><span class="p">.</span><span class="nf">encrypt</span><span class="p">(</span><span class="n">msg</span><span class="p">)[</span><span class="o">-</span><span class="mi">16</span><span class="p">:]</span>
+    <span class="k">return</span> <span class="nf">hexlify</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">threading</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+    <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="n">INITIAL</span><span class="p">.</span><span class="nf">encode</span><span class="p">())</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="n">Random</span><span class="p">.</span><span class="nf">get_random_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">queries</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="nf">len</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">MAX_QUERIES</span><span class="p">:</span>
+        <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="n">MENU</span><span class="p">.</span><span class="nf">encode</span><span class="p">())</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">choice</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">).</span><span class="nf">decode</span><span class="p">().</span><span class="nf">strip</span><span class="p">()</span>
+        <span class="k">except</span> <span class="nb">ConnectionResetError</span> <span class="k">as</span> <span class="n">cre</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="c1"># MAC QUERY
+</span>        <span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="s">'1'</span><span class="p">:</span>
+            <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">b</span><span class="s">'msg (hex): '</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">).</span><span class="nf">strip</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="nf">unhexlify</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="nf">if </span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">+</span> <span class="n">BS</span><span class="p">)</span> <span class="o">%</span> <span class="n">BS</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">f</span><span class="s">'Invalid msg length. Must be a multiple of BS=</span><span class="si">{</span><span class="n">BS</span><span class="si">}</span><span class="se">\n</span><span class="s">'</span><span class="p">.</span><span class="nf">encode</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">queries</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="nf">cbc_mac</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                    <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">f</span><span class="s">'CBC-MAC(msg): </span><span class="si">{</span><span class="n">t</span><span class="p">.</span><span class="nf">decode</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s">'</span><span class="p">.</span><span class="nf">encode</span><span class="p">())</span>
+            <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">b</span><span class="s">'Invalid msg format. Must be in hexadecimal</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+        <span class="c1"># FORGERY (impossible as I'm told)
+</span>        <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s">'2'</span><span class="p">:</span>
+            <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">b</span><span class="s">'msg (hex): '</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">).</span><span class="nf">strip</span><span class="p">()</span>
+            <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">b</span><span class="s">'tag (hex): '</span><span class="p">)</span>
+            <span class="n">tag</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">).</span><span class="nf">strip</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="nf">unhexlify</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="nf">if </span><span class="p">(</span><span class="nf">len</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">+</span> <span class="n">BS</span><span class="p">)</span> <span class="o">%</span> <span class="n">BS</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">f</span><span class="s">'Invalid msg length. Must be a multiple of BS=</span><span class="si">{</span><span class="n">BS</span><span class="si">}</span><span class="s"> bytes</span><span class="se">\n</span><span class="s">'</span><span class="p">.</span><span class="nf">encode</span><span class="p">())</span>
+                <span class="k">elif</span> <span class="nf">len</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span> <span class="o">!=</span> <span class="n">BS</span><span class="o">*</span><span class="mi">2</span><span class="p">:</span>
+                    <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">f</span><span class="s">'Invalid tag length. Must be </span><span class="si">{</span><span class="n">BS</span><span class="si">}</span><span class="s"> bytes</span><span class="se">\n</span><span class="s">'</span><span class="p">.</span><span class="nf">encode</span><span class="p">())</span>
+                <span class="k">elif</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">queries</span><span class="p">:</span>
+                    <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">f</span><span class="s">'cheater</span><span class="se">\n</span><span class="s">'</span><span class="p">.</span><span class="nf">encode</span><span class="p">())</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">t_ret</span> <span class="o">=</span> <span class="nf">cbc_mac</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">t_ret</span> <span class="o">==</span> <span class="n">tag</span><span class="p">:</span>
+                        <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">f</span><span class="s">'If you reach this point, I guess we need to find a better MAC (and not trust TR). </span><span class="si">{</span><span class="n">FLAG</span><span class="si">}</span><span class="se">\n</span><span class="s">'</span><span class="p">.</span><span class="nf">encode</span><span class="p">())</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">t_ret</span> <span class="o">==</span> <span class="n">tag</span><span class="p">).</span><span class="nf">encode</span><span class="p">()</span> <span class="o">+</span> <span class="sa">b</span><span class="s">'</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+            <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">b</span><span class="s">'Invalid msg format. Must be in hexadecimal</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="s">'3'</span><span class="p">:</span> <span class="c1"># EXIT
+</span>                <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">b</span><span class="s">'bye</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span> <span class="c1"># INVALID CHOICE
+</span>                <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">b</span><span class="s">'invalid menu choice</span><span class="se">\n</span><span class="s">'</span><span class="p">)</span>
+            <span class="k">break</span>
+    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">MAX_QUERIES</span><span class="p">:</span>
+        <span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">f</span><span class="s">'too many queries: </span><span class="si">{</span><span class="nf">len</span><span class="p">(</span><span class="n">queries</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s">'</span><span class="p">.</span><span class="nf">encode</span><span class="p">())</span>
+    <span class="n">conn</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">socket</span><span class="p">.</span><span class="nf">socket</span><span class="p">(</span><span class="n">socket</span><span class="p">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="p">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
+        <span class="n">s</span><span class="p">.</span><span class="nf">setsockopt</span><span class="p">(</span><span class="n">socket</span><span class="p">.</span><span class="n">SOL_SOCKET</span><span class="p">,</span> <span class="n">socket</span><span class="p">.</span><span class="n">SO_REUSEADDR</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">s</span><span class="p">.</span><span class="nf">bind</span><span class="p">((</span><span class="n">HOST</span><span class="p">,</span> <span class="n">PORT</span><span class="p">))</span>
+        <span class="n">s</span><span class="p">.</span><span class="nf">listen</span><span class="p">()</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">conn</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="nf">accept</span><span class="p">()</span>
+            <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'new connection: </span><span class="si">{</span><span class="n">addr</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+            <span class="nf">start_new_thread</span><span class="p">(</span><span class="n">threading</span><span class="p">,</span> <span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="p">))</span>
+        <span class="n">s</span><span class="p">.</span><span class="nf">close</span><span class="p">()</span>
+
+</code></pre></div></div>
+
+<p>The remote challenge is at <strong>nc 0.cloud.chals.io 12769</strong>. The challenges is Generating a <strong>Message Authentication Code [Tag]</strong> For the given input message. The message should be in hex format and the length of the message has to be multiple of 16.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/cbc0mac1<span class="nv">$ </span>nc 0.cloud.chals.io 12769
+Team Rocket told me CBC-MAC with arbitrary-length messages is safe from forgery. If you manage to forge a message you haven<span class="s1">'t queried using my oracle, I'</span>ll give you something <span class="k">in return</span><span class="nb">.</span>
+
+What would you like to <span class="k">do</span>?
+	<span class="o">(</span>1<span class="o">)</span> MAC Query
+	<span class="o">(</span>2<span class="o">)</span> Forgery
+	<span class="o">(</span>3<span class="o">)</span> Exit
+
+Choice: 1
+msg <span class="o">(</span>hex<span class="o">)</span>: 6162636465666768696a6b6c6d6e6f70
+CBC-MAC<span class="o">(</span>msg<span class="o">)</span>: f670f2abb9159a15a82a5779adbfb7bc
+
+What would you like to <span class="k">do</span>?
+	<span class="o">(</span>1<span class="o">)</span> MAC Query
+	<span class="o">(</span>2<span class="o">)</span> Forgery
+	<span class="o">(</span>3<span class="o">)</span> Exit
+
+Choice: 1
+msg <span class="o">(</span>hex<span class="o">)</span>: 6162636465666768696a6b6c6d6e6f706162636465666768696a6b6c6d6e6f70
+CBC-MAC<span class="o">(</span>msg<span class="o">)</span>: 2836413262109e028fe4e00452f60f53
+
+What would you like to <span class="k">do</span>?
+	<span class="o">(</span>1<span class="o">)</span> MAC Query
+	<span class="o">(</span>2<span class="o">)</span> Forgery
+	<span class="o">(</span>3<span class="o">)</span> Exit
+
+Choice: 
+
+</code></pre></div></div>
+
+<p>The program is taking the variable length message as input, this is a flag in cbc-mac.</p>
+
+<p><img src="/assets/img/post_img/umdctf23_cbcmac11.png" alt="cbcmac11" /></p>
+
+<p>So, The MAC or Tag is the last encrypted plaintext in the CBC Mode of AES. As the program allowing us to input variable length message we can generate a new message <code class="language-plaintext highlighter-rouge">M2</code> with the same tag <code class="language-plaintext highlighter-rouge">t1</code> which is the tag of <code class="language-plaintext highlighter-rouge">M1</code>. To do this I choosed <code class="language-plaintext highlighter-rouge">M2</code> with 2 blocks of plaintext with 16 characters each. The <code class="language-plaintext highlighter-rouge">new_M2 = (last block of M2) xor t1</code>  This <code class="language-plaintext highlighter-rouge">new_M2</code> will have the same tag <code class="language-plaintext highlighter-rouge">t1</code>. This is how we can forge the message. Here is the automated script for the challenge.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="n">Crypto.Util.strxor</span> <span class="kn">import</span> <span class="n">strxor</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="nf">remote</span><span class="p">(</span><span class="s">'0.cloud.chals.io'</span><span class="p">,</span><span class="mi">12769</span><span class="p">)</span>
+<span class="n">conn</span><span class="p">.</span><span class="nf">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s">'Choice: '</span><span class="p">)</span>
+<span class="n">conn</span><span class="p">.</span><span class="nf">sendall</span><span class="p">(</span><span class="sa">b</span><span class="s">'1'</span><span class="p">)</span>
+<span class="n">conn</span><span class="p">.</span><span class="nf">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s">'msg (hex): '</span><span class="p">)</span>
+
+<span class="n">m1</span> <span class="o">=</span> <span class="s">"abcdefghijklmnop"</span>
+<span class="n">m2</span> <span class="o">=</span> <span class="s">"abcdefghijklmnopqrstuvwxyz123456"</span>
+
+<span class="n">m1_hex</span> <span class="o">=</span> <span class="s">''</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="nf">hex</span><span class="p">(</span><span class="nf">ord</span><span class="p">(</span><span class="n">c</span><span class="p">))[</span><span class="mi">2</span><span class="p">:]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">m1</span><span class="p">)</span>
+<span class="n">m2_hex</span> <span class="o">=</span> <span class="s">''</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="nf">hex</span><span class="p">(</span><span class="nf">ord</span><span class="p">(</span><span class="n">c</span><span class="p">))[</span><span class="mi">2</span><span class="p">:]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">m2</span><span class="p">)</span>
+
+<span class="n">conn</span><span class="p">.</span><span class="nf">sendline</span><span class="p">(</span><span class="n">m1_hex</span><span class="p">.</span><span class="nf">encode</span><span class="p">())</span>
+<span class="n">conn</span><span class="p">.</span><span class="nf">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s">'(msg): '</span><span class="p">)</span>
+
+<span class="n">tag1</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">recvline</span><span class="p">().</span><span class="nf">strip</span><span class="p">()</span>
+<span class="n">x</span> <span class="o">=</span> <span class="nf">strxor</span><span class="p">(</span><span class="n">m2_hex</span><span class="p">[</span><span class="mi">32</span><span class="p">:].</span><span class="nf">encode</span><span class="p">(),</span><span class="n">tag1</span><span class="p">)</span>
+<span class="n">new_m2</span> <span class="o">=</span> <span class="n">m2_hex</span><span class="p">[:</span><span class="mi">32</span><span class="p">]</span><span class="o">+</span><span class="n">x</span><span class="p">.</span><span class="nf">decode</span><span class="p">()</span>
+<span class="n">conn</span><span class="p">.</span><span class="nf">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s">"Choice: "</span><span class="p">)</span>
+<span class="n">conn</span><span class="p">.</span><span class="nf">sendline</span><span class="p">(</span><span class="sa">b</span><span class="s">"2"</span><span class="p">)</span>
+<span class="n">conn</span><span class="p">.</span><span class="nf">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s">"msg (hex): "</span><span class="p">)</span>
+<span class="n">conn</span><span class="p">.</span><span class="nf">sendline</span><span class="p">(</span><span class="n">new_m2</span><span class="p">.</span><span class="nf">encode</span><span class="p">())</span>
+<span class="n">conn</span><span class="p">.</span><span class="nf">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s">"tag (hex): "</span><span class="p">)</span>
+<span class="n">conn</span><span class="p">.</span><span class="nf">sendline</span><span class="p">(</span><span class="n">tag1</span><span class="p">)</span>
+<span class="n">flag</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">recv</span><span class="p">()</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : UMDCTF{Th!s_M@C_Sch3M3_1s_0nly_S3cur3_f0r_f!xed_l3ngth_m3ss4g3s_78232813}</code></p>
+</blockquote>
+
+<h1 id="pokecomms">Pokecomms</h1>
+
+<p><img src="/assets/img/post_img/umdctf23_pokecomms.png" alt="pokecomms" /></p>
+
+<p>The challenge had this txt file.</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code> CHU! PIKA CHU! PIKA CHU! PIKA CHU! PIKA
+ CHU! PIKA CHU! CHU! PIKA PIKA CHU! PIKA
+ CHU! PIKA CHU! CHU! CHU! PIKA CHU! CHU!
+ CHU! PIKA CHU! CHU! CHU! CHU! PIKA PIKA
+ CHU! PIKA CHU! PIKA CHU! PIKA CHU! CHU!
+ CHU! PIKA CHU! CHU! CHU! PIKA PIKA CHU!
+ CHU! PIKA PIKA PIKA PIKA CHU! PIKA PIKA
+ CHU! PIKA CHU! PIKA CHU! CHU! CHU! CHU!
+ CHU! CHU! PIKA PIKA CHU! CHU! CHU! PIKA
+ CHU! PIKA CHU! CHU! PIKA CHU! PIKA PIKA
+ CHU! CHU! PIKA PIKA CHU! PIKA CHU! CHU!
+ .
+ .
+ CHU! CHU! PIKA PIKA CHU! PIKA CHU! CHU!
+</code></pre></div></div>
+
+<p>The first thing I did is eliminated the duplicate lines in text file. Then I saw that there are only 8 words in every line. And the The words are only CHU! PIKA with random sequence. So, I changed CHU! to 1 and PIKA to 0. Got the binary bits then converted it to ascii to get the flag.</p>
+
+<p>The solution script is</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="s">"pokecomms.txt"</span><span class="p">,</span><span class="s">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="n">f</span><span class="p">.</span><span class="nf">readlines</span><span class="p">()</span>
+<span class="n">m</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+    <span class="n">m</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="nf">strip</span><span class="p">())</span>
+<span class="n">s</span> <span class="o">=</span> <span class="nf">list</span><span class="p">(</span><span class="nf">set</span><span class="p">(</span><span class="n">m</span><span class="p">))</span>
+<span class="n">byte</span><span class="o">=</span><span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">m</span><span class="p">:</span>
+    <span class="n">bits</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i</span><span class="p">.</span><span class="nf">split</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="s">"CHU!"</span><span class="p">:</span>
+            <span class="n">bits</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="s">'0'</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">j</span> <span class="o">==</span> <span class="s">"PIKA"</span><span class="p">:</span>
+            <span class="n">bits</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="s">'1'</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"else"</span><span class="p">)</span>
+    <span class="n">oneb</span> <span class="o">=</span> <span class="s">""</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+    <span class="n">byte</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="nf">int</span><span class="p">(</span><span class="n">oneb</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">byte</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="nf">chr</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="s">""</span><span class="p">)</span>
+
+<span class="c1">#UMDCTF{P1K4CHU_Once_upon_a_time,_there_was_a_young_boy_named_Ash_who_dreamed_of_becoming_the_world's_greatest_Pokemon_trainer._He_set_out_on_a_journey_with_his_trusty_Pokemon_partner,_Pikachu,_a_cute_and_powerful_electric-type_Pokemon._As_Ash_and_Pikachu_traveled_through_the_regions,_they_encountered_many_challenges_and_made_many_friends._But_they_also_faced_their_fair_share_of_enemies,_including_the_notorious_Team_Rocket,_who_were_always_trying_to_steal_Pikachu._Despite_the_odds_stacked_against_them,_Ash_and_Pikachu_never_gave_up._They_trained_hard_and_battled_even_harder,_always_looking_for_ways_to_improve_their_skills_and_strengthen_their_bond._And_along_the_way,_they_learned_valuable_lessons_about_friendship,_determination,_and_the_power_of_believing_in_oneself._Eventually,_Ash_and_Pikachu's_hard_work_paid_off._They_defeated_powerful_opponents,_earned_badges_from_Gym_Leaders,_and_even_competed_in_the_prestigious_Pokemon_League_tournaments._But_no_matter_how_many_victories_they_achieved,_Ash_and_Pikachu_never_forgot_where_they_came_from_or_the_importance_of_their_friendship._In_the_end,_Ash_and_Pikachu_became_a_legendary_team,_admired_by_Pokemon_trainers_around_the_world._And_although_their_journey_may_have_had_its_ups_and_downs,_they_always_knew_that_as_long_as_they_had_each_other,_they_could_overcome_any_obstacle_that_stood_in_their_way}
+</span>
+</code></pre></div></div>
+
+<hr />
+
+<h1 id="rev">Rev</h1>
+
+<h1 id="welcome-to-python">Welcome to Python</h1>
+
+<p><img src="/assets/img/post_img/umdctf23_welcometopy.png" alt="welcome" /></p>
+
+<p>Challenge had this binary file <a>chall</a></p>
+
+<p>As it is a ELF file I decompiled it to <code class="language-plaintext highlighter-rouge">Pyc</code> then Pyc to <code class="language-plaintext highlighter-rouge">py</code> file.
+My teammates found that python generated <code class="language-plaintext highlighter-rouge">ELF</code> can be decompiled to pyc with <a href="https://snapcraft.io/pyinstxtractor" target="_blank">pyinstxtractor</a>. It generated a pyc file then used online pyc decompiler to decompile to the py file.</p>
+
+<p>The decompiled <code class="language-plaintext highlighter-rouge">chall.py</code> is</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Source Generated with Decompyle++
+# File: chal.pyc (Python 3.10)
+</span><span class="kn">from</span> <span class="n">math</span> <span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span>
+<span class="kn">from</span> <span class="n">ctypes</span> <span class="kn">import</span> <span class="n">c_uint32</span><span class="p">,</span> <span class="n">c_float</span>
+<span class="kn">from</span> <span class="n">sys</span> <span class="kn">import</span> <span class="nb">exit</span> <span class="k">as</span> <span class="n">exit_</span>
+<span class="n">source</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="mi">672662614</span><span class="p">,</span>
+    <span class="mi">741343303</span><span class="p">,</span>
+    <span class="mi">495239261</span><span class="p">,</span>
+    <span class="mi">744259788</span><span class="p">,</span>
+    <span class="mi">722021046</span><span class="p">,</span>
+    <span class="mh">0xA70AA247</span><span class="p">,</span>
+    <span class="mi">1053692</span><span class="p">,</span>
+    <span class="mh">0xA8050035</span><span class="p">,</span>
+    <span class="mh">0xA982A820</span><span class="p">,</span>
+    <span class="mi">624689</span><span class="p">,</span>
+    <span class="mh">0xA90D20BC</span><span class="p">,</span>
+    <span class="mi">41134</span><span class="p">,</span>
+    <span class="mi">295340</span><span class="p">,</span>
+    <span class="mh">0xA0028102</span><span class="p">,</span>
+    <span class="mi">622681</span><span class="p">,</span>
+    <span class="mi">576469</span><span class="p">,</span>
+    <span class="mi">671170814</span><span class="p">,</span>
+    <span class="mh">0x8041086E</span><span class="p">,</span>
+    <span class="mi">765</span><span class="p">,</span>
+    <span class="mi">680595550</span><span class="p">,</span>
+    <span class="mh">0x80200166</span><span class="p">,</span>
+    <span class="mi">698368102</span><span class="p">,</span>
+    <span class="mi">2437137</span><span class="p">,</span>
+    <span class="mh">0x8042C1EE</span><span class="p">,</span>
+    <span class="mi">570966112</span><span class="p">,</span>
+    <span class="mi">4612341</span><span class="p">,</span>
+    <span class="mh">0x800008D4</span><span class="p">,</span>
+    <span class="mh">0xA94D02CE</span><span class="p">,</span>
+    <span class="mi">16484</span><span class="p">,</span>
+    <span class="mi">2103301</span><span class="p">,</span>
+    <span class="mi">136226</span><span class="p">,</span>
+    <span class="mi">9438506</span><span class="p">,</span>
+    <span class="mi">663820758</span><span class="p">,</span>
+    <span class="mh">0x8013523B</span><span class="p">,</span>
+    <span class="mi">8405532</span><span class="p">,</span>
+    <span class="mh">0xA4000875</span><span class="p">,</span>
+    <span class="mh">0x80030A78</span><span class="p">,</span>
+    <span class="mi">136768</span><span class="p">]</span>
+<span class="n">seed</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="k">def</span> <span class="nf">wandom</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="nf">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="nf">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
+<span class="k">def</span> <span class="nf">evil_bit_hack</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nf">int</span><span class="p">(</span><span class="n">c_uint32</span><span class="p">.</span><span class="nf">from_buffer</span><span class="p">(</span><span class="nf">c_float</span><span class="p">(</span><span class="n">y</span><span class="p">)).</span><span class="n">value</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">'=========================================='</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">'Professional flag checker service (v 97.2)'</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">'=========================================='</span><span class="p">)</span>
+<span class="n">flag</span> <span class="o">=</span> <span class="nf">input</span><span class="p">(</span><span class="s">'Show me the flag: '</span><span class="p">)</span>
+<span class="n">lf</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span>
+<span class="n">ls</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">lf</span> <span class="k">if</span> <span class="n">lf</span> <span class="o">&lt;</span> <span class="n">ls</span> <span class="k">else</span> <span class="n">ls</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">seed</span> <span class="o">+</span> <span class="n">l</span><span class="p">):</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="nf">wandom</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span><span class="o">~</span><span class="nf">ord</span><span class="p">(</span><span class="n">flag</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">seed</span><span class="p">])</span> <span class="o">^</span> <span class="nf">evil_bit_hack</span><span class="p">(</span><span class="nf">wandom</span><span class="p">(</span><span class="nf">wandom</span><span class="p">(</span><span class="n">w</span><span class="p">)))</span> <span class="o">&amp;</span> <span class="nf">evil_bit_hack</span><span class="p">(</span><span class="n">w</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">source</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">seed</span><span class="p">]</span> <span class="o">!=</span> <span class="n">c</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Uh oh! We don't think your flag is correct... :("</span><span class="p">)</span>
+        <span class="nf">exit_</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">lf</span> <span class="o">==</span> <span class="n">ls</span><span class="p">:</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">'Your flag is correct!'</span><span class="p">)</span>
+<span class="c1"># None('Some of your flag is correct...')
+</span></code></pre></div></div>
+
+<p>Points I observed</p>
+
+<ul>
+  <li>The seed is 64</li>
+  <li>source values are known</li>
+  <li><code class="language-plaintext highlighter-rouge">c</code> is generated by XORing flag char with evil_bit_hack(wandom(wandom(w))) &amp; evil_bit_hack(w) and 1 is added at the end.</li>
+</ul>
+
+<p>So, I just need to reverse this line ` c = ~(~ord(flag[i - seed]) ^ evil_bit_hack(wandom(wandom(w))) &amp; evil_bit_hack(w)) + 1` To print the flag.</p>
+
+<p>Interesting, lets do it</p>
+
+<p><code class="language-plaintext highlighter-rouge">res = (source[i-seed]-1)^ evil_bit_hack(wandom(wandom(w))) &amp; evil_bit_hack(w)</code> Will be the reversed function.</p>
+
+<p>And here is the solution script to print the flag.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Source Generated with Decompyle++
+# File: chal.pyc (Python 3.10)
+</span>
+<span class="kn">from</span> <span class="n">math</span> <span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span>
+<span class="kn">from</span> <span class="n">ctypes</span> <span class="kn">import</span> <span class="n">c_uint32</span><span class="p">,</span> <span class="n">c_float</span>
+<span class="kn">from</span> <span class="n">sys</span> <span class="kn">import</span> <span class="nb">exit</span> <span class="k">as</span> <span class="n">exit_</span>
+<span class="n">source</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="mi">672662614</span><span class="p">,</span>
+    <span class="mi">741343303</span><span class="p">,</span>
+    <span class="mi">495239261</span><span class="p">,</span>
+    <span class="mi">744259788</span><span class="p">,</span>
+    <span class="mi">722021046</span><span class="p">,</span>
+    <span class="mh">0xA70AA247</span><span class="p">,</span>
+    <span class="mi">1053692</span><span class="p">,</span>
+    <span class="mh">0xA8050035</span><span class="p">,</span>
+    <span class="mh">0xA982A820</span><span class="p">,</span>
+    <span class="mi">624689</span><span class="p">,</span>
+    <span class="mh">0xA90D20BC</span><span class="p">,</span>
+    <span class="mi">41134</span><span class="p">,</span>
+    <span class="mi">295340</span><span class="p">,</span>
+    <span class="mh">0xA0028102</span><span class="p">,</span>
+    <span class="mi">622681</span><span class="p">,</span>
+    <span class="mi">576469</span><span class="p">,</span>
+    <span class="mi">671170814</span><span class="p">,</span>
+    <span class="mh">0x8041086E</span><span class="p">,</span>
+    <span class="mi">765</span><span class="p">,</span>
+    <span class="mi">680595550</span><span class="p">,</span>
+    <span class="mh">0x80200166</span><span class="p">,</span>
+    <span class="mi">698368102</span><span class="p">,</span>
+    <span class="mi">2437137</span><span class="p">,</span>
+    <span class="mh">0x8042C1EE</span><span class="p">,</span>
+    <span class="mi">570966112</span><span class="p">,</span>
+    <span class="mi">4612341</span><span class="p">,</span>
+    <span class="mh">0x800008D4</span><span class="p">,</span>
+    <span class="mh">0xA94D02CE</span><span class="p">,</span>
+    <span class="mi">16484</span><span class="p">,</span>
+    <span class="mi">2103301</span><span class="p">,</span>
+    <span class="mi">136226</span><span class="p">,</span>
+    <span class="mi">9438506</span><span class="p">,</span>
+    <span class="mi">663820758</span><span class="p">,</span>
+    <span class="mh">0x8013523B</span><span class="p">,</span>
+    <span class="mi">8405532</span><span class="p">,</span>
+    <span class="mh">0xA4000875</span><span class="p">,</span>
+    <span class="mh">0x80030A78</span><span class="p">,</span>
+    <span class="mi">136768</span><span class="p">]</span>
+<span class="n">seed</span> <span class="o">=</span> <span class="mi">64</span>
+
+<span class="k">def</span> <span class="nf">wandom</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="nf">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="nf">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
+
+<span class="k">def</span> <span class="nf">evil_bit_hack</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nf">int</span><span class="p">(</span><span class="n">c_uint32</span><span class="p">.</span><span class="nf">from_buffer</span><span class="p">(</span><span class="nf">c_float</span><span class="p">(</span><span class="n">y</span><span class="p">)).</span><span class="n">value</span><span class="p">)</span>
+<span class="n">flag</span> <span class="o">=</span> <span class="mi">38</span> <span class="o">*</span> <span class="s">'A'</span>
+<span class="n">lf</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">flag</span><span class="p">)</span>
+<span class="n">ls</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="n">l</span> <span class="o">=</span> <span class="n">lf</span> <span class="k">if</span> <span class="n">lf</span> <span class="o">&lt;</span> <span class="n">ls</span> <span class="k">else</span> <span class="n">ls</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">seed</span> <span class="o">+</span> <span class="n">l</span><span class="p">):</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="nf">wandom</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="nf">evil_bit_hack</span><span class="p">(</span><span class="nf">wandom</span><span class="p">(</span><span class="nf">wandom</span><span class="p">(</span><span class="n">w</span><span class="p">)))</span> <span class="o">&amp;</span> <span class="nf">evil_bit_hack</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span><span class="o">~</span><span class="nf">ord</span><span class="p">(</span><span class="n">flag</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">seed</span><span class="p">])</span> <span class="o">^</span> <span class="nf">evil_bit_hack</span><span class="p">(</span><span class="nf">wandom</span><span class="p">(</span><span class="nf">wandom</span><span class="p">(</span><span class="n">w</span><span class="p">)))</span> <span class="o">&amp;</span> <span class="nf">evil_bit_hack</span><span class="p">(</span><span class="n">w</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">source</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">seed</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">^</span><span class="n">x</span>
+    <span class="nf">print</span><span class="p">(</span><span class="nf">chr</span><span class="p">(</span><span class="n">res</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="s">""</span><span class="p">)</span>
+<span class="c1">#UMDCTF{0_0+-+eXP-eLLiARm_us_!!!-12345}
+</span></code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : UMDCTF{0_0+-+eXP-eLLiARm_us_!!!-12345}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="hardware">Hardware</h1>
+
+<h1 id="beep1">beep1</h1>
+
+<p><img src="/assets/img/post_img/umdctf23_beep1.png" alt="beep" /></p>
+
+<p>The attached files are <a>Beep1.circ</a> which is a xml file and a <a>flag.enc</a> file.</p>
+
+<p><strong>Beep1.circ</strong> is</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;</span>
+<span class="nt">&lt;project</span> <span class="na">source=</span><span class="s">"3.8.0"</span> <span class="na">version=</span><span class="s">"1.0"</span><span class="nt">&gt;</span>
+  This file is intended to be loaded by Logisim-evolution v3.8.0(https://github.com/logisim-evolution/).
+
+  <span class="nt">&lt;lib</span> <span class="na">desc=</span><span class="s">"#Wiring"</span> <span class="na">name=</span><span class="s">"0"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">name=</span><span class="s">"Pin"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"appearance"</span> <span class="na">val=</span><span class="s">"classic"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/tool&gt;</span>
+  <span class="nt">&lt;/lib&gt;</span>
+  <span class="nt">&lt;lib</span> <span class="na">desc=</span><span class="s">"#Gates"</span> <span class="na">name=</span><span class="s">"1"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;lib</span> <span class="na">desc=</span><span class="s">"#Plexers"</span> <span class="na">name=</span><span class="s">"2"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;lib</span> <span class="na">desc=</span><span class="s">"#Arithmetic"</span> <span class="na">name=</span><span class="s">"3"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;lib</span> <span class="na">desc=</span><span class="s">"#Memory"</span> <span class="na">name=</span><span class="s">"4"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;lib</span> <span class="na">desc=</span><span class="s">"#I/O"</span> <span class="na">name=</span><span class="s">"5"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;lib</span> <span class="na">desc=</span><span class="s">"#TTL"</span> <span class="na">name=</span><span class="s">"6"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;lib</span> <span class="na">desc=</span><span class="s">"#TCL"</span> <span class="na">name=</span><span class="s">"7"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;lib</span> <span class="na">desc=</span><span class="s">"#Base"</span> <span class="na">name=</span><span class="s">"8"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;lib</span> <span class="na">desc=</span><span class="s">"#BFH-Praktika"</span> <span class="na">name=</span><span class="s">"9"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;lib</span> <span class="na">desc=</span><span class="s">"#Input/Output-Extra"</span> <span class="na">name=</span><span class="s">"10"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;lib</span> <span class="na">desc=</span><span class="s">"#Soc"</span> <span class="na">name=</span><span class="s">"11"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;main</span> <span class="na">name=</span><span class="s">"main"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;options&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"gateUndefined"</span> <span class="na">val=</span><span class="s">"ignore"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"simlimit"</span> <span class="na">val=</span><span class="s">"1000"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"simrand"</span> <span class="na">val=</span><span class="s">"0"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/options&gt;</span>
+  <span class="nt">&lt;mappings&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"8"</span> <span class="na">map=</span><span class="s">"Button2"</span> <span class="na">name=</span><span class="s">"Poke Tool"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"8"</span> <span class="na">map=</span><span class="s">"Button3"</span> <span class="na">name=</span><span class="s">"Menu Tool"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"8"</span> <span class="na">map=</span><span class="s">"Ctrl Button1"</span> <span class="na">name=</span><span class="s">"Menu Tool"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/mappings&gt;</span>
+  <span class="nt">&lt;toolbar&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"8"</span> <span class="na">name=</span><span class="s">"Poke Tool"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"8"</span> <span class="na">name=</span><span class="s">"Edit Tool"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"8"</span> <span class="na">name=</span><span class="s">"Wiring Tool"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"8"</span> <span class="na">name=</span><span class="s">"Text Tool"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;sep/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"0"</span> <span class="na">name=</span><span class="s">"Pin"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"0"</span> <span class="na">name=</span><span class="s">"Pin"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"facing"</span> <span class="na">val=</span><span class="s">"west"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"output"</span> <span class="na">val=</span><span class="s">"true"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/tool&gt;</span>
+    <span class="nt">&lt;sep/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"1"</span> <span class="na">name=</span><span class="s">"NOT Gate"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"1"</span> <span class="na">name=</span><span class="s">"AND Gate"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"1"</span> <span class="na">name=</span><span class="s">"OR Gate"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"1"</span> <span class="na">name=</span><span class="s">"XOR Gate"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"1"</span> <span class="na">name=</span><span class="s">"NAND Gate"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"1"</span> <span class="na">name=</span><span class="s">"NOR Gate"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;sep/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"4"</span> <span class="na">name=</span><span class="s">"D Flip-Flop"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;tool</span> <span class="na">lib=</span><span class="s">"4"</span> <span class="na">name=</span><span class="s">"Register"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/toolbar&gt;</span>
+  <span class="nt">&lt;circuit</span> <span class="na">name=</span><span class="s">"main"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"appearance"</span> <span class="na">val=</span><span class="s">"logisim_evolution"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"circuit"</span> <span class="na">val=</span><span class="s">"main"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"clabelup"</span> <span class="na">val=</span><span class="s">"north"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"simulationFrequency"</span> <span class="na">val=</span><span class="s">"8.0"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;comp</span> <span class="na">lib=</span><span class="s">"0"</span> <span class="na">loc=</span><span class="s">"(140,300)"</span> <span class="na">name=</span><span class="s">"Clock"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"label"</span> <span class="na">val=</span><span class="s">"clk"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/comp&gt;</span>
+    <span class="nt">&lt;comp</span> <span class="na">lib=</span><span class="s">"0"</span> <span class="na">loc=</span><span class="s">"(350,220)"</span> <span class="na">name=</span><span class="s">"Splitter"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"fanout"</span> <span class="na">val=</span><span class="s">"8"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"incoming"</span> <span class="na">val=</span><span class="s">"8"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/comp&gt;</span>
+    <span class="nt">&lt;comp</span> <span class="na">lib=</span><span class="s">"0"</span> <span class="na">loc=</span><span class="s">"(440,460)"</span> <span class="na">name=</span><span class="s">"Splitter"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"facing"</span> <span class="na">val=</span><span class="s">"west"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"fanout"</span> <span class="na">val=</span><span class="s">"8"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"incoming"</span> <span class="na">val=</span><span class="s">"8"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"spacing"</span> <span class="na">val=</span><span class="s">"2"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/comp&gt;</span>
+    <span class="nt">&lt;comp</span> <span class="na">lib=</span><span class="s">"0"</span> <span class="na">loc=</span><span class="s">"(460,130)"</span> <span class="na">name=</span><span class="s">"Splitter"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"facing"</span> <span class="na">val=</span><span class="s">"west"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"fanout"</span> <span class="na">val=</span><span class="s">"8"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"incoming"</span> <span class="na">val=</span><span class="s">"8"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/comp&gt;</span>
+    <span class="nt">&lt;comp</span> <span class="na">lib=</span><span class="s">"0"</span> <span class="na">loc=</span><span class="s">"(670,190)"</span> <span class="na">name=</span><span class="s">"Bit Extender"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"out_width"</span> <span class="na">val=</span><span class="s">"7"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"type"</span> <span class="na">val=</span><span class="s">"one"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/comp&gt;</span>
+    <span class="nt">&lt;comp</span> <span class="na">lib=</span><span class="s">"1"</span> <span class="na">loc=</span><span class="s">"(290,380)"</span> <span class="na">name=</span><span class="s">"NOT Gate"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"facing"</span> <span class="na">val=</span><span class="s">"north"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/comp&gt;</span>
+    <span class="nt">&lt;comp</span> <span class="na">lib=</span><span class="s">"1"</span> <span class="na">loc=</span><span class="s">"(300,340)"</span> <span class="na">name=</span><span class="s">"Controlled Buffer"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;comp</span> <span class="na">lib=</span><span class="s">"1"</span> <span class="na">loc=</span><span class="s">"(320,540)"</span> <span class="na">name=</span><span class="s">"NOR Gate"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"facing"</span> <span class="na">val=</span><span class="s">"west"</span><span class="nt">/&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"inputs"</span> <span class="na">val=</span><span class="s">"8"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/comp&gt;</span>
+    <span class="nt">&lt;comp</span> <span class="na">lib=</span><span class="s">"4"</span> <span class="na">loc=</span><span class="s">"(320,300)"</span> <span class="na">name=</span><span class="s">"Counter"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"appearance"</span> <span class="na">val=</span><span class="s">"classic"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/comp&gt;</span>
+    <span class="nt">&lt;comp</span> <span class="na">lib=</span><span class="s">"4"</span> <span class="na">loc=</span><span class="s">"(340,290)"</span> <span class="na">name=</span><span class="s">"ROM"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"appearance"</span> <span class="na">val=</span><span class="s">"classic"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/comp&gt;</span>
+    <span class="nt">&lt;comp</span> <span class="na">lib=</span><span class="s">"5"</span> <span class="na">loc=</span><span class="s">"(140,370)"</span> <span class="na">name=</span><span class="s">"Button"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"label"</span> <span class="na">val=</span><span class="s">"rst"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/comp&gt;</span>
+    <span class="nt">&lt;comp</span> <span class="na">lib=</span><span class="s">"5"</span> <span class="na">loc=</span><span class="s">"(710,200)"</span> <span class="na">name=</span><span class="s">"TTY"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"cols"</span> <span class="na">val=</span><span class="s">"40"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/comp&gt;</span>
+    <span class="nt">&lt;comp</span> <span class="na">lib=</span><span class="s">"5"</span> <span class="na">loc=</span><span class="s">"(710,260)"</span> <span class="na">name=</span><span class="s">"Button"</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;a</span> <span class="na">name=</span><span class="s">"label"</span> <span class="na">val=</span><span class="s">"tty_rst"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;/comp&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(140,300)"</span> <span class="na">to=</span><span class="s">"(160,300)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(140,370)"</span> <span class="na">to=</span><span class="s">"(310,370)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(160,300)"</span> <span class="na">to=</span><span class="s">"(160,340)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(160,340)"</span> <span class="na">to=</span><span class="s">"(280,340)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(290,350)"</span> <span class="na">to=</span><span class="s">"(290,380)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(290,410)"</span> <span class="na">to=</span><span class="s">"(290,540)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(290,540)"</span> <span class="na">to=</span><span class="s">"(320,540)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(300,320)"</span> <span class="na">to=</span><span class="s">"(300,340)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(300,340)"</span> <span class="na">to=</span><span class="s">"(330,340)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(310,320)"</span> <span class="na">to=</span><span class="s">"(310,370)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(320,300)"</span> <span class="na">to=</span><span class="s">"(340,300)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(330,230)"</span> <span class="na">to=</span><span class="s">"(330,340)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(330,230)"</span> <span class="na">to=</span><span class="s">"(690,230)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(350,220)"</span> <span class="na">to=</span><span class="s">"(350,270)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(350,270)"</span> <span class="na">to=</span><span class="s">"(590,270)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(370,120)"</span> <span class="na">to=</span><span class="s">"(370,140)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(370,120)"</span> <span class="na">to=</span><span class="s">"(480,120)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(370,150)"</span> <span class="na">to=</span><span class="s">"(420,150)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(370,160)"</span> <span class="na">to=</span><span class="s">"(380,160)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(370,170)"</span> <span class="na">to=</span><span class="s">"(440,170)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(370,180)"</span> <span class="na">to=</span><span class="s">"(390,180)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(370,190)"</span> <span class="na">to=</span><span class="s">"(390,190)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(370,200)"</span> <span class="na">to=</span><span class="s">"(380,200)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(370,210)"</span> <span class="na">to=</span><span class="s">"(370,220)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(370,220)"</span> <span class="na">to=</span><span class="s">"(420,220)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(380,140)"</span> <span class="na">to=</span><span class="s">"(380,160)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(380,140)"</span> <span class="na">to=</span><span class="s">"(430,140)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(380,200)"</span> <span class="na">to=</span><span class="s">"(380,210)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(380,210)"</span> <span class="na">to=</span><span class="s">"(400,210)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(380,500)"</span> <span class="na">to=</span><span class="s">"(390,500)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(380,510)"</span> <span class="na">to=</span><span class="s">"(400,510)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(380,520)"</span> <span class="na">to=</span><span class="s">"(410,520)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(380,530)"</span> <span class="na">to=</span><span class="s">"(420,530)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(380,550)"</span> <span class="na">to=</span><span class="s">"(420,550)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(380,560)"</span> <span class="na">to=</span><span class="s">"(410,560)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(380,570)"</span> <span class="na">to=</span><span class="s">"(400,570)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(380,580)"</span> <span class="na">to=</span><span class="s">"(390,580)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(390,160)"</span> <span class="na">to=</span><span class="s">"(390,180)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(390,160)"</span> <span class="na">to=</span><span class="s">"(440,160)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(390,190)"</span> <span class="na">to=</span><span class="s">"(390,200)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(390,200)"</span> <span class="na">to=</span><span class="s">"(440,200)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(390,470)"</span> <span class="na">to=</span><span class="s">"(390,500)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(390,470)"</span> <span class="na">to=</span><span class="s">"(420,470)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(390,580)"</span> <span class="na">to=</span><span class="s">"(390,600)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(390,600)"</span> <span class="na">to=</span><span class="s">"(420,600)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(400,180)"</span> <span class="na">to=</span><span class="s">"(400,210)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(400,180)"</span> <span class="na">to=</span><span class="s">"(440,180)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(400,490)"</span> <span class="na">to=</span><span class="s">"(400,510)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(400,490)"</span> <span class="na">to=</span><span class="s">"(420,490)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(400,570)"</span> <span class="na">to=</span><span class="s">"(400,590)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(400,590)"</span> <span class="na">to=</span><span class="s">"(420,590)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(410,510)"</span> <span class="na">to=</span><span class="s">"(410,520)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(410,510)"</span> <span class="na">to=</span><span class="s">"(420,510)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(410,560)"</span> <span class="na">to=</span><span class="s">"(410,570)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(410,570)"</span> <span class="na">to=</span><span class="s">"(420,570)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(420,130)"</span> <span class="na">to=</span><span class="s">"(420,150)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(420,130)"</span> <span class="na">to=</span><span class="s">"(440,130)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(420,190)"</span> <span class="na">to=</span><span class="s">"(420,220)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(420,190)"</span> <span class="na">to=</span><span class="s">"(440,190)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(420,600)"</span> <span class="na">to=</span><span class="s">"(420,610)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(430,140)"</span> <span class="na">to=</span><span class="s">"(430,150)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(430,150)"</span> <span class="na">to=</span><span class="s">"(440,150)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(440,130)"</span> <span class="na">to=</span><span class="s">"(440,140)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(440,210)"</span> <span class="na">to=</span><span class="s">"(440,220)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(440,220)"</span> <span class="na">to=</span><span class="s">"(480,220)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(440,460)"</span> <span class="na">to=</span><span class="s">"(590,460)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(460,130)"</span> <span class="na">to=</span><span class="s">"(590,130)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(480,120)"</span> <span class="na">to=</span><span class="s">"(480,220)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(580,350)"</span> <span class="na">to=</span><span class="s">"(590,350)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(590,130)"</span> <span class="na">to=</span><span class="s">"(590,190)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(590,190)"</span> <span class="na">to=</span><span class="s">"(630,190)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(590,270)"</span> <span class="na">to=</span><span class="s">"(590,350)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(590,350)"</span> <span class="na">to=</span><span class="s">"(590,460)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(670,190)"</span> <span class="na">to=</span><span class="s">"(710,190)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(690,200)"</span> <span class="na">to=</span><span class="s">"(690,230)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(690,200)"</span> <span class="na">to=</span><span class="s">"(710,200)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(710,260)"</span> <span class="na">to=</span><span class="s">"(720,260)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(720,230)"</span> <span class="na">to=</span><span class="s">"(720,260)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(720,230)"</span> <span class="na">to=</span><span class="s">"(730,230)"</span><span class="nt">/&gt;</span>
+    <span class="nt">&lt;wire</span> <span class="na">from=</span><span class="s">"(730,210)"</span> <span class="na">to=</span><span class="s">"(730,230)"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;/circuit&gt;</span>
+<span class="nt">&lt;/project&gt;</span>
+</code></pre></div></div>
+
+<p>The solution, the header contains the github link to the <a href="https://github.com/logisim-evolution/">logisim</a> software. Downloaded the <code class="language-plaintext highlighter-rouge">logisim-evolution-3.8.0-all.jar</code> file and runned it locally. And Opened the <code class="language-plaintext highlighter-rouge">beep1.circ</code> file in the software and loaded the <code class="language-plaintext highlighter-rouge">flag.enc</code> file in the ROM. And started the simmulation then the flag is displayed in the TTY.</p>
+
+<p><img src="/assets/img/post_img/umdctf23_beep11.png" class="autoimg" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag: UMDCTF{w3lc0me_t0_l0g1s1m_yeet}</code></p>
+</blockquote>
+
+<h1 id="clutter">clutter</h1>
+
+<p><img src="/assets/img/post_img/umdctf23_clutter.png" alt="clutter" /></p>
+
+<p>The challenge has two files <a>clutter.vsp</a> and a pdf about the installation of <code class="language-plaintext highlighter-rouge">VeSP</code> software.</p>
+
+<p>The clutter.vsp is</p>
+
+<pre><code class="language-txt">2000
+0000
+2001
+0000
+2001
+0003
+2000
+0052
+0000
+315B
+0000
+2001
+0008
+2000
+0045
+0000
+3285
+0000
+...
+..
+and upto 215 lines
+</code></pre>
+
+<p>Solution,</p>
+
+<p>Installed and started the VeSP</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/clutter<span class="nv">$ </span>wget https://user.eng.umd.edu/<span class="se">\~</span>yavuz/teaching/courses/enee350/vesp-source-code/vesp1.1X/main.cpp <span class="nt">-o</span> vesp1_1.cpp
+mj0ln1r@AHLinux:~/clutter<span class="nv">$ </span>cpp vesp1_1.cpp <span class="nt">-o</span> vesp1_1
+mj0ln1r@AHLinux:~/clutter<span class="nv">$ </span><span class="nb">ls
+</span>vesp1_1
+mj0ln1r@AHLinux:~/clutter<span class="nv">$ </span>./vesp1_1
+Welcome to Vesp 1.1
+
+
+Type 
+ 0 to enter a program
+ 1 to display registers
+ 2 to display memory: 
+
+</code></pre></div></div>
+<p>Okay, I followed the instructions and loaded the <code class="language-plaintext highlighter-rouge">clutter.vsp</code> file in the vesp1_1 program. After running the program with long trace(in verbose mode). I found some memory storage locations in every instruction execution like this <code class="language-plaintext highlighter-rouge">Memory[0001] = 000A</code>. After observing all the same memory location values I got to know that flag characters are stored in memory locations other than <code class="language-plaintext highlighter-rouge">0000</code> and <code class="language-plaintext highlighter-rouge">0001</code>. I couldn’t found any way to store the output of the program to a file so I wrote this automated script using <code class="language-plaintext highlighter-rouge">pwntools</code>. Cool, Right!</p>
+
+<p>solve.py</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="n">re</span>
+
+<span class="n">target</span> <span class="o">=</span> <span class="nf">process</span><span class="p">(</span><span class="s">"vesp/vesp1_1"</span><span class="p">)</span>
+
+<span class="n">target</span><span class="p">.</span><span class="nf">recv</span><span class="p">()</span>
+<span class="n">target</span><span class="p">.</span><span class="nf">sendline</span><span class="p">(</span><span class="sa">b</span><span class="s">"0"</span><span class="p">)</span>
+<span class="n">target</span><span class="p">.</span><span class="nf">sendline</span><span class="p">(</span><span class="sa">b</span><span class="s">"002"</span><span class="p">)</span>
+<span class="n">target</span><span class="p">.</span><span class="nf">sendline</span><span class="p">(</span><span class="sa">b</span><span class="s">"1"</span><span class="p">)</span>
+<span class="n">target</span><span class="p">.</span><span class="nf">sendline</span><span class="p">(</span><span class="sa">b</span><span class="s">"clutter/clutter.vsp"</span><span class="p">)</span>
+<span class="n">target</span><span class="p">.</span><span class="nf">sendline</span><span class="p">(</span><span class="sa">b</span><span class="s">"0"</span><span class="p">)</span>
+<span class="n">target</span><span class="p">.</span><span class="nf">sendline</span><span class="p">(</span><span class="sa">b</span><span class="s">"1"</span><span class="p">)</span>
+
+<span class="n">output</span> <span class="o">=</span> <span class="n">target</span><span class="p">.</span><span class="nf">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s">"The number of clock cycles used = 396"</span><span class="p">).</span><span class="nf">decode</span><span class="p">(</span><span class="s">'utf-8'</span><span class="p">)</span>
+
+<span class="n">regex</span> <span class="o">=</span> <span class="s">"Memory\[\w+\] = .{4}"</span>
+
+<span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">findall</span><span class="p">(</span><span class="n">regex</span><span class="p">,</span><span class="n">output</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">match</span><span class="p">:</span>
+    <span class="nf">if </span><span class="p">(</span><span class="s">"0000"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">i</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="s">"0001"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">i</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="mi">15</span><span class="p">:]</span>
+        <span class="n">di</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="mi">16</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="nf">chr</span><span class="p">(</span><span class="n">di</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="s">""</span><span class="p">)</span>
+
+<span class="c1"># UMDCTF{Ux13-us3-m3m0ry-w1p3!}
+</span></code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag: UMDCTF{Ux13-us3-m3m0ry-w1p3!}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="forensics">Forensics</h1>
+
+<h1 id="fire-type-pokemons-only">Fire Type Pokemons Only</h1>
+
+<p><img src="/assets/img/post_img/umdctf23_ftpo.png" alt="firetype" /></p>
+
+<p>Attached file : <a href="/assets/files/umdctf23/fire-type-pokemon-only.pcapng.zip">fire-type-pokemon-only.pcapng.zip</a></p>
+
+<p>Without opening the pcap file I know that I had to look for <code class="language-plaintext highlighter-rouge">FTP</code> packets in the file. So I extracted the zip and opened the pcap file in wireshark.</p>
+
+<p>Solution</p>
+
+<ul>
+  <li>Opened the pcap in wireshark</li>
+  <li>Filtered FTP packets in wireshark</li>
+  <li>Followed the TCP stream of FTP data</li>
+  <li>Found a password <code class="language-plaintext highlighter-rouge">piku</code></li>
+  <li>Some Images are transfered over network</li>
+</ul>
+
+<p>So, I just exported the FTP-DATA saved the files. The files are <code class="language-plaintext highlighter-rouge">Diglett.png</code> , <code class="language-plaintext highlighter-rouge">secretpic1.png</code>, <code class="language-plaintext highlighter-rouge">hmmmm</code> and <code class="language-plaintext highlighter-rouge">secret.zip</code></p>
+
+<p>The zip is password protected, I used <code class="language-plaintext highlighter-rouge">piku</code> as the password for the zip. A video file is extracted, the flag is diplayed in the video.</p>
+
+<p><img src="/assets/img/post_img/umdctf23_ftpoflag.png" alt="firetype" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : UMDCTF{its_n0t_p1kachu!!}</code></p>
+</blockquote>
+
+<h1 id="no-352">No. 352</h1>
+
+<p><img src="/assets/img/post_img/umdctf23_no352.png" alt="352" /></p>
+
+<p>A <a>hide-n-seek.jpg</a> file is attached</p>
+
+<p>Used Steghide immediately</p>
+
+<ul>
+  <li>First password <code class="language-plaintext highlighter-rouge">kecleon</code> (from google search)</li>
+  <li>Second password <code class="language-plaintext highlighter-rouge">timetofindwhatkecleonishiding</code></li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/no352<span class="nv">$ </span>steghide extract <span class="nt">-sf</span> hide-n-seek.jpg
+Enter passphrase : kecleon
+extracted data kecleon.jpg
+mj0ln1r@AHLinux:~/no352<span class="nv">$ </span>steghide extract <span class="nt">-sf</span> kecleon.jpg
+Enter passphrase : timetofindwhatkecleonishiding
+extracted data wrote to flag.txt
+mj0ln1r@AHLinux:~/no352<span class="nv">$ </span><span class="nb">cat </span>flag.txt
+UMDCTF<span class="o">{</span>KECLE0NNNNN<span class="o">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : UMDCTF{KECLE0NNNNN}</code></p>
+</blockquote>
+
+<h1 id="mirror-unknown">Mirror Unknown</h1>
+
+<p><img src="/assets/img/post_img/umdctf23_mirror.png" alt="mirror" /></p>
+
+<p>The attached image is</p>
+
+<p><img src="/assets/img/post_img/umdctf23_mirror1.png" alt="mirror1" /></p>
+
+<p>Solution,</p>
+
+<p>Did a reverse image search on google images. And found the letters associated with the symbols.</p>
+
+<p><a href="https://lens.google.com/search?p=ATHekxerHQuSfeoaj3EZuxksrJRLN2lKODT1iiXlao7WYlgVQ9PEur4KOhjNvgU6awWK6K5r5D90H_dTI5-VuQa6i7fgp2ImdswSBpCNy_uZo3FzCylYUA8aDQc-hzEJTuXgOoy_m1mC7QTZBE5TH51MFcoMO8sWvqMtVWINMZj_iM1DYXmyHN7pvGwpeUKOc5T-kt6bvqEdFvOLHNtyv4Riw7t2Qn9BkX9JNMrYHKKvjh30uuFEGLpVkbuTW7jqDLoEj_YHysjJRSsT0cOdR1uSy0XXA3CCm3GUFbwccW9S&amp;ep=gsbubb&amp;hl=en-IN&amp;re=df#lns=W251bGwsbnVsbCxudWxsLG51bGwsbnVsbCxudWxsLG51bGwsIkVrY0tKR1V3WldGbE1tWTVMV1E0T1RndE5EUTFaaTFpWmprd0xUTTFOR1ppTWpZeU9EUmpOUklmVFMxQlR6VkxhVmROVTFsbFdVeHVaVFo2U1ROWFNFOVdXbWN5TUdaQ1p3PT0iXQ==" target="_blank">Image reverse search result</a></p>
+
+<p>The Alphabets associated with symbols are - <code class="language-plaintext highlighter-rouge">HOJNISSNIUR</code></p>
+
+<p>Reversed the letters as the challenge says it mirror - <code class="language-plaintext highlighter-rouge">SINJOHRUINS</code></p>
+
+<p>Found that Sinjoh ruins is a place, It might be the correct flag and it is.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : UMDCTF{SINJOHRUINS}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="osint">OSINT</h1>
+
+<h1 id="gone-missing-1">Gone Missing 1</h1>
+
+<p><img src="/assets/img/post_img/umdctf23_gone1.png" alt="gone1" /></p>
+
+<p>The link attached hosted this location image</p>
+
+<p><img src="/assets/img/post_img/umdctf23_gone12.png" class="autoimg" /></p>
+
+<p>Again did a reverse image search search</p>
+
+<p><a href="https://www.google.com/maps/place/The+Royal+Palace/@59.9182997,10.7273703,15.03zdata=!4m8!3m7!1s0x46416dd779ba357b:0x677038c9acc2591c!8m2!3d59.9170428!4d10.7273769!9m1!1b1!16zL20vMDU1ZDY4" target="_blank">Image reverse search result</a></p>
+
+<p>Found that it is <a>Royal Palace, Oslo</a></p>
+
+<p>Selected the Royal palace in the map given at the bottom right corner, got the flag.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : UMDCTF{I_b3t_rainbolt_c0uld_g3t_th1s_!n_thr33_s3c0nd5}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="web">Web</h1>
+
+<h1 id="treps-ticket-system">Treps Ticket System</h1>
+
+<p><img src="/assets/img/post_img/umdctf23_tts.png" alt="tts" /></p>
+
+<p>The attached URL hosted a form like this,</p>
+
+<p><img src="/assets/img/post_img/umdctf23_tts1.png" alt="tts1" /></p>
+
+<p>Inputed the Test creds name = test email = test@gmail.com</p>
+
+<p>It loaded a ticket with the URL <code class="language-plaintext highlighter-rouge">https://tts.chall.lol/ticket?num=12</code></p>
+
+<p><img src="/assets/img/post_img/umdctf23_tts2.png" alt="tts2" /></p>
+
+<p>Tried <code class="language-plaintext highlighter-rouge">IDOR</code> in the URL. changed the <code class="language-plaintext highlighter-rouge">num=0</code> and recieved the flag.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : UMDCTF{d0nt_b3_@n_id0r_@lw@ys_s3cur3_ur_tick3ts}</code></p>
+</blockquote>
+
+<hr />
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2023
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>
