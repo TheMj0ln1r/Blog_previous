@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-CryptoverseCTF 2023</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>CryptoverseCTF 2023 | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="CryptoverseCTF 2023" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hello all! I played CryptoverseCTF 2023 which was happened from 06 May to 08 May. I played it with my team Invaders0x1. This time a couple of automation tasks." />
+<meta property="og:description" content="Hello all! I played CryptoverseCTF 2023 which was happened from 06 May to 08 May. I played it with my team Invaders0x1. This time a couple of automation tasks." />
+<link rel="canonical" href="http://localhost:8000/posts/cryptoversectf23" />
+<meta property="og:url" content="http://localhost:8000/posts/cryptoversectf23" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-05-09T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="CryptoverseCTF 2023" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2023-05-09T00:00:00+05:30","datePublished":"2023-05-09T00:00:00+05:30","description":"Hello all! I played CryptoverseCTF 2023 which was happened from 06 May to 08 May. I played it with my team Invaders0x1. This time a couple of automation tasks.","headline":"CryptoverseCTF 2023","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/posts/cryptoversectf23"},"url":"http://localhost:8000/posts/cryptoversectf23"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div class="head-parent">
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat CryptoverseCTF</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>CryptoverseCTF 2023</h2>
+  <time datetime="2023-05-09T00:00:00+05:30" class="by-line">09 May 2023</time>
+  <p>Hello all! 
+I played <a href="https://ctftime.org/event/1907" target="_blank">CryptoverseCTF 2023</a> which was happened from  06 May to 08 May. I played it with my team <a href="https://ctftime.org/team/217079">Invaders0x1</a>. This time a couple of automation tasks.</p>
+
+<p>These are the writeups for the challenges I solved.</p>
+
+<h1 id="crypto">Crypto</h1>
+
+<h1 id="warmup-3">Warmup 3</h1>
+
+<p><img src="/assets/img/post_img/cvctf23_crypto2.png" alt="warmup2" /></p>
+
+<p>The Cipher given was a <code class="language-plaintext highlighter-rouge">Bifid Cipher</code> (from wikipedia). So, simply decoded it using <a href="https://www.dcode.fr/bifid-cipher" target="_blank"> this site </a></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : cvctf{funbiffiddecoding}}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="forensics">Forensics</h1>
+
+<h1 id="the-cyber-heist">The Cyber Heist</h1>
+
+<p><img src="/assets/img/post_img/cvctf23_cyberh.png" alt="forensic" /></p>
+
+<p>Attached File : <a href="/assets/files/cvctf23/challenge.pcapng">challenge.pcapng</a></p>
+
+<p>There is only one forensic chall and it was fun to do. I opened the pcapng file in wireshark and it there is only the USB data traffic is recorded in the pcapng.</p>
+
+<p><img src="/assets/img/post_img/cvctf23_cyberh1.png" alt="forensic" /></p>
+
+<p>So, I did a quick search on google about USB traffic. Found <a href="https://ctf-wiki.mahaloz.re/misc/traffic/protocols/USB/" target="_blank">this blog </a>. So, I got to know that, I have to collect the keystrokes of the keyboard and decode it from the traffic to the printable characters.</p>
+
+<p>First of all, I extracted the keystroke data field from the pcapng. The keyboard data is represented in <code class="language-plaintext highlighter-rouge">8 bytes</code> and the field of this 8 bytes data is <code class="language-plaintext highlighter-rouge">usbhid.data</code></p>
+
+<p><img src="/assets/img/post_img/cvctf23_cyberh2.png" alt="forensic" /></p>
+
+<p>So, I used <code class="language-plaintext highlighter-rouge">Tshark</code> to extract the data in this field.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/foresics<span class="nv">$ </span>tshark <span class="nt">-r</span> challenge.pcapng <span class="nt">-T</span> fields <span class="nt">-e</span> usbhid.data <span class="nt">-Y</span> <span class="s2">"usb.data_len == 8"</span> <span class="o">&gt;</span> usbdata.txt
+mj0ln1r@Linux:~/foresics<span class="nv">$ </span><span class="nb">head </span>usbdata.txt
+00ffff00ffffffff
+00fefe00fefffeff
+00feff00feffffff
+00feff00feffffff
+00fdfd00fdfffdff
+00fdff00fdffffff
+00fdfd00fdfffdff
+00fdfe00fdfffeff
+</code></pre></div></div>
+
+<p>So, The next step is to convert these bytes to ASCII. And here is my solution script to solve this.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python
+</span><span class="kn">import</span> <span class="n">sys</span>
+<span class="kn">import</span> <span class="n">os</span>
+<span class="n">DataFileName</span> <span class="o">=</span> <span class="s">"usbdata.txt"</span>
+<span class="n">presses</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">normalKeys</span> <span class="o">=</span> <span class="p">{</span><span class="s">"04"</span><span class="p">:</span><span class="s">"a"</span><span class="p">,</span> <span class="s">"05"</span><span class="p">:</span><span class="s">"b"</span><span class="p">,</span> <span class="s">"06"</span><span class="p">:</span><span class="s">"c"</span><span class="p">,</span> <span class="s">"07"</span><span class="p">:</span><span class="s">"d"</span><span class="p">,</span> <span class="s">"08"</span><span class="p">:</span><span class="s">"e"</span><span class="p">,</span> <span class="s">"09"</span><span class="p">:</span><span class="s">"f"</span><span class="p">,</span> <span class="s">"0a"</span><span class="p">:</span><span class="s">"g"</span><span class="p">,</span> <span class="s">"0b"</span><span class="p">:</span><span class="s">"h"</span><span class="p">,</span> <span class="s">"0c"</span><span class="p">:</span><span class="s">"i"</span><span class="p">,</span> <span class="s">"0d"</span><span class="p">:</span><span class="s">"j"</span><span class="p">,</span> <span class="s">"0e"</span><span class="p">:</span><span class="s">"k"</span><span class="p">,</span> <span class="s">"0f"</span><span class="p">:</span><span class="s">"l"</span><span class="p">,</span> <span class="s">"10"</span><span class="p">:</span><span class="s">"m"</span><span class="p">,</span> <span class="s">"11"</span><span class="p">:</span><span class="s">"n"</span><span class="p">,</span> <span class="s">"12"</span><span class="p">:</span><span class="s">"o"</span><span class="p">,</span> <span class="s">"13"</span><span class="p">:</span><span class="s">"p"</span><span class="p">,</span> <span class="s">"14"</span><span class="p">:</span><span class="s">"q"</span><span class="p">,</span> <span class="s">"15"</span><span class="p">:</span><span class="s">"r"</span><span class="p">,</span> <span class="s">"16"</span><span class="p">:</span><span class="s">"s"</span><span class="p">,</span> <span class="s">"17"</span><span class="p">:</span><span class="s">"t"</span><span class="p">,</span> <span class="s">"18"</span><span class="p">:</span><span class="s">"u"</span><span class="p">,</span> <span class="s">"19"</span><span class="p">:</span><span class="s">"v"</span><span class="p">,</span> <span class="s">"1a"</span><span class="p">:</span><span class="s">"w"</span><span class="p">,</span> <span class="s">"1b"</span><span class="p">:</span><span class="s">"x"</span><span class="p">,</span> <span class="s">"1c"</span><span class="p">:</span><span class="s">"y"</span><span class="p">,</span> <span class="s">"1d"</span><span class="p">:</span><span class="s">"z"</span><span class="p">,</span><span class="s">"1e"</span><span class="p">:</span><span class="s">"1"</span><span class="p">,</span> <span class="s">"1f"</span><span class="p">:</span><span class="s">"2"</span><span class="p">,</span> <span class="s">"20"</span><span class="p">:</span><span class="s">"3"</span><span class="p">,</span> <span class="s">"21"</span><span class="p">:</span><span class="s">"4"</span><span class="p">,</span> <span class="s">"22"</span><span class="p">:</span><span class="s">"5"</span><span class="p">,</span> <span class="s">"23"</span><span class="p">:</span><span class="s">"6"</span><span class="p">,</span><span class="s">"24"</span><span class="p">:</span><span class="s">"7"</span><span class="p">,</span><span class="s">"25"</span><span class="p">:</span><span class="s">"8"</span><span class="p">,</span><span class="s">"26"</span><span class="p">:</span><span class="s">"9"</span><span class="p">,</span><span class="s">"27"</span><span class="p">:</span><span class="s">"0"</span><span class="p">,</span><span class="s">"28"</span><span class="p">:</span><span class="s">"&lt;RET&gt;"</span><span class="p">,</span><span class="s">"29"</span><span class="p">:</span><span class="s">"&lt;ESC&gt;"</span><span class="p">,</span><span class="s">"2a"</span><span class="p">:</span><span class="s">"&lt;DEL&gt;"</span><span class="p">,</span> <span class="s">"2b"</span><span class="p">:</span><span class="s">"</span><span class="se">\t</span><span class="s">"</span><span class="p">,</span><span class="s">"2c"</span><span class="p">:</span><span class="s">"&lt;SPACE&gt;"</span><span class="p">,</span><span class="s">"2d"</span><span class="p">:</span><span class="s">"-"</span><span class="p">,</span><span class="s">"2e"</span><span class="p">:</span><span class="s">"="</span><span class="p">,</span><span class="s">"2f"</span><span class="p">:</span><span class="s">"["</span><span class="p">,</span><span class="s">"30"</span><span class="p">:</span><span class="s">"]"</span><span class="p">,</span><span class="s">"31"</span><span class="p">:</span><span class="s">"</span><span class="se">\\</span><span class="s">"</span><span class="p">,</span><span class="s">"32"</span><span class="p">:</span><span class="s">"&lt;NON&gt;"</span><span class="p">,</span><span class="s">"33"</span><span class="p">:</span><span class="s">";"</span><span class="p">,</span><span class="s">"34"</span><span class="p">:</span><span class="s">"'"</span><span class="p">,</span><span class="s">"35"</span><span class="p">:</span><span class="s">"&lt;GA&gt;"</span><span class="p">,</span><span class="s">"36"</span><span class="p">:</span><span class="s">","</span><span class="p">,</span><span class="s">"37"</span><span class="p">:</span><span class="s">"."</span><span class="p">,</span><span class="s">"38"</span><span class="p">:</span><span class="s">"/"</span><span class="p">,</span><span class="s">"39"</span><span class="p">:</span><span class="s">"&lt;CAP&gt;"</span><span class="p">,</span><span class="s">"3a"</span><span class="p">:</span><span class="s">"&lt;F1&gt;"</span><span class="p">,</span><span class="s">"3b"</span><span class="p">:</span><span class="s">"&lt;F2&gt;"</span><span class="p">,</span> <span class="s">"3c"</span><span class="p">:</span><span class="s">"&lt;F3&gt;"</span><span class="p">,</span><span class="s">"3d"</span><span class="p">:</span><span class="s">"&lt;F4&gt;"</span><span class="p">,</span><span class="s">"3e"</span><span class="p">:</span><span class="s">"&lt;F5&gt;"</span><span class="p">,</span><span class="s">"3f"</span><span class="p">:</span><span class="s">"&lt;F6&gt;"</span><span class="p">,</span><span class="s">"40"</span><span class="p">:</span><span class="s">"&lt;F7&gt;"</span><span class="p">,</span><span class="s">"41"</span><span class="p">:</span><span class="s">"&lt;F8&gt;"</span><span class="p">,</span><span class="s">"42"</span><span class="p">:</span><span class="s">"&lt;F9&gt;"</span><span class="p">,</span><span class="s">"43"</span><span class="p">:</span><span class="s">"&lt;F10&gt;"</span><span class="p">,</span><span class="s">"44"</span><span class="p">:</span><span class="s">"&lt;F11&gt;"</span><span class="p">,</span><span class="s">"45"</span><span class="p">:</span><span class="s">"&lt;F12&gt;"</span><span class="p">}</span>
+<span class="n">shiftKeys</span> <span class="o">=</span> <span class="p">{</span><span class="s">"04"</span><span class="p">:</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"05"</span><span class="p">:</span><span class="s">"B"</span><span class="p">,</span> <span class="s">"06"</span><span class="p">:</span><span class="s">"C"</span><span class="p">,</span> <span class="s">"07"</span><span class="p">:</span><span class="s">"D"</span><span class="p">,</span> <span class="s">"08"</span><span class="p">:</span><span class="s">"E"</span><span class="p">,</span> <span class="s">"09"</span><span class="p">:</span><span class="s">"F"</span><span class="p">,</span> <span class="s">"0a"</span><span class="p">:</span><span class="s">"G"</span><span class="p">,</span> <span class="s">"0b"</span><span class="p">:</span><span class="s">"H"</span><span class="p">,</span> <span class="s">"0c"</span><span class="p">:</span><span class="s">"I"</span><span class="p">,</span> <span class="s">"0d"</span><span class="p">:</span><span class="s">"J"</span><span class="p">,</span> <span class="s">"0e"</span><span class="p">:</span><span class="s">"K"</span><span class="p">,</span> <span class="s">"0f"</span><span class="p">:</span><span class="s">"L"</span><span class="p">,</span> <span class="s">"10"</span><span class="p">:</span><span class="s">"M"</span><span class="p">,</span> <span class="s">"11"</span><span class="p">:</span><span class="s">"N"</span><span class="p">,</span> <span class="s">"12"</span><span class="p">:</span><span class="s">"O"</span><span class="p">,</span> <span class="s">"13"</span><span class="p">:</span><span class="s">"P"</span><span class="p">,</span> <span class="s">"14"</span><span class="p">:</span><span class="s">"Q"</span><span class="p">,</span> <span class="s">"15"</span><span class="p">:</span><span class="s">"R"</span><span class="p">,</span> <span class="s">"16"</span><span class="p">:</span><span class="s">"S"</span><span class="p">,</span> <span class="s">"17"</span><span class="p">:</span><span class="s">"T"</span><span class="p">,</span> <span class="s">"18"</span><span class="p">:</span><span class="s">"U"</span><span class="p">,</span> <span class="s">"19"</span><span class="p">:</span><span class="s">"V"</span><span class="p">,</span> <span class="s">"1a"</span><span class="p">:</span><span class="s">"W"</span><span class="p">,</span> <span class="s">"1b"</span><span class="p">:</span><span class="s">"X"</span><span class="p">,</span> <span class="s">"1c"</span><span class="p">:</span><span class="s">"Y"</span><span class="p">,</span> <span class="s">"1d"</span><span class="p">:</span><span class="s">"Z"</span><span class="p">,</span><span class="s">"1e"</span><span class="p">:</span><span class="s">"!"</span><span class="p">,</span> <span class="s">"1f"</span><span class="p">:</span><span class="s">"@"</span><span class="p">,</span> <span class="s">"20"</span><span class="p">:</span><span class="s">"#"</span><span class="p">,</span> <span class="s">"21"</span><span class="p">:</span><span class="s">"$"</span><span class="p">,</span> <span class="s">"22"</span><span class="p">:</span><span class="s">"%"</span><span class="p">,</span> <span class="s">"23"</span><span class="p">:</span><span class="s">"^"</span><span class="p">,</span><span class="s">"24"</span><span class="p">:</span><span class="s">"&amp;"</span><span class="p">,</span><span class="s">"25"</span><span class="p">:</span><span class="s">"*"</span><span class="p">,</span><span class="s">"26"</span><span class="p">:</span><span class="s">"("</span><span class="p">,</span><span class="s">"27"</span><span class="p">:</span><span class="s">")"</span><span class="p">,</span><span class="s">"28"</span><span class="p">:</span><span class="s">"&lt;RET&gt;"</span><span class="p">,</span><span class="s">"29"</span><span class="p">:</span><span class="s">"&lt;ESC&gt;"</span><span class="p">,</span><span class="s">"2a"</span><span class="p">:</span><span class="s">"&lt;DEL&gt;"</span><span class="p">,</span> <span class="s">"2b"</span><span class="p">:</span><span class="s">"</span><span class="se">\t</span><span class="s">"</span><span class="p">,</span><span class="s">"2c"</span><span class="p">:</span><span class="s">"&lt;SPACE&gt;"</span><span class="p">,</span><span class="s">"2d"</span><span class="p">:</span><span class="s">"_"</span><span class="p">,</span><span class="s">"2e"</span><span class="p">:</span><span class="s">"+"</span><span class="p">,</span><span class="s">"2f"</span><span class="p">:</span><span class="s">"{"</span><span class="p">,</span><span class="s">"30"</span><span class="p">:</span><span class="s">"}"</span><span class="p">,</span><span class="s">"31"</span><span class="p">:</span><span class="s">"|"</span><span class="p">,</span><span class="s">"32"</span><span class="p">:</span><span class="s">"&lt;NON&gt;"</span><span class="p">,</span><span class="s">"33"</span><span class="p">:</span><span class="s">":"</span><span class="p">,</span><span class="s">"34"</span><span class="p">:</span><span class="s">"</span><span class="se">\"</span><span class="s">"</span><span class="p">,</span><span class="s">"35"</span><span class="p">:</span><span class="s">"&lt;GA&gt;"</span><span class="p">,</span><span class="s">"36"</span><span class="p">:</span><span class="s">"&lt;"</span><span class="p">,</span><span class="s">"37"</span><span class="p">:</span><span class="s">"&gt;"</span><span class="p">,</span><span class="s">"38"</span><span class="p">:</span><span class="s">"?"</span><span class="p">,</span><span class="s">"39"</span><span class="p">:</span><span class="s">"&lt;CAP&gt;"</span><span class="p">,</span><span class="s">"3a"</span><span class="p">:</span><span class="s">"&lt;F1&gt;"</span><span class="p">,</span><span class="s">"3b"</span><span class="p">:</span><span class="s">"&lt;F2&gt;"</span><span class="p">,</span> <span class="s">"3c"</span><span class="p">:</span><span class="s">"&lt;F3&gt;"</span><span class="p">,</span><span class="s">"3d"</span><span class="p">:</span><span class="s">"&lt;F4&gt;"</span><span class="p">,</span><span class="s">"3e"</span><span class="p">:</span><span class="s">"&lt;F5&gt;"</span><span class="p">,</span><span class="s">"3f"</span><span class="p">:</span><span class="s">"&lt;F6&gt;"</span><span class="p">,</span><span class="s">"40"</span><span class="p">:</span><span class="s">"&lt;F7&gt;"</span><span class="p">,</span><span class="s">"41"</span><span class="p">:</span><span class="s">"&lt;F8&gt;"</span><span class="p">,</span><span class="s">"42"</span><span class="p">:</span><span class="s">"&lt;F9&gt;"</span><span class="p">,</span><span class="s">"43"</span><span class="p">:</span><span class="s">"&lt;F10&gt;"</span><span class="p">,</span><span class="s">"44"</span><span class="p">:</span><span class="s">"&lt;F11&gt;"</span><span class="p">,</span><span class="s">"45"</span><span class="p">:</span><span class="s">"&lt;F12&gt;"</span><span class="p">}</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># check argv
+</span>    <span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"Usage : "</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"        python newsolve.py challenge.pcapng"</span><span class="p">)</span>
+        <span class="nf">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># get argv
+</span>    <span class="n">pcapFilePath</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># get data of pcap
+</span>    <span class="n">os</span><span class="p">.</span><span class="nf">system</span><span class="p">(</span><span class="s">"tshark -r %s -T fields -e usbhid.data -Y 'usb.data_len == 8' &gt; %s"</span> <span class="o">%</span> <span class="p">(</span><span class="n">pcapFilePath</span><span class="p">,</span> <span class="n">DataFileName</span><span class="p">))</span>
+    <span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">DataFileName</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">presses</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="s">""</span>
+    <span class="k">for</span> <span class="n">press</span> <span class="ow">in</span> <span class="n">presses</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">press</span> <span class="o">==</span> <span class="s">''</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="s">':'</span> <span class="ow">in</span> <span class="n">press</span><span class="p">:</span>
+            <span class="n">Bytes</span> <span class="o">=</span> <span class="n">press</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="s">":"</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Bytes</span> <span class="o">=</span> <span class="p">[</span><span class="n">press</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nf">len</span><span class="p">(</span><span class="n">press</span><span class="p">),</span> <span class="mi">2</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">Bytes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">"00"</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">Bytes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="s">"00"</span> <span class="ow">and</span> <span class="n">normalKeys</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">Bytes</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="n">normalKeys</span><span class="p">[</span><span class="n">Bytes</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+        <span class="k">elif</span> <span class="nf">int</span><span class="p">(</span><span class="n">Bytes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mb">0b10</span> <span class="ow">or</span> <span class="nf">int</span><span class="p">(</span><span class="n">Bytes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">16</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mb">0b100000</span><span class="p">:</span> <span class="c1"># shift key is pressed.
+</span>            <span class="k">if</span> <span class="n">Bytes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="s">"00"</span> <span class="ow">and</span> <span class="n">normalKeys</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="n">Bytes</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                <span class="n">result</span> <span class="o">+=</span> <span class="n">shiftKeys</span><span class="p">[</span><span class="n">Bytes</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"[-] Unknow Key : %s"</span> <span class="o">%</span> <span class="p">(</span><span class="n">Bytes</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"[+] Found : %s"</span> <span class="o">%</span> <span class="p">(</span><span class="n">result</span><span class="p">))</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="nf">main</span><span class="p">()</span>
+
+<span class="c1">#cvctf{w1r3shark_fun!!!}
+</span></code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : cvctf{w1r3shark_fun!!!}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="rev">Rev</h1>
+
+<h1 id="simple-checkin">Simple Checkin</h1>
+
+<p><img src="/assets/img/post_img/cvctf23_checkin.png" alt="simple checkin" /></p>
+
+<p>Attached File : <a href="/assets/files/cvctf23/challenge">challenge</a></p>
+
+<p>A binary file was given, I used <a>ghidra</a> to view the source code of it.</p>
+
+<p><img src="/assets/img/post_img/cvctf23_checkin1.png" alt="simple checkin" /></p>
+
+<p>In main function I observed that there were two long array are assigned to some values. And when I scroll down an <code class="language-plaintext highlighter-rouge">XOR</code> operation was done between these two array elements.</p>
+
+<pre><code class="language-C">  for (local_78 = 0; local_78 &lt; local_7c; local_78 = local_78 + 1) {
+		    if ((local_68[local_78] ^ (int)(char)local_48[local_78]) != local_58[local_78]) {
+		      local_74 = 0;
+		    }
+	}
+</code></pre>
+
+<p>So, I copied the values of those two arrays performed a simple XOR between them, it resulted the flag.</p>
+
+<p>Here, is the solution script</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">local_68</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mh">0xe1</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+<span class="n">local_58</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mh">0xe1</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+
+<span class="n">local_68</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x68</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7d</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xac</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xcf</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa8</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xdc</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">99</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xef</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x94</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x1e</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x77</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd7</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x88</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x8c</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xed</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x94</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xe4</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x1f</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x70</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xb</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xeb</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xb</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x87</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xc</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x9b</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xc</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf4</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xd</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x2a</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xd</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x4d</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xe</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb6</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xe</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xdf</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xf</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x80</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xf</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xfa</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x10</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3a</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x10</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5f</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x11</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x39</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x11</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x66</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x12</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x39</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x12</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5f</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x13</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5f</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x13</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x30</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x14</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x93</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x14</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xe1</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x15</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5f</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x15</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x16</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x70</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x16</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x17</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x46</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x17</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x33</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x18</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xe1</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x18</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x82</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x19</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb9</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x19</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd1</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x1a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3c</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x1a</span><span class="p">]</span> <span class="o">=</span> <span class="mi">99</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x1b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3b</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x1b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5a</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x1c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x76</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x1c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x29</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x1d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x2c</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x1d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x40</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x1e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x48</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x1e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x27</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x1f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xae</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x1f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xc0</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x20</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x6a</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x20</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x21</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd7</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x21</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x88</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x22</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x4b</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x22</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x38</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x23</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa2</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x23</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd6</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x24</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xbf</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x24</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xcd</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x25</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xc1</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x25</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa8</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x26</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xee</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x26</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x80</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x27</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xba</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x27</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xdd</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x28</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x28</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3b</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x29</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xbb</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x29</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd2</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x2a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xbb</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x2a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd5</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x2b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb7</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x2b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xe8</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x2c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb6</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x2c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xc2</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x2d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xc6</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x2d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xae</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x2e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x49</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x2e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x20</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x2f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xe0</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x2f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x93</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x30</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb3</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x30</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xec</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x31</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x23</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x31</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x40</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x32</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x85</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x32</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xed</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x33</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x58</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x33</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3d</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x34</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa1</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x34</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xc2</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x35</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x35</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x66</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x36</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf3</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x36</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x9a</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x37</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x21</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x37</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x4f</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x38</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xaa</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x38</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf5</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x39</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xcc</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x39</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xaf</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x3a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x4a</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x3a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x22</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x3b</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x3b</span><span class="p">]</span> <span class="o">=</span> <span class="mi">99</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x3c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x2e</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x3c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x42</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x3d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb0</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x3d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xdc</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x3e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd4</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x3e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb1</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x3f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x8c</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x3f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xe2</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x40</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x49</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x40</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x2e</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x41</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3d</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x41</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x58</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x42</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa5</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x42</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x89</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x43</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7e</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x43</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x1c</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x44</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x8e</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x44</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xfb</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x45</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x15</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x45</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x61</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x46</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd9</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x46</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x86</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x47</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x41</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x47</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x28</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x48</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x98</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x48</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xec</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x49</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xef</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x49</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb0</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x4a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x90</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x4a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xfd</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x4b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x34</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x4b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5d</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x4c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa9</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x4c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xce</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x4d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x4d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x67</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x4e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7c</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x4e</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x4f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x4c</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x4f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x13</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x50</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x45</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x50</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x27</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x51</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7b</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x51</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x1e</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x52</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x6e</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x52</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x31</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x53</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x95</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x53</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf4</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x54</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3a</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x54</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x65</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x55</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x80</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x55</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xe7</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x56</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xcd</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x56</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa2</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x57</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7b</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x57</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x14</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x58</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xe2</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x58</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x86</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x59</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x9f</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x59</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xc0</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x5a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3c</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x5a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x48</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x5b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xcc</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x5b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa5</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x5c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x6a</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x5c</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x5d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf8</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x5d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x9d</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x5e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x67</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x5e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x38</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x5f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x77</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x5f</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x60</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf3</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x60</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x9c</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x61</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa8</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x61</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf7</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x62</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x55</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x62</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x39</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mi">99</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x65</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">99</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x15</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x74</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x65</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa7</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x65</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd5</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x66</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x87</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x66</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xe9</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x67</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xcb</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x67</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x94</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x68</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x89</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x68</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xe8</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x69</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x1d</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x69</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7f</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x6a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xcf</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x6a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa0</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x6b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd1</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x6b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa4</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x6c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x1b</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x6c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x6f</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x6d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x79</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x6d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x26</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x6e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xe7</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x6e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x86</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x6f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7d</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x6f</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x70</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5c</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x70</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x28</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x71</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf0</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x71</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x9f</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x72</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xfb</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x72</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x96</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x73</span><span class="p">]</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x73</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x68</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x74</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x4a</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x74</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3e</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x75</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x45</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x75</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x2c</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x76</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x76</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x69</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x77</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x74</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x77</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x13</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x78</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xcd</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x78</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x92</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x79</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7f</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x79</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x7a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x98</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x7a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf0</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x7b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x7b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x62</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x7c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xaa</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x7c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd9</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x7d</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x7d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5b</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x7e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xe</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x7e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7e</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x7f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x70</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x7f</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x80</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x22</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x80</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x4d</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x81</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x11</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x81</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x72</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x82</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x9c</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x82</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf9</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x83</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x72</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x83</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x84</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3e</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x84</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x4d</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x85</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7c</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x85</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x43</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x86</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x86</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x86</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xdf</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x87</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x1c</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x87</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x73</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x88</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x21</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x88</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x54</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x89</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x6e</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x89</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x31</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x8a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x18</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x8a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x75</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x8b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x4e</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x8b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x27</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x8c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x30</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x8c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x57</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x8d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3b</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x8d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x53</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x8e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x8e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7b</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x8f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x2a</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x8f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x75</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x90</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x26</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x90</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x48</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x91</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x6f</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x91</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x92</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb8</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x92</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xdd</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x93</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x8e</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x93</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xea</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x94</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x4c</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x94</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x13</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x95</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7f</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x95</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x96</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x22</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x96</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x4d</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x97</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xef</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x97</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb0</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x98</span><span class="p">]</span> <span class="o">=</span> <span class="mi">99</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x98</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x99</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa3</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x99</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xcc</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x9a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xc2</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x9a</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x9d</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x9b</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x9b</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa1</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x9c</span><span class="p">]</span> <span class="o">=</span> <span class="mi">99</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x9c</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x17</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x9d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd8</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x9d</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x87</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x9e</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x9e</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x60</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0x9f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x88</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0x9f</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xed</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xa0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x19</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xa0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7a</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xa1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5b</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xa1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3a</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xa2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x78</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xa2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xa3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7a</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xa3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xa4</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x39</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xa4</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5c</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xa5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x8c</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xa5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd3</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xa6</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xbf</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xa6</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd7</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xa7</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xc3</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xa7</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa6</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xa8</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x19</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xa8</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x6b</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xa9</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5d</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xa9</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x38</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xaa</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x87</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xaa</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd8</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xab</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x9a</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xab</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf3</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xac</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd9</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xac</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xaa</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xad</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa2</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xad</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xfd</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xae</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xea</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xae</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x8b</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xaf</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7f</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xaf</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x20</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xb0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xfd</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xb0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x8d</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xb1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd0</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xb1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb1</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xb2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf9</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xb2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x90</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xb3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb6</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xb3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd8</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xb4</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf7</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xb4</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x91</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xb5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x6e</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xb5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x1b</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xb6</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xad</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xb6</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xc1</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xb7</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xaf</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xb7</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf0</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xb8</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5d</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xb8</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x35</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xb9</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd8</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xb9</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xbd</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xba</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xca</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xba</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb2</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xbb</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x29</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xbb</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x13</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xbc</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x8f</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xbc</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xbc</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xbd</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb5</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xbd</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x87</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xbe</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xbe</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x6e</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xbf</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xbd</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xbf</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x8c</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xc0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xce</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xc0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf8</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xc1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf8</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xc1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x9a</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xc2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x9d</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xc2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xae</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xc3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xcb</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xc3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xaa</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xc4</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x18</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xc4</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x2f</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xc5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa0</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xc5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xc5</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xc6</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x8f</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xc6</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xea</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mi">199</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xce</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">199</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xa8</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mi">200</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x30</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mi">200</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xc9</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x77</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xc9</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x13</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xca</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5f</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xca</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3a</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xcb</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x8a</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xcb</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xbb</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xcc</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xeb</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xcc</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd9</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xcd</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xcd</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x3c</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xce</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x73</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xce</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x40</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xcf</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xda</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xcf</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xe2</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xd0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x9e</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xd0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xaf</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xd1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x61</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xd1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x53</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xd2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7f</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xd2</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x51</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xd3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x51</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xd3</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x14</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xd4</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x20</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xd4</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x4e</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xd5</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x69</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xd5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xd6</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x10</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xd6</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7f</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xd7</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x69</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xd7</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x10</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xd8</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf1</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xd8</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xd9</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xd9</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x26</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xd9</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x49</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xda</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x9e</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xda</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xec</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xdb</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7d</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xdb</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x22</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xdc</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xf7</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xdc</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x99</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xdd</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xdd</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x69</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xde</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xde</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7e</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xdf</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0xb0</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xdf</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x99</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xe0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5f</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xe0</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x7e</span>
+<span class="n">local_68</span><span class="p">[</span><span class="mh">0xe1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x22</span>
+<span class="n">local_58</span><span class="p">[</span><span class="mh">0xe1</span><span class="p">]</span> <span class="o">=</span> <span class="mh">0x5f</span>
+
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="ow">in</span> <span class="nf">zip</span><span class="p">(</span><span class="n">local_58</span><span class="p">,</span><span class="n">local_68</span><span class="p">):</span>
+    <span class="nf">print</span><span class="p">(</span><span class="nf">chr</span><span class="p">(</span><span class="n">i</span><span class="o">^</span><span class="n">j</span><span class="p">),</span><span class="n">end</span><span class="o">=</span><span class="s">""</span><span class="p">)</span>
+
+<span class="c1">#cvctf{i_apologize_for_such_a_long_string_in_this_checkin_challenge,but_it_might_be_a_good_time_to_learn_about_automating_this_process?You_might_need_to_do_it_because_here_is_a_painful_hex:32a16b3a7eef8de1263812.Enjoy(or_not)!}
+</span></code></pre></div></div>
+
+<h1 id="micro-assembly">Micro Assembly</h1>
+
+<p><img src="/assets/img/post_img/cvctf23_microasm.png" alt="micro asm" /></p>
+
+<p>Attached File : <a href="/assets/files/cvctf23/file.asm">file.asm</a></p>
+
+<p>The content of file.asm</p>
+
+<pre><code class="language-asm">main:
+   PUSH %BP
+   MOV  %SP, %BP
+@main_body:
+   SUB  %SP, $28, %SP
+   MOV  $154, -28(%BP)
+   MOV  $16, -24(%BP)
+   MOV  $16, -20(%BP)
+   MOV  $228, -16(%BP)
+   MOV  $66, -12(%BP)
+   MOV  $286, -8(%BP)
+   MOV  $3, -4(%BP)
+@if0:
+   DIV  -28(%BP), $2, %0
+   CMP  %12, $0
+   JNE  @false0
+@true0:
+   DIV  -28(%BP), $2, %0
+   MOV  %0, -28(%BP)
+   JMP  @exit0
+@false0:
+@exit0:
+   MUL  -24(%BP), $3, %0
+   ADD  %0, $1, %0
+   MOV  %0, -24(%BP)
+   SHL  -20(%BP), $2, %0
+   ADD  %0, $3, %0
+   MOV  %0, -20(%BP)
+@if1:
+   DIV  -16(%BP), $3, %0
+   CMP  %12, $1
+   JNE  @false1
+@true1:
+   SUB  -16(%BP), $1, %0
+   DIV  %0, $3, %0
+   MOV  %0, -16(%BP)
+   JMP  @exit1
+@false1:
+   DIV  -16(%BP), $2, %0
+   MOV  %0, -16(%BP)
+@exit1:
+   SUB  -12(%BP), $2, %0
+   MOV  %0, -12(%BP)
+@if2:
+   DIV  -8(%BP), $3, %0
+   CMP  %12, $1
+   JNE  @false2
+@true2:
+   SUB  -8(%BP), $1, %0
+   DIV  %0, $3, %0
+   MOV  %0, -8(%BP)
+   JMP  @exit2
+@false2:
+   DIV  -8(%BP), $2, %0
+   MOV  %0, -8(%BP)
+@exit2:
+   SHL  $11, -4(%BP), %0
+   ADD  %0, $11, %0
+   MOV  %0, -4(%BP)
+   LEA  -28(%BP), %0
+   MOV  %0, %13
+   JMP  @main_exit
+@main_exit:
+   MOV  %BP, %SP
+   POP  %BP
+   RET 
+</code></pre>
+
+<p>Yeah, I know <code class="language-plaintext highlighter-rouge">Assembly</code>. There are <code class="language-plaintext highlighter-rouge">7</code> memory locations are initialized I thought that it was 7 character long flag. So, I started solving it by hand.</p>
+
+<p>Let me clearly explain the first <code class="language-plaintext highlighter-rouge">if</code> block.</p>
+
+<pre><code class="language-asm">@if0:
+   DIV  -28(%BP), $2, %0     // 154/2 == 77
+   CMP  %12, $0               // %12, 77 
+   JNE  @false0
+@true0:
+   DIV  -28(%BP), $2, %0     // 154/2 = 77
+   MOV  %0, -28(%BP)          //-28(bp) = 77 (154 --&gt; 77)
+   JMP  @exit0
+@false0:
+</code></pre>
+
+<p><code class="language-plaintext highlighter-rouge">-28(%BP)</code> is the location of value <code class="language-plaintext highlighter-rouge">154</code> and <code class="language-plaintext highlighter-rouge">$2</code> is just an integer.<br /><code class="language-plaintext highlighter-rouge">DIV 154,2</code> is stored in <code class="language-plaintext highlighter-rouge">%0</code><br />
+The result <code class="language-plaintext highlighter-rouge">77</code> is compared with the value present in <code class="language-plaintext highlighter-rouge">%12</code> location<br /> I assumed It was true, So the <code class="language-plaintext highlighter-rouge">@true0</code> will be executed.<br /> The true block is just doing DIV again and stored the value at <code class="language-plaintext highlighter-rouge">-28(%BP)</code>, which means the <code class="language-plaintext highlighter-rouge">158</code> is erased and <code class="language-plaintext highlighter-rouge">77</code> is stored inplace of it.</p>
+
+<p>By this way, I traced all the conditions. Most of the time I assumed the condition was true. Only when I got the result in decimal points marked it as false and excuted the false block.</p>
+
+<p>Here is my rough work of the challenge.</p>
+
+<pre><code class="language-asm">main:
+   PUSH %BP
+   MOV  %SP, %BP
+@main_body:
+   SUB  %SP, $28, %SP
+   MOV  $154, -28(%BP)
+   MOV  $16, -24(%BP)
+   MOV  $16, -20(%BP)
+   MOV  $228, -16(%BP)
+   MOV  $66, -12(%BP)
+   MOV  $286, -8(%BP)
+   MOV  $3, -4(%BP)
+@if0:
+   DIV  -28(%BP), $2, %0     // 154/2 == 77
+   CMP  %12, $0               // %12, 77 
+   JNE  @false0
+@true0:
+   DIV  -28(%BP), $2, %0     // 154/2 = 77
+   MOV  %0, -28(%BP)          //-28(bp) = 77 (154 --&gt; 77)
+   JMP  @exit0
+@false0:
+@exit0:
+   MUL  -24(%BP), $3, %0      // 16 * 3 = 48
+   ADD  %0, $1, %0            // 48+1 = 49
+   MOV  %0, -24(%BP)          // -24(bp) = 2 (16 -- &gt; 49)
+   SHL  -20(%BP), $2, %0      //-20(bp) = 16..  16&lt;&lt; 2 = 64
+   ADD  %0, $3, %0            // 64 + 3 = 67
+   MOV  %0, -20(%BP)          // -20(bp) = 67  (16--&gt;67)
+@if1:
+   DIV  -16(%BP), $3, %0      // -16(bp) = 228  .. 228/3 = 76
+   CMP  %12, $1               // %12, 1 
+   JNE  @false1
+@true1:
+   SUB  -16(%BP), $1, %0      // 228 - 1 = 227
+   DIV  %0, $3, %0            // 227/3 = 75.666
+   MOV  %0, -16(%BP)          // 
+   JMP  @exit1
+@false1:
+   DIV  -16(%BP), $2, %0      // 228/2 = 114
+   MOV  %0, -16(%BP)          // -16(bp) = 114
+@exit1:
+   SUB  -12(%BP), $2, %0      // 66 - 2 = 64
+   MOV  %0, -12(%BP)          // -12(bp) = 64
+@if2:
+   DIV  -8(%BP), $3, %0       // 286/3 = 95.333
+   CMP  %12, $1         
+   JNE  @false2
+@true2:
+   SUB  -8(%BP), $1, %0       // 286-1 = 285
+   DIV  %0, $3, %0            // 285/3 = 95
+   MOV  %0, -8(%BP)           // -8(bp) = 95
+   JMP  @exit2
+@false2:
+   DIV  -8(%BP), $2, %0     // 286/2 = 143
+   MOV  %0, -8(%BP)          // -8(bp) = 143
+@exit2:
+   SHL  $11, -4(%BP), %0      // 11 &lt;&lt; 3 = 88
+   ADD  %0, $11, %0           // 88 + 11 = 99
+   MOV  %0, -4(%BP)           // -4(bp) =99
+   LEA  -28(%BP), %0          // 77, %0
+   MOV  %0, %13               // %13 = 77
+   JMP  @main_exit
+@main_exit:
+   MOV  %BP, %SP
+   POP  %BP
+   RET 
+
+cvctf{M1Cr@_c}
+</code></pre>
+
+<p>Later the values present in the memory locations from <code class="language-plaintext highlighter-rouge">-28(%BP)</code> to <code class="language-plaintext highlighter-rouge">-4(%BP)</code> converted these integers to ascii and The result was wrapped around cvctf{}.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : cvctf{M1Cr@_c}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="misc">Misc</h1>
+
+<h1 id="baby-calculator">Baby Calculator</h1>
+
+<p><img src="/assets/img/post_img/cvctf23_babycalc.png" alt="baby calc" /></p>
+
+<p><code class="language-plaintext highlighter-rouge">nc 20.169.252.240 4200</code></p>
+
+<p>A good challenge to do writeup.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/babycalc<span class="nv">$ </span>nc 20.169.252.240 4200
+Welcome to the Baby Calculator! Answer 40 questions <span class="k">in </span>a minute to get the flag.
+The difference between your input and the correct answer must be less than 1e-6.
+<span class="o">[</span>+] Question 1:
+Evaluate the integral of: 4/x from 3 to 7.
+<span class="o">&gt;</span> Answer: 
+
+</code></pre></div></div>
+
+<p>It was asking us to do integral of <code class="language-plaintext highlighter-rouge">4/x from 3 to 7</code>, It was easy to do with <code class="language-plaintext highlighter-rouge">scipy</code> module of python</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">scipy.integrate</span> <span class="kn">import</span> <span class="n">quad</span>
+<span class="k">def</span> <span class="nf">compute_integral</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">lower_limit</span><span class="p">,</span> <span class="n">upper_limit</span><span class="p">):</span>
+    <span class="n">integral</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="nf">quad</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">lower_limit</span><span class="p">,</span> <span class="n">upper_limit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">integral</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+	<span class="k">return</span> <span class="mi">4</span><span class="o">/</span><span class="n">x</span> 
+<span class="nf">compute_integral</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<p>But it was difficult to answer 40 questions in a minute. So, I used <code class="language-plaintext highlighter-rouge">pwntools</code> to automate this process.</p>
+
+<p>This is my solution script.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">math</span> <span class="kn">import</span> <span class="n">cos</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span><span class="n">sin</span>
+<span class="kn">from</span> <span class="n">scipy.integrate</span> <span class="kn">import</span> <span class="n">quad</span>
+<span class="kn">from</span> <span class="n">pwn</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">def</span> <span class="nf">compute_integral</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">lower_limit</span><span class="p">,</span> <span class="n">upper_limit</span><span class="p">):</span>
+    <span class="n">integral</span><span class="p">,</span> <span class="n">error</span> <span class="o">=</span> <span class="nf">quad</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">lower_limit</span><span class="p">,</span> <span class="n">upper_limit</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">integral</span>
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nf">eval</span><span class="p">(</span><span class="n">exp</span><span class="p">)</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="nf">remote</span><span class="p">(</span><span class="s">'20.169.252.240'</span><span class="p">,</span><span class="mi">4200</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">40</span><span class="p">):</span>
+    <span class="n">conn</span><span class="p">.</span><span class="nf">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s">'Evaluate the integral of: '</span><span class="p">)</span>
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s">' '</span><span class="p">).</span><span class="nf">decode</span><span class="p">()</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">recvuntil</span><span class="p">(</span><span class="sa">b</span><span class="s">'.'</span><span class="p">).</span><span class="nf">decode</span><span class="p">().</span><span class="nf">strip</span><span class="p">(</span><span class="s">'.'</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="s">" "</span><span class="p">)</span>
+    <span class="n">ranges</span> <span class="o">=</span> <span class="p">[</span><span class="nf">int</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nf">int</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">3</span><span class="p">])]</span>
+    <span class="n">integral</span> <span class="o">=</span> <span class="nf">compute_integral</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ranges</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ranges</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">integral</span><span class="p">)</span>
+    <span class="n">conn</span><span class="p">.</span><span class="nf">recv</span><span class="p">()</span>
+    <span class="n">conn</span><span class="p">.</span><span class="nf">sendline</span><span class="p">(</span><span class="nf">str</span><span class="p">(</span><span class="n">integral</span><span class="p">).</span><span class="nf">encode</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">39</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">conn</span><span class="p">.</span><span class="nf">recv</span><span class="p">())</span>
+
+<span class="c1"># cvctf{B4by_m@7h_G14n7_5t3P}
+</span></code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : cvctf{B4by_m@7h_G14n7_5t3P}</code></p>
+</blockquote>
+
+<h1 id="misc-1">Misc</h1>
+
+<h1 id="ojail">OJail</h1>
+
+<p><img src="/assets/img/post_img/cvctf23_ojail.png" alt="ojail" /></p>
+
+<p>Challenge</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/ojail<span class="nv">$ </span>nc 20.169.252.240 4201
+        OCaml version 4.08.1
+
+<span class="c"># </span>
+</code></pre></div></div>
+
+<p>Okay its time to learn <code class="language-plaintext highlighter-rouge">OCaml</code>. I quickly checked the Ocaml hello world program and tried it.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/ojail<span class="nv">$ </span>nc 20.169.252.240 4201
+        OCaml version 4.08.1
+
+<span class="c"># print_string "hello world!\n";;</span>
+hello world!
+- : unit <span class="o">=</span> <span class="o">()</span>
+<span class="c"># </span>
+</code></pre></div></div>
+<p>Yes, it worked. So, I found that with  <code class="language-plaintext highlighter-rouge">Sys.command</code> we can executed the system commands. I tried with <code class="language-plaintext highlighter-rouge">ls</code>. I found that there were a flag.txt but it was not the correct one. Then looked into <code class="language-plaintext highlighter-rouge">secret</code> directory and catted out the <code class="language-plaintext highlighter-rouge">flag-1d573e0faa99.json</code></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/ojail<span class="nv">$ </span>nc 20.169.252.240 4201
+        OCaml version 4.08.1
+
+<span class="c"># Sys.command "ls";;</span>
+Dockerfile
+build.sh
+flag.txt
+secret
+- : int <span class="o">=</span> 0
+<span class="c"># Sys.command "ls secret";;       </span>
+flag-1d573e0faa99.json
+- : int <span class="o">=</span> 0
+<span class="c"># Sys.command "cat secret/flag-1d573e0faa99.json";;</span>
+<span class="o">{</span>
+    <span class="s2">"message"</span>: <span class="s2">"Flag is here. OCaml syntax is easy, right?"</span>,
+    <span class="s2">"flag"</span>: <span class="s2">"cvctf{J41L3d_OOOO-C4mL@@}"</span>
+<span class="o">}</span>- : int <span class="o">=</span> 0
+<span class="c"># </span>
+
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : cvctf{J41L3d_OOOO-C4mL@@}</code></p>
+</blockquote>
+
+<hr />
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2023
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>
