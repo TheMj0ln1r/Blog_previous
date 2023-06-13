@@ -141,3 +141,9 @@ Now you are set to run this project
 ### Additional Links
 
 Source code : [Github](https://github.com/TheMj0ln1r/novel-cryptography-project)
+
+> `Please let me know there was any bug/flaw in the implementation..`
+
+***
+
+Thank you!
