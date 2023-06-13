@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-Novel Cryptography Techniquique for Video Encryption</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Novel Cryptography Techniquique for Video Encryption | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Novel Cryptography Techniquique for Video Encryption" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hello guys!" />
+<meta property="og:description" content="Hello guys!" />
+<link rel="canonical" href="http://localhost:8000/posts/novelcryptographyproject" />
+<meta property="og:url" content="http://localhost:8000/posts/novelcryptographyproject" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-06-13T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Novel Cryptography Techniquique for Video Encryption" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2023-06-13T00:00:00+05:30","datePublished":"2023-06-13T00:00:00+05:30","description":"Hello guys!","headline":"Novel Cryptography Techniquique for Video Encryption","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/posts/novelcryptographyproject"},"url":"http://localhost:8000/posts/novelcryptographyproject"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div class="head-parent">
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat Cryptography-Project</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>Novel Cryptography Techniquique for Video Encryption</h2>
+  <time datetime="2023-06-13T00:00:00+05:30" class="by-line">13 Jun 2023</time>
+  <p>Hello guys!</p>
+
+<p>Long time no see with the projects..? And now back again with a cryptography based project (excited)..</p>
+
+<p>This project is a combination of multiple trending technologies,</p>
+
+<p><strong>Hybrid Cryptography, Multikey Cryptography, Video Communication, Real-time Streaming, Elliptic Curve Cryptography (ECC), AES Encryption, Client-Server Model, Socket Programming, Flask, SQLAlchemy, RSA, Key Generation</strong></p>
+
+<p>Interesting..? Lets me give a breif introduction about this project.</p>
+
+<h1 id="a-novel-hybrid-multikey-cryptography-technique-for-video-communication-with-client-server-model">A Novel Hybrid Multikey Cryptography Technique for Video Communication with Client-Server Model</h1>
+
+<p>Protecting copyright and preventing piracy has become a crucial concern in real-time video streaming systems. This research project presents a revolutionary multi-key and hybrid cryptography approach to provide enhanced security for video communication.</p>
+
+<p>The project implements a software solution for video encryption and decryption using a continuous system based on the Elliptic Curve Cryptography (ECC) approach as pseudorandom encryption key generators. This approach generates multiple keys to encrypt and decrypt small chunks of video files dynamically, based on the video data. The implementation follows a client-server model utilizing socket programming.</p>
+
+<h3 id="video-walkthrough">Video Walkthrough</h3>
+
+<video width="100%" height="100%" controls="">
+  <source src="/assets/files/novel-cryptography/demo.webm" type="video/mp4" />
+  Your browser does not support the video tag
+</video>
+
+<h2 id="project-flow">Project Flow</h2>
+
+<ol>
+  <li>User Registration:
+    <ul>
+      <li>Users register on a web page developed using Flask.</li>
+      <li>User data is stored in a SQLAlchemy database.</li>
+      <li>During registration, users are required to import their public key and provide their email, password, and MAC address.</li>
+    </ul>
+  </li>
+  <li>User Login and Dashboard:
+    <ul>
+      <li>Users log into the web page using their credentials.</li>
+      <li>Upon successful login, the user’s dashboard displays video thumbnails.</li>
+      <li>The dashboard provides a download button to obtain the client software used to connect to the streaming server.</li>
+    </ul>
+  </li>
+  <li>Client Execution:
+    <ul>
+      <li>Users execute the <code class="language-plaintext highlighter-rouge">client.py</code> script on their local machine.</li>
+      <li>The server prompts the user to enter their email and password for verification.</li>
+      <li>If the provided credentials match those used during registration, the server displays the list of videos available, which corresponds to the videos displayed on the user’s dashboard.</li>
+    </ul>
+  </li>
+  <li>Additional Authentication:
+    <ul>
+      <li>The user is asked to enter their MAC address, which was provided during registration, to ensure further security.</li>
+    </ul>
+  </li>
+  <li>Private Key Import:
+    <ul>
+      <li>The user is prompted to import their private key path to decrypt the received video from the server.</li>
+    </ul>
+  </li>
+  <li>Video Decryption and Playback:
+    <ul>
+      <li>Once the decryption process is completed, the video is immediately played for the user.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="encryption-flow">Encryption Flow</h2>
+
+<p>The video file encrypion flow as follows.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. Input video file Vinput
+2. Generate video chunks Vci from Vinput
+3. Fetch the receiver's public key of the RPkey
+4. Collect receiver's MAC address Rmac
+5. Generate VID using Vc0
+6. Store VID in a temporary file
+7. Encrypt Vc0 using RSA
+8. Generate Keya ← x^3 + VID * x + Rmac
+9. Encrypt Vc1 using Keya and AES
+10. for i := 2 to n do
+11.    Generate Keya ← x^3 + Keya * x + Rmac
+12.    Encrypt Vci using Keya and AES
+13. end for
+</code></pre></div></div>
+
+<h2 id="internal-processes">Internal Processes:</h2>
+
+<ul>
+  <li>User Registration:
+    <ul>
+      <li>During registration, users are required to import their public key, along with their email, password, and MAC address.</li>
+    </ul>
+  </li>
+  <li>Encryption</li>
+</ul>
+
+<p><img src="/assets/files/novel-cryptography/video_encryption.png" alt="Video Encryption" /></p>
+
+<ul>
+  <li>The server-side encryption involves AES encryption of each 1MB chunk of the video file.</li>
+</ul>
+
+<p><img src="/assets/files/novel-cryptography/keygeneration.png" alt="keygeneration" /></p>
+
+<ul>
+  <li>The encryption key used for AES is generated using a novel key generation technique that combines RSA and ECC.</li>
+  <li>Decryption
+    <ul>
+      <li>The decryption was done at the client side same key generation was used here.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="analysis-of-results">Analysis of Results</h2>
+
+<h3 id="time-to-generate-keys">Time to generate keys</h3>
+
+<p>To determine the impact of the multi-key in the encryption and decryption process, the time required to generate the key was calculated in this experiment. The method and equation used to derive the keys are the same for both encryption and
+decryption. So, for the sake of analysis, the delay calculated for encryption has been employed in this part. The receiver’s public key and partial video data serve as the basis for the key used to encrypt the first video chunk. The remaining keys are obtained using the receiver’s MAC address, public key, and previously computed key. Since the length of the parameters is consistent during this procedure, the time between each key does not vary much.</p>
+
+<h3 id="time-to-encrypt-video-chunks">Time to encrypt video chunks</h3>
+
+<p>This section has talked about how long it takes to encrypt each chunk. Although the video processing modules split the video file into chunks for each full frame, the implementation assumes the chunk size to be 1 MB. The video chunks are fed into the AES module before being transmitted. The chunks are mostly the same in that it varies between 1MB and 1.2MB, and the time taken to encrypt each also varies between 0.9 sec to 1.2 sec.</p>
+
+<h3 id="number-of-keys-generated">Number of keys generated</h3>
+
+<p>The number of keys generated depends on the quantity of generated video chunks. This statistic has been considered for the study because the suggested solution uses multiple key technologies to provide improved security. Multiple keys have no impact on memory use because the keys are only momentarily saved at the transmitter and receiver sides. Furthermore, because each key is only utilized once, an increase in the number of keys has no impact on the fetching delay.</p>
+
+<h2 id="installing-entire-project">Installing Entire Project</h2>
+
+<ol>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">git clone https://github.com/TheMj0ln1r/novel-cryptography-project.git</code></p>
+  </li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">cd novel-cryptography-project</code></p>
+  </li>
+  <li>
+    <p>python3 -m venv env</p>
+  </li>
+  <li>
+    <p>source env/bin/activate</p>
+  </li>
+  <li>
+    <p>pip3 install -r requirements.txt</p>
+  </li>
+</ol>
+
+<p>Now you are set to run this project</p>
+
+<ul>
+  <li>
+    <p>Move to Flask_App directory run the <code class="language-plaintext highlighter-rouge">app.py</code></p>
+  </li>
+  <li>
+    <p>Visit your localhost to view the webpage on action</p>
+  </li>
+  <li>
+    <p>Register an account on the webpage</p>
+  </li>
+  <li>
+    <p>Start the <code class="language-plaintext highlighter-rouge">server.py</code> and run the <code class="language-plaintext highlighter-rouge">client.py</code></p>
+  </li>
+  <li>
+    <p>Input the required data in the <code class="language-plaintext highlighter-rouge">client.py</code> console</p>
+  </li>
+  <li>
+    <p>Import your private to play the video</p>
+  </li>
+</ul>
+
+<h3 id="references">References</h3>
+
+<ul>
+  <li>Research paper published by <a href="https://www.linkedin.com/in/rkmundugar/">Sir. M. Ramakrishna</a></li>
+  <li>Cryptography knowledge by <a href="https://www.crypto-textbook.com/">Prof.Christof paar</a></li>
+  <li>Socket Programming tutorial by <a href="https://realpython.com/python-sockets/">Real Python</a></li>
+  <li>Flask tutorial by <a href="https://www.youtube.com/watch?v=Z1RJmh_OqeA">freecodecamp</a></li>
+</ul>
+
+<h3 id="additional-links">Additional Links</h3>
+
+<p>Source code : <a href="https://github.com/TheMj0ln1r/novel-cryptography-project">Github</a></p>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2023
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>
