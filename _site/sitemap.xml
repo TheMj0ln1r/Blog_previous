@@ -77,8 +77,16 @@
 <lastmod>2023-06-06T00:00:00+05:30</lastmod>
 </url>
 <url>
+<loc>http://localhost:8000/posts/n00bzctf23</loc>
+<lastmod>2023-06-10T00:00:00+05:30</lastmod>
+</url>
+<url>
 <loc>http://localhost:8000/posts/novelcryptographyproject</loc>
 <lastmod>2023-06-13T00:00:00+05:30</lastmod>
+</url>
+<url>
+<loc>http://localhost:8000/posts/googlectf23</loc>
+<lastmod>2023-06-26T00:00:00+05:30</lastmod>
 </url>
 <url>
 <loc>http://localhost:8000/404</loc>
@@ -109,6 +117,9 @@
 </url>
 <url>
 <loc>http://localhost:8000/page/7/</loc>
+</url>
+<url>
+<loc>http://localhost:8000/page/8/</loc>
 </url>
 <url>
 <loc>http://localhost:8000/assets/files/picoctf2023.pdf</loc>
