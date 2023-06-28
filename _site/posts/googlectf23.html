@@ -16,8 +16,8 @@
 <meta property="og:title" content="Google Capture The Flag 2023" />
 <meta name="author" content="Mj0ln1" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Hello all! I played Google CTF 2023 which was happened from 24 June to 26 June. I played it with my team Invaders0x1." />
-<meta property="og:description" content="Hello all! I played Google CTF 2023 which was happened from 24 June to 26 June. I played it with my team Invaders0x1." />
+<meta name="description" content="Hello all! I played Google CTF 2023 which was happened from 24 June to 26 June." />
+<meta property="og:description" content="Hello all! I played Google CTF 2023 which was happened from 24 June to 26 June." />
 <link rel="canonical" href="http://localhost:8000/posts/googlectf23" />
 <meta property="og:url" content="http://localhost:8000/posts/googlectf23" />
 <meta property="og:site_name" content="Mj0ln1’s Blog" />
@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Google Capture The Flag 2023" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2023-06-26T00:00:00+05:30","datePublished":"2023-06-26T00:00:00+05:30","description":"Hello all! I played Google CTF 2023 which was happened from 24 June to 26 June. I played it with my team Invaders0x1.","headline":"Google Capture The Flag 2023","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/posts/googlectf23"},"url":"http://localhost:8000/posts/googlectf23"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2023-06-26T00:00:00+05:30","datePublished":"2023-06-26T00:00:00+05:30","description":"Hello all! I played Google CTF 2023 which was happened from 24 June to 26 June.","headline":"Google Capture The Flag 2023","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:8000/posts/googlectf23"},"url":"http://localhost:8000/posts/googlectf23"}</script>
 <!-- End Jekyll SEO tag -->
  
 </head>
@@ -51,7 +51,7 @@
   <h2>Google Capture The Flag 2023</h2>
   <time datetime="2023-06-26T00:00:00+05:30" class="by-line">26 Jun 2023</time>
   <p>Hello all! 
-I played <a href="https://ctftime.org/event/1929" target="_blank">Google CTF 2023</a> which was happened from  24 June to 26 June. I played it with my team <a href="https://ctftime.org/team/217079">Invaders0x1</a>.</p>
+I played <a href="https://ctftime.org/event/1929" target="_blank">Google CTF 2023</a> which was happened from  24 June to 26 June.</p>
 
 <h1 id="crypto---least-common-genominator">Crypto - LEAST COMMON GENOMINATOR?</h1>
 
@@ -197,16 +197,15 @@ lcg_n = p</code></p>
 
 <p>We can find the <code class="language-plaintext highlighter-rouge">n(modulus)</code> by making the 4 \(2 \times 2\) matrices from \(X_1,X_2,X_3,X_4,X_5,X_6,X_7\) and finding the GCD of the determinant values of these 7 values.</p>
 
-<p>The 4 \(2 \times 2\) matrices,</p>
-
-\[\begin{bmatrix} 
+<p>The 4 \(2 \times 2\) matrices,
+\(\begin{bmatrix} 
 	X_1 - X_0 &amp; X_2 - X_1\\
 	X_2 - X_0 &amp; X_3 - X_1
-\end{bmatrix},
+\end{bmatrix}
 \begin{bmatrix} 
 	X_2 - X_0 &amp; X_3 - X_1\\
 	X_3 - X_0 &amp; X_4 - X_1
-\end{bmatrix}\]
+\end{bmatrix}\)</p>
 
 \[\begin{bmatrix} 
 	X_3 - X_0 &amp; X_4 - X_1\\
