@@ -29,8 +29,7 @@ command: history
       {% endunless %}
         <li><time>{{ post.date | date:"%d %b" }} - </time>
           <a href="{{ post.url | prepend: site.baseurl | replace: '//', '/' }}">
-            {{ post.title }}
-          </a>
+            {{ post.title }}</a> <span class="tags" >{{post.tags}}</span>
         </li>
     {% endfor %}
     </ul>

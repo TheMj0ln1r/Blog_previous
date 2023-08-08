@@ -2,6 +2,7 @@
 layout: post
 title:  "NahamConCTF 2023"
 command: cat NahamConCTF
+tags: CTF
 ---
 
 Hello all! 

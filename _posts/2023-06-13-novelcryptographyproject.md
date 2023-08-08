@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  "Novel Cryptography Techniquique for Video Encryption"
+title:  "Novel Cryptography Technique for Video Encryption"
 command: cat Cryptography-Project
+tags: Project
 ---
 
 Hello guys!

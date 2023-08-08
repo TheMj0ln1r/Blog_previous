@@ -2,6 +2,7 @@
 layout: post
 title:  "CryptoverseCTF 2023"
 command: cat CryptoverseCTF
+tags: CTF
 ---
 
 Hello all! 
