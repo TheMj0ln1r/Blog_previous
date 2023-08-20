@@ -159,7 +159,193 @@ p2 = \left(\frac{gcd(a+c,d-b)}{2}\right)^2 + \left(\frac{gcd(a-c,d+b)}{2}\right)
 # Decrypted plaintext: b'ENO{Gauss_t0ld_u5_th3r3_1s_mor3_th4n_on3_d1men5i0n}'
 </span></code></pre></div></div>
 
+<h1 id="crypto---sebastians-secret-sharing">Crypto - Sebastian’s Secret Sharing</h1>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Attached files : [sss.py]
+</code></pre></div></div>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env python3
+</span><span class="kn">import</span> <span class="n">random</span>
+<span class="kn">from</span> <span class="n">decimal</span> <span class="kn">import</span> <span class="n">Decimal</span><span class="p">,</span><span class="n">getcontext</span>
+
+<span class="k">class</span> <span class="nc">SeSeSe</span><span class="p">:</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+		<span class="n">self</span><span class="p">.</span><span class="n">s</span> <span class="o">=</span> <span class="nb">int</span><span class="p">.</span><span class="nf">from_bytes</span><span class="p">(</span><span class="n">s</span><span class="p">.</span><span class="nf">encode</span><span class="p">(),</span><span class="n">byteorder</span><span class="o">=</span><span class="s">"big"</span><span class="p">)</span>
+		<span class="n">self</span><span class="p">.</span><span class="n">l</span> <span class="o">=</span> <span class="nf">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> 	
+		<span class="n">self</span><span class="p">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+		<span class="n">self</span><span class="p">.</span><span class="n">t</span> <span class="o">=</span> <span class="n">t</span>
+		<span class="n">self</span><span class="p">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="nf">_a</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">_a</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+		<span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">s</span><span class="p">]</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+			<span class="n">a</span> <span class="o">=</span> <span class="nc">Decimal</span><span class="p">(</span><span class="n">random</span><span class="p">.</span><span class="nf">randint</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">s</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">s</span><span class="o">*</span><span class="mi">2</span><span class="p">))</span>
+			<span class="n">c</span><span class="p">.</span><span class="nf">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">c</span>
+
+	<span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="n">self</span><span class="p">):</span>
+		<span class="n">s</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">n</span><span class="p">):</span>
+			<span class="n">x</span> <span class="o">=</span> <span class="n">j</span>
+			<span class="n">px</span> <span class="o">=</span> <span class="nf">sum</span><span class="p">([</span><span class="n">self</span><span class="p">.</span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">t</span><span class="p">)])</span> 
+			<span class="n">s</span><span class="p">.</span><span class="nf">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">px</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">s</span>
+
+	<span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">shares</span><span class="p">):</span>
+		<span class="k">assert</span> <span class="nf">len</span><span class="p">(</span><span class="n">shares</span><span class="p">)</span><span class="o">==</span><span class="n">self</span><span class="p">.</span><span class="n">t</span>
+		<span class="n">secret</span> <span class="o">=</span> <span class="nc">Decimal</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">t</span><span class="p">):</span>
+			<span class="n">yj</span> <span class="o">=</span> <span class="nc">Decimal</span><span class="p">(</span><span class="n">shares</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+			<span class="n">r</span> <span class="o">=</span> <span class="nc">Decimal</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">t</span><span class="p">):</span>
+				<span class="k">if</span> <span class="n">m</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+					<span class="k">continue</span>
+				<span class="n">xm</span> <span class="o">=</span> <span class="nc">Decimal</span><span class="p">(</span><span class="n">shares</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+				<span class="n">xj</span> <span class="o">=</span> <span class="nc">Decimal</span><span class="p">(</span><span class="n">shares</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+
+				<span class="n">r</span> <span class="o">*=</span> <span class="nc">Decimal</span><span class="p">(</span><span class="n">xm</span><span class="o">/</span><span class="nc">Decimal</span><span class="p">(</span><span class="n">xm</span><span class="o">-</span><span class="n">xj</span><span class="p">))</span>
+			<span class="n">secret</span> <span class="o">+=</span> <span class="nc">Decimal</span><span class="p">(</span><span class="n">yj</span> <span class="o">*</span> <span class="n">r</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nf">int</span><span class="p">(</span><span class="nf">round</span><span class="p">(</span><span class="nc">Decimal</span><span class="p">(</span><span class="n">secret</span><span class="p">),</span><span class="mi">0</span><span class="p">)).</span><span class="nf">to_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">l</span><span class="p">).</span><span class="nf">decode</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+	<span class="nf">getcontext</span><span class="p">().</span><span class="n">prec</span> <span class="o">=</span> <span class="mi">256</span> <span class="c1"># beat devision with precision :D 
+</span>	<span class="n">n</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="nf">randint</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">150</span><span class="p">)</span>
+	<span class="n">t</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="nf">randint</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+	<span class="n">sss</span> <span class="o">=</span> <span class="nc">SeSeSe</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="nf">open</span><span class="p">(</span><span class="s">"flag.txt"</span><span class="p">,</span><span class="s">'r'</span><span class="p">).</span><span class="nf">read</span><span class="p">(),</span> <span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+	
+	<span class="n">shares</span> <span class="o">=</span> <span class="n">sss</span><span class="p">.</span><span class="nf">encode</span><span class="p">()</span>
+
+	<span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Welcome to Sebastian's Secret Sharing!"</span><span class="p">)</span>
+	<span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"I have split my secret into 1..N=</span><span class="si">{</span><span class="n">sss</span><span class="p">.</span><span class="n">n</span><span class="si">}</span><span class="s"> shares, and you need t=</span><span class="si">{</span><span class="n">sss</span><span class="p">.</span><span class="n">t</span><span class="si">}</span><span class="s"> shares to recover it."</span><span class="p">)</span>
+	<span class="nf">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"However, I will only give you </span><span class="si">{</span><span class="n">sss</span><span class="p">.</span><span class="n">t</span><span class="o">-</span><span class="mi">1</span><span class="si">}</span><span class="s"> shares :P"</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nf">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">sss</span><span class="p">.</span><span class="n">t</span><span class="p">):</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">sid</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="nf">input</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">.: Choose a share: "</span><span class="p">))</span>
+			<span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">sid</span> <span class="o">&lt;=</span> <span class="n">sss</span><span class="p">.</span><span class="n">n</span><span class="p">:</span>
+				<span class="nf">print</span><span class="p">(</span><span class="n">shares</span><span class="p">[</span><span class="n">sid</span> <span class="o">%</span> <span class="n">sss</span><span class="p">.</span><span class="n">n</span><span class="p">])</span>
+		<span class="k">except</span><span class="p">:</span>
+			<span class="k">pass</span>
+	<span class="nf">print</span><span class="p">(</span><span class="s">"Good luck!"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The remote connection of chalenge gives us the following information.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/ nc 52.59.124.14 10031
+Welcome to Sebastian<span class="s1">'s Secret Sharing!
+I have split my secret into 1..N=83 shares, and you need t=10 shares to recover it.
+However, I will only give you 9 shares :P
+1.: Choose a share: 
+</span></code></pre></div></div>
+
+<p>I searched about secret sharing schemes available, and found that this challenge is related to <a href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing" target="_blank">Shamir Secret Sharing</a>. I used trailofbits <a href="https://www.zkdocs.com/docs/zkdocs/protocol-primitives/shamir/" target="_blank">ZKdocs</a>to learn weaknesses in Shamir Secret Sharing.</p>
+
+<h3 id="shamir-secret-sharing">Shamir Secret Sharing</h3>
+
+<p>Shamir’s Secret Sharing is a cryptographic algorithm that allows you to split a secret into multiple shares in such a way that a minimum threshold of these shares is required to reconstruct the original secret. The algorithm was developed by Adi Shamir in 1979.</p>
+
+<h4 id="step-1-choose-a-prime-number-and-parameters">Step 1: Choose a Prime Number and Parameters</h4>
+
+<ol>
+  <li>Choose a large prime number \(p\) such that \(p &gt; \text{max_secret_value}\), where \(\text{max_secret_value}\) is the maximum possible value of the secret you want to share.</li>
+  <li>Choose a threshold value \((k)\), which represents the minimum number of shares required to reconstruct the secret.</li>
+  <li>Choose \((k-1)\) random coefficients \((a_1, a_2, \ldots, a_{k-1})\) from the finite field \((\mathbb{F}_p)\).</li>
+</ol>
+
+<h4 id="step-2-define-the-polynomial">Step 2: Define the Polynomial</h4>
+
+<ol>
+  <li>
+    <p>Construct a polynomial of degree \((k-1)\) over \((\mathbb{F}_p)\) using the chosen coefficients:</p>
+
+\[f(x) = a_1x^{k-1} + a_2x^{k-2} + \ldots + a_{k-1}x + \text{secret}\\\]
+
+    <p>Where:</p>
+    <ul>
+      <li>\((a_1, a_2, \ldots, a_{k-1})\) are the randomly chosen coefficients.</li>
+      <li>\((\text{secret})\) is the value you want to share.</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="step-3-generate-shares">Step 3: Generate Shares</h4>
+
+<ol>
+  <li>Choose \((k)\) distinct x-values \((x_1, x_2, \ldots, x_k)\) from the field \((\mathbb{F}_p)\).</li>
+  <li>
+    <p>Compute \((y_i = f(x_i))\) for each \((i)\), which represents the shares:</p>
+
+\[y_i = a_1x_i^{k-1} + a_2x_i^{k-2} + \ldots + a_{k-1}x_i + \text{secret}\]
+
+    <p>These \(k\) pairs \(((x_i, y_i))\) are the shares that can be distributed among participants.</p>
+  </li>
+</ol>
+
+<h4 id="step-4-share-distribution">Step 4: Share Distribution</h4>
+
+<ol>
+  <li>Distribute the shares \(((x_i, y_i))\) to the participants. Each participant receives one share.</li>
+</ol>
+
+<h4 id="step-5-secret-reconstruction">Step 5: Secret Reconstruction</h4>
+
+<ol>
+  <li>
+    <p>To reconstruct the secret, you need at least \((k)\) shares. Let’s say you have \((k)\) shares \(((x_1, y_1), (x_2, y_2), \ldots, (x_k, y_k))\)</p>
+  </li>
+  <li>
+    <p>Use Lagrange interpolation to find the value of the secret:</p>
+
+\[\text{secret} = \sum_{i=1}^{k} y_i \cdot \frac{\prod_{j=1, j\neq i}^{k} (x - x_j)}{\prod_{j=1, j\neq i}^{k} (x_i - x_j)}\]
+
+    <p>Where:</p>
+    <ul>
+      <li>\((y_i)\) are the y-values of the shares.</li>
+      <li>\((x_i)\) are the x-values of the shares.</li>
+      <li>\((x)\) is the variable (typically set to 0).</li>
+    </ul>
+  </li>
+</ol>
+
+<p>By calculating this equation, you can reconstruct the original secret.</p>
+
+<p>This is how <code class="language-plaintext highlighter-rouge">Shamir Secret Sharing</code> cryptosystem works. Coming to Challenge, we are able to get the \((k-1)\) shares of secret, but we need exactly \(k\) shares to reconstruct the secret. The secret is nothing but the \(0^{th}\) share ((0,S_0)).</p>
+
+<p>I was not able to find the flaw in system during the CTF, after the CTF <strong><code class="language-plaintext highlighter-rouge">hakid29</code></strong> on discord helped me to find the flaw, that is, sending <code class="language-plaintext highlighter-rouge">n</code> will give us the \(0^{th}\) share which is the actual secret.</p>
+
+<p><strong>Why sending n..?</strong></p>
+
+<p>If we observer the following line in code,</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sid</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="nf">input</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">.: Choose a share: "</span><span class="p">))</span>
+<span class="k">if</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">sid</span> <span class="o">&lt;=</span> <span class="n">sss</span><span class="p">.</span><span class="n">n</span><span class="p">:</span>
+	<span class="nf">print</span><span class="p">(</span><span class="n">shares</span><span class="p">[</span><span class="n">sid</span> <span class="o">%</span> <span class="n">sss</span><span class="p">.</span><span class="n">n</span><span class="p">])</span>
+</code></pre></div></div>
+
+<p>we can know that this allows us to input the any number from (1 to n) including both. So in the below line simple \(%\) operator is used to select the share among all shares. If we send <code class="language-plaintext highlighter-rouge">n</code> then it will become \(n mod n = 0\), so it will select the \(0^{th}\) share which is the flag we need.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~<span class="nv">$ </span>nc 52.59.124.14 10031
+Welcome to Sebastian<span class="s1">'s Secret Sharing!
+I have split my secret into 1..N=141 shares, and you need t=5 shares to recover it.
+However, I will only give you 4 shares :P
+1.: Choose a share: 141
+(0, Decimal('</span>111370287875855598506538509804271500535681803123044982950094717<span class="s1">'))
+2.: Choose a share: 
+^C
+</span></code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="n">Crypto.Util.number</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="nf">print</span><span class="p">(</span><span class="nf">long_to_bytes</span><span class="p">(</span><span class="mi">111370287875855598506538509804271500535681803123044982950094717</span><span class="p">))</span>
+
+<span class="c1"># output
+# b'ENO{SeCr3t_Sh4m1r_H4sh1ng}
+</span></code></pre></div></div>
+
+<blockquote>
+  <p>I solved an easy web challenge too, look at this <a href="https://xhacka.github.io/posts/writeup/2023/08/20/TYPicalBoss/" target="_blank">blog</a> someone explained it better.</p>
+</blockquote>
+
 <hr />
+
 <p>Thank you for reading!</p>
 
 </article>

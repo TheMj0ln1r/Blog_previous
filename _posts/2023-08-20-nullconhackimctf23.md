@@ -122,5 +122,181 @@ print("Decrypted plaintext:", plaintext)
 # Decrypted plaintext: b'ENO{Gauss_t0ld_u5_th3r3_1s_mor3_th4n_on3_d1men5i0n}'
 ```
 
+
+# Crypto - Sebastian's Secret Sharing
+
+```text
+Attached files : [sss.py]
+```
+```python
+#!/usr/bin/env python3
+import random
+from decimal import Decimal,getcontext
+
+class SeSeSe:
+	def __init__(self, s, n, t):
+		self.s = int.from_bytes(s.encode(),byteorder="big")
+		self.l = len(s) 	
+		self.n = n
+		self.t = t
+		self.a = self._a()
+
+	def _a(self):
+		c = [self.s]
+		for i in range(self.t-1):
+			a = Decimal(random.randint(self.s+1, self.s*2))
+			c.append(a)
+		return c
+
+	def encode(self):
+		s = []
+		for j in range(self.n):
+			x = j
+			px = sum([self.a[i] * x**i for i in range(self.t)]) 
+			s.append((x,px))
+		return s
+
+	def decode(self, shares):
+		assert len(shares)==self.t
+		secret = Decimal(0)
+		for j in range(self.t):
+			yj = Decimal(shares[j][1])
+			r = Decimal(1)
+			for m in range(self.t):
+				if m == j:
+					continue
+				xm = Decimal(shares[m][0])
+				xj = Decimal(shares[j][0])
+
+				r *= Decimal(xm/Decimal(xm-xj))
+			secret += Decimal(yj * r)
+		return int(round(Decimal(secret),0)).to_bytes(self.l).decode()
+
+
+if __name__ == "__main__":
+	getcontext().prec = 256 # beat devision with precision :D 
+	n = random.randint(50,150)
+	t = random.randint(5,10)
+	sss = SeSeSe(s=open("flag.txt",'r').read(), n=n, t=t)
+	
+	shares = sss.encode()
+
+	print(f"Welcome to Sebastian's Secret Sharing!")
+	print(f"I have split my secret into 1..N={sss.n} shares, and you need t={sss.t} shares to recover it.")
+	print(f"However, I will only give you {sss.t-1} shares :P")
+	for i in range(1,sss.t):
+		try:
+			sid = int(input(f"{i}.: Choose a share: "))
+			if 1 <= sid <= sss.n:
+				print(shares[sid % sss.n])
+		except:
+			pass
+	print("Good luck!")
+```
+
+The remote connection of chalenge gives us the following information.
+
+```sh
+mj0ln1r@Linux:~/ nc 52.59.124.14 10031
+Welcome to Sebastian's Secret Sharing!
+I have split my secret into 1..N=83 shares, and you need t=10 shares to recover it.
+However, I will only give you 9 shares :P
+1.: Choose a share: 
+```
+
+I searched about secret sharing schemes available, and found that this challenge is related to <a href="https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing" target=_blank>Shamir Secret Sharing</a>. I used trailofbits <a href="https://www.zkdocs.com/docs/zkdocs/protocol-primitives/shamir/" target=_blank>ZKdocs</a>to learn weaknesses in Shamir Secret Sharing.
+
+### Shamir Secret Sharing
+
+Shamir's Secret Sharing is a cryptographic algorithm that allows you to split a secret into multiple shares in such a way that a minimum threshold of these shares is required to reconstruct the original secret. The algorithm was developed by Adi Shamir in 1979.
+
+#### Step 1: Choose a Prime Number and Parameters
+
+1. Choose a large prime number $$p$$ such that $$p > \text{max_secret_value}$$, where $$\text{max_secret_value}$$ is the maximum possible value of the secret you want to share.
+2. Choose a threshold value $$ (k) $$, which represents the minimum number of shares required to reconstruct the secret.
+3. Choose $$(k-1)$$ random coefficients $$(a_1, a_2, \ldots, a_{k-1})$$ from the finite field $$(\mathbb{F}_p)$$.
+
+#### Step 2: Define the Polynomial
+
+4. Construct a polynomial of degree $$(k-1)$$ over $$(\mathbb{F}_p)$$ using the chosen coefficients:
+   
+   $$
+   f(x) = a_1x^{k-1} + a_2x^{k-2} + \ldots + a_{k-1}x + \text{secret}\\
+   $$
+
+   Where:
+   - $$(a_1, a_2, \ldots, a_{k-1})$$ are the randomly chosen coefficients.
+   - $$(\text{secret})$$ is the value you want to share.
+
+#### Step 3: Generate Shares
+
+5. Choose $$(k)$$ distinct x-values $$(x_1, x_2, \ldots, x_k)$$ from the field $$(\mathbb{F}_p)$$.
+6. Compute $$(y_i = f(x_i))$$ for each $$(i)$$, which represents the shares:
+
+   $$
+   y_i = a_1x_i^{k-1} + a_2x_i^{k-2} + \ldots + a_{k-1}x_i + \text{secret}
+   $$
+
+   These $$k$$ pairs $$((x_i, y_i))$$ are the shares that can be distributed among participants.
+
+#### Step 4: Share Distribution
+
+7. Distribute the shares $$((x_i, y_i))$$ to the participants. Each participant receives one share.
+
+#### Step 5: Secret Reconstruction
+
+8. To reconstruct the secret, you need at least $$(k)$$ shares. Let's say you have $$(k)$$ shares $$((x_1, y_1), (x_2, y_2), \ldots, (x_k, y_k))$$
+
+9. Use Lagrange interpolation to find the value of the secret:
+
+   $$
+   \text{secret} = \sum_{i=1}^{k} y_i \cdot \frac{\prod_{j=1, j\neq i}^{k} (x - x_j)}{\prod_{j=1, j\neq i}^{k} (x_i - x_j)}
+   $$
+
+   Where:
+   - $$(y_i)$$ are the y-values of the shares.
+   - $$(x_i)$$ are the x-values of the shares.
+   - $$(x)$$ is the variable (typically set to 0).
+
+By calculating this equation, you can reconstruct the original secret.
+
+This is how `Shamir Secret Sharing` cryptosystem works. Coming to Challenge, we are able to get the $$(k-1)$$ shares of secret, but we need exactly $$k$$ shares to reconstruct the secret. The secret is nothing but the $$0^{th}$$ share ((0,S_0)).
+
+I was not able to find the flaw in system during the CTF, after the CTF **`hakid29`** on discord helped me to find the flaw, that is, sending `n` will give us the $$0^{th}$$ share which is the actual secret. 
+
+**Why sending n..?**
+
+If we observer the following line in code,
+
+```python
+sid = int(input(f"{i}.: Choose a share: "))
+if 1 <= sid <= sss.n:
+	print(shares[sid % sss.n])
+```
+
+we can know that this allows us to input the any number from (1 to n) including both. So in the below line simple $$%$$ operator is used to select the share among all shares. If we send `n` then it will become $$n mod n = 0$$, so it will select the $$0^{th}$$ share which is the flag we need.
+
+```sh
+mj0ln1r@Linux:~$ nc 52.59.124.14 10031
+Welcome to Sebastian's Secret Sharing!
+I have split my secret into 1..N=141 shares, and you need t=5 shares to recover it.
+However, I will only give you 4 shares :P
+1.: Choose a share: 141
+(0, Decimal('111370287875855598506538509804271500535681803123044982950094717'))
+2.: Choose a share: 
+^C
+```
+
+```python
+from Crypto.Util.number import *
+print(long_to_bytes(111370287875855598506538509804271500535681803123044982950094717))
+
+# output
+# b'ENO{SeCr3t_Sh4m1r_H4sh1ng}
+```
+
+> I solved an easy web challenge too, look at this <a href="https://xhacka.github.io/posts/writeup/2023/08/20/TYPicalBoss/" target=_blank>blog</a> someone explained it better. 
+
 ***
+
 Thank you for reading!
