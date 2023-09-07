@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-Extreme Privacy Setup for Computers</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Extreme Privacy Setup for Computers | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Extreme Privacy Setup for Computers" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hello mate," />
+<meta property="og:description" content="Hello mate," />
+<link rel="canonical" href="http://localhost:5000/posts/computerprivacy" />
+<meta property="og:url" content="http://localhost:5000/posts/computerprivacy" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-09-06T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Extreme Privacy Setup for Computers" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2023-09-06T00:00:00+05:30","datePublished":"2023-09-06T00:00:00+05:30","description":"Hello mate,","headline":"Extreme Privacy Setup for Computers","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:5000/posts/computerprivacy"},"url":"http://localhost:5000/posts/computerprivacy"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div class="head-parent">
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat computer-privacy</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>Extreme Privacy Setup for Computers</h2>
+  <time datetime="2023-09-06T00:00:00+05:30" class="by-line">06 Sep 2023</time>
+  <p>Hello mate,</p>
+
+<p>This is a blog post aiming to achieve extreme privacy setup/settings in computer systems. I am going to walk you through the methodologies and settings mentioned by Michael Bazzell in his Extreme Privacy Edition. Lets try to maximize the privacy and security of our machines..!</p>
+
+<h1 id="introduction">Introduction</h1>
+
+<p>In an age where data breaches and online surveillance have become all too common, taking steps to protect your digital privacy is paramount. While most people are aware of basic privacy measures like using strong passwords and enabling two-factor authentication, setting up extreme privacy on your computer takes things to a whole new level. In this comprehensive guide, we’ll walk you through the steps to create an ironclad fortress around your digital life.</p>
+
+<h1 id="linux-is-your-bf">Linux is your BF</h1>
+
+<p>Yes, when it matters to privacy linux is the only recommended operating system to work on. Many people argue that Apple is more private than linux, but its not. Apple requires an online account to download and use many applications on the system. Apple tracks many details related to the associated Apple ID that a user has. Apple collects information such as Approximate location, IP address history, Search history, Programs Downloaded and opened, etc. So, with Apple we cant acheive extreme privacy. Then WINDOWS…? Absolutely not. I know, You know and every other single person who is a tech savy knows that Microsoft tracks huge information of a windows machine. Dont worry I will walk you through the <strong>Hardening of Windows &amp; MacOs</strong> too.</p>
+
+<blockquote>
+  <p>So, Finally. Linux is our BF.</p>
+</blockquote>
+
+<h1 id="new-linux-computer-configuration">New Linux Computer Configuration</h1>
+
+<p>Some cool qualities of one of the popular linux system ubuntu are :</p>
+
+<ol>
+  <li>Ubuntu allows easy access to software packages 1n a graphical interface.</li>
+  <li>Ubuntu has some of the highest compatibility with existing computers.</li>
+  <li>Ubuntu provides easy software update options.</li>
+  <li>Ubuntu reflects a large portion of Linux users, and online support is abundant.</li>
+  <li>Ubuntu has fewer driver issues than other systems when adding new hardware.</li>
+  <li>Ubuntu has removed the controversial Amazon affiliate links in previous builds.</li>
+  <li>Ubuntu’s large user base makes us all a smaller needle in the Linux haystack.</li>
+</ol>
+
+<h3 id="installing-ubuntu">Installing Ubuntu</h3>
+
+<p>Go to the official Ubuntu website at <a href="https://www.ubuntu.com/download/desktop" target="_blank">Ubuntu</a>. Download the latest Long-Term Support (LTS) Desktop version. At the time of writing, it was 22.04.3 LTS, but check for the most recent version. The download will be a large ISO file. After downloading ISO image navigate to <a href="https://etcher.balena.io/" target="_blank">Etcher</a> and downlad the Balena Etcher software to boot the ISO image into USB.</p>
+
+<!-- ![LCG](/assets/img/post_img/googlectf23_lcg.png) -->
+
+<p><img src="/assets/img/blog_img/blog1_etcher.png" alt="balena etcher" class="autoimg" /></p>
+<center> <i> Balena Etcher </i></center>
+
+<p>Insert the Ubuntu USB device into your computer. Power on the computer and, if the Ubuntu install screen doesn’t appear, research the appropriate key (usually F1, F2, F10, delete, or escape) to select the boot device or access the BIOS settings. Choose USB device as the intaller.</p>
+
+<p><img src="/assets/img/blog_img/blog1_boot.png" alt="Boot menu" class="autoimg" /></p>
+<center> <i>Sample boot menu of HP Computer </i></center>
+
+<ul>
+  <li>On the Welcome screen, choose “Install Ubuntu” and select your preferred language.</li>
+</ul>
+
+<p><img src="/assets/img/blog_img/blog1_ubuntu1.png" alt="Ubuntu install 1" class="autoimg" /></p>
+<center> <i> Welcome Screen</i></center>
+
+<ul>
+  <li>Choose “Normal Installation” and check both download options under “Other.”</li>
+</ul>
+
+<p><img src="/assets/img/blog_img/blog1_ubuntu2.png" alt="Ubuntu install 2" class="autoimg" /></p>
+<center> <i>Select Normal Install </i></center>
+
+<ul>
+  <li>If you no longer need any data on your computer’s drive, select “Erase disk and install Ubuntu.” Be cautious; this action will erase all data on the drive.</li>
+  <li>Click “Advanced features,” select “Use LVM with the…,” and choose the “Encrypt the new…” option.
+Click OK, then click “Install Now.”</li>
+</ul>
+
+<p><img src="/assets/img/blog_img/blog1_ubuntu3.png" alt="Ubuntu install 3" class="autoimg" /></p>
+<center> <i>Select erase disk and install</i></center>
+
+<p>Now follow these basic steps to complete the installation.</p>
+
+<ul>
+  <li>Create a secure password that you can remember and is not used elsewhere.</li>
+  <li>If overwriting a used computer, consider the “Overwrite empty disk space” option, which will delete all data on the drive (this might take a while).</li>
+  <li>Click “Install Now,” “Continue,” choose a location, and click “Continue.”</li>
+  <li>Provide a generic name for your computer, like “Laptop,” and enter a secure password. You can use the same password as the encryption password for convenience or choose a unique one for extra security. These passwords will be required each time you boot the computer.</li>
+  <li>Confirm your selections, let the installation complete, and then reboot your computer.</li>
+  <li>Provide your passwords, and click “Skip” on the welcome screen.</li>
+  <li>Select “No, don’t send system info,” then click “Next,” “Next,” and “Done.”</li>
+  <li>If prompted, click “Install Now” to install updates and allow your computer to reboot.</li>
+</ul>
+
+<h3 id="post-installation">Post Installation</h3>
+
+<p>The LVM full disk encryption prevents someone from accessing your data even if they remove your hard drive. And there few things to do after a fresh install of ubuntu to stop sending system status information to ubuntu managers.</p>
+
+<ul>
+  <li>Disable Ubuntu’s crash reporting and usage statistics with following commands.</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">sudo </span>apt purge <span class="nt">-y</span> apport
+mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">sudo </span>apt remove <span class="nt">-y</span> popularity-contest
+mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">sudo </span>apt autoremove <span class="nt">-y</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Disable Notifications : Open “Settings”,goto “Notifications” disable both options.</li>
+  <li>Disable File History : Open “Settings”,goto “Privacy” then “File history &amp; Trash” disable any options.</li>
+  <li>Disable Diagnostics : Open “Settings”,goto “Privacy” then “Diagnostics” Change to “Never”.</li>
+</ul>
+
+<h3 id="installing-additional-applications">Installing Additional Applications</h3>
+
+<h4 id="antivirus">Antivirus</h4>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2023
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>
