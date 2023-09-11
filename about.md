@@ -12,15 +12,9 @@ Particularly I am good at
 
 > Cryptography
 
-> Forensics
+> Blockchain Technology
 
-> Steganography
-
-> Network Analysis
-
-> Web exploitation
-
-> Linux Shell 
+> `Visit my linked in profile for more accurate information about me.`
 
 <h2>My Profiles</h2>
 > **TryHackme** <script src="https://tryhackme.com/badge/819191"></script>
