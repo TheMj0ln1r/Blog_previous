@@ -18,15 +18,15 @@
 <meta property="og:locale" content="en_US" />
 <meta name="description" content="Hello mate," />
 <meta property="og:description" content="Hello mate," />
-<link rel="canonical" href="http://localhost:5000/posts/computerprivacy" />
-<meta property="og:url" content="http://localhost:5000/posts/computerprivacy" />
+<link rel="canonical" href="http://localhost:4000/posts/computerprivacy" />
+<meta property="og:url" content="http://localhost:4000/posts/computerprivacy" />
 <meta property="og:site_name" content="Mj0ln1’s Blog" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2023-09-06T00:00:00+05:30" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Extreme Privacy Setup for Computers" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2023-09-06T00:00:00+05:30","datePublished":"2023-09-06T00:00:00+05:30","description":"Hello mate,","headline":"Extreme Privacy Setup for Computers","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:5000/posts/computerprivacy"},"url":"http://localhost:5000/posts/computerprivacy"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2023-09-06T00:00:00+05:30","datePublished":"2023-09-06T00:00:00+05:30","description":"Hello mate,","headline":"Extreme Privacy Setup for Computers","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/computerprivacy"},"url":"http://localhost:4000/posts/computerprivacy"}</script>
 <!-- End Jekyll SEO tag -->
  
 </head>
@@ -152,6 +152,198 @@ mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">sudo </span>apt autor
 <h3 id="installing-additional-applications">Installing Additional Applications</h3>
 
 <h4 id="antivirus">Antivirus</h4>
+
+<p>Viruses are rare in linux systems, but they do exists. To perform an antivirus scan we can use <code class="language-plaintext highlighter-rouge">ClamAV</code> applications.</p>
+
+<p>Installing and performing a scan using ClamAV.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">sudo </span>apt update
+mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">sudo </span>apt <span class="nb">install</span> <span class="nt">-y</span> clamav clamav-daemon
+mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">sudo </span>systemctl stop clamav-freshclam
+mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">sudo </span>freshclam
+mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">sudo </span>systemctl start clamav-freshclam
+mj0ln1r@Ubuntu:~<span class="nv">$ </span>clamscan <span class="nt">-r</span> <span class="nt">-i</span> <span class="nt">--remove</span><span class="o">=</span><span class="nb">yes</span> /
+</code></pre></div></div>
+
+<h4 id="system-cleaner">System Cleaner</h4>
+
+<p><code class="language-plaintext highlighter-rouge">Bleachbit</code> is a system cleaner software which is free and easy to use and effective to clean the system. I use <code class="language-plaintext highlighter-rouge">bleachbit</code> whenever I am going to shutdown my laptop.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">sudo </span>apt update
+mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">sudo </span>apt <span class="nb">install </span>bleachbit <span class="nt">-y</span>
+mj0ln1r@Ubuntu:~<span class="nv">$ </span>bleachbit
+</code></pre></div></div>
+
+<h4 id="backups">Backups</h4>
+
+<p>Eventhough linux is stable and robust enough, but bad things may happen. So, keeping a backup of our important files is important to avoid any loss after a disaster. In ubuntu we can backup our data using backups tool which presents with multiple location options to store backups. We could choose local file server, local folder, or any cloud storage like google drive. Note that these backups are not encrypted.</p>
+
+<h1 id="new-apple-computer-configuration">New Apple Computer Configuration</h1>
+
+<p>Lets, try to maximize the privacy settings on new Apple laptop or computer. Apple macOS systems are more secure than microsoft systems. We are going to discuss the things that we could mind to maximize the privacy of macOS.</p>
+
+<h4 id="apple-id">Apple ID</h4>
+
+<p>When first booting a new or reformatted macOS device, you will be prompted to provide an Apple ID, or create a new Apple ID account providing your name, physical address, and email address. You have the option to bypass this requirement, but you will be prohibited from using the App Store.</p>
+
+<blockquote>
+  <p>I suggest you to eliminate the Apple ID</p>
+</blockquote>
+
+<p>We can still install softwares without using apple store.</p>
+
+<h4 id="filevault">FileVault</h4>
+
+<p>Applying full disk encryption makes the file access without the user password impossible. To enable this goto “System Preferences” application and selecting “Security &amp; Privacy”. Choose the “FileVault” option to see the current state of encryption on your device. Enabling FileVault displays a 24 letters recovery key, choose to not to store on iCloud store this in a password manager. Once you have enabled FileVault’s full-disk encryption, your system possesses an extremely important level of security. The entire contents of your computer’s storage can only be read once your password has been entered upon initial login or after standby login.</p>
+
+<h4 id="brew">Brew</h4>
+
+<p>Brew is a package manager which is used to install applications on system without using Apple Store. To intsall brew run the following command in terminal.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Ubuntu:~<span class="nv">$ </span>/bin/bash <span class="nt">-c</span> <span class="s2">"</span><span class="si">$(</span>curl <span class="nt">-fsSL</span> https://raw.githubusercontent.com/Homebrew/install/ HEAD /install.sh<span class="si">)</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<h4 id="antivirus-1">Antivirus</h4>
+
+<p>We can consider using <code class="language-plaintext highlighter-rouge">ClamAV</code> for virus scanning on macOS. Follow these steps to install and run the ClamAV.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Ubuntu:~<span class="nv">$ </span>brew analytics off
+mj0ln1r@Ubuntu:~<span class="nv">$ </span>brew <span class="nb">install </span>clamav
+mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">sudo mkdir</span> /usr/local/sbin
+mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">sudo chown</span> <span class="nt">-R</span> “‘whoami<span class="k">*</span>:admin /usr/local/sbin
+mj0ln1r@Ubuntu:~<span class="nv">$ </span>brew <span class="nb">link </span>clamav
+mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">cd</span> /usr/local/etc/clamav/
+mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">cp </span>freshclam.conf.sample freshclam.conf
+mj0ln1r@Ubuntu:~<span class="nv">$ </span><span class="nb">sed</span> <span class="nt">-ie</span> <span class="s1">'s/“Example/#Example/g'</span> freshclam.conf
+
+mj0ln1r@Ubuntu:~<span class="nv">$ </span>clamscan <span class="nt">-i</span> <span class="nt">-r</span> <span class="nt">--remove</span><span class="o">=</span><span class="nb">yes</span> /
+</code></pre></div></div>
+
+<h4 id="oversight">OverSight</h4>
+
+<p>Oversight application detects applications which uses the external devices of the computer such as microphones. Run the following command to install oversight.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Ubuntu:~<span class="nv">$ </span>brew <span class="nb">install </span>oversight
+</code></pre></div></div>
+
+<h4 id="onyx">Onyx</h4>
+
+<p>Onyx corrects the undesirable behaviours and glitches. To install onyx use the following command.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Ubuntu:~<span class="nv">$ </span>brew <span class="nb">install </span>onyx
+</code></pre></div></div>
+
+<h4 id="virtualbox">VirtualBox</h4>
+
+<p>If you want to run any windows applications in an isolated environment you can consider using virtualbox.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Ubuntu:~<span class="nv">$ </span>brew <span class="nb">install </span>virtualbox
+</code></pre></div></div>
+
+<h4 id="updates">Updates</h4>
+
+<p>Use the following commands to update and upgrade the brew package manager. The cleanup and autoremove options will be used to remove the cached and unnecessary files.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Ubuntu:~<span class="nv">$ </span>brew update
+mj0ln1r@Ubuntu:~<span class="nv">$ </span>brew upgrade
+mj0ln1r@Ubuntu:~<span class="nv">$ </span>brew cleanup <span class="nt">-s</span>
+mj0ln1r@Ubuntu:~<span class="nv">$ </span>brew autoremove
+</code></pre></div></div>
+
+<h4 id="system-cleaner-1">System Cleaner</h4>
+
+<p>Unfortunately bleachbit not available on macOS. But we can use the customized cleaner script provided by the <code class="language-plaintext highlighter-rouge">Privacy.sexy</code> to clean the system according to our choice.</p>
+
+<h4 id="little-snitch">Little Snitch</h4>
+
+<p>Little Snitch is an application similiar to a firewall. Little Snitch controlls the in and out traffic of the system.</p>
+
+<h1 id="new-microsoft-windows-computer-configuration">New Microsoft Windows Computer Configuration</h1>
+
+<p>Okay, as most of you are using windows lets try to setup basic privacy settings on windows.</p>
+
+<p>Windows requires microsoft account to enable few services like appstore, but we can bypass this. While installing windows turn off wife in offline mode we will be prompted to create the microsoft account later. Eventhough we bypass the microsoft account, they collect these many information with telemetry services.</p>
+
+<ol>
+  <li>Typed text on keyboard</li>
+  <li>Microphone transmissions</li>
+  <li>Index of all media files on your computer</li>
+  <li>Webcam data</li>
+  <li>Browsing history</li>
+  <li>Search history</li>
+  <li>Location activity</li>
+  <li>Heath activity collected by HealthVault, Microsoft Band, other trackers</li>
+  <li>Privacy settings across Microsoft application ecosystem</li>
+</ol>
+
+<h4 id="full-disk-encryption">Full disk encryption</h4>
+
+<p>If you have windows 10/11 pro version you can enable <code class="language-plaintext highlighter-rouge">Bitlocker</code> to enable fulldisk encryption. If not we can use <code class="language-plaintext highlighter-rouge">VeraCrypt</code> to enable fulldisk encryption.</p>
+
+<p>Download veracrypt from www.veracrypt.fr and run the installer. Use “Normal” system encryption and choose “Encrypt whole drive” and select “Single-Boot”. Keep the rescue disk created by veracrypt to decrypt your files if the bootloader was failed anytime. Select “none” for the Wipe Mode and enter encryption key and when you attempt to login again you will be propted with encrypt button to encrypt the disk.</p>
+
+<h4 id="system-cleaner-2">System Cleaner</h4>
+
+<p><code class="language-plaintext highlighter-rouge">Bleeeaaaachhhhhbbbbiiiittt agaiiiinnnn</code></p>
+
+<h4 id="glasswireportmaster">Glasswire/Portmaster</h4>
+
+<p>Glasswire and Portmaster replicates the work of Little Snitch, these applications used to control the system traffic and monitors the ports being used on system.</p>
+
+<h4 id="package-management">Package Management</h4>
+
+<p>Run the following command on powershell to display the list of applications installed on the build of windows.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Powershell&gt; Get-AppxProvisionedPackage <span class="nt">-Online</span> | Format-Table DisplayName, PackageName
+</code></pre></div></div>
+
+<p>You can run the following powershell script to remove the all the applications installed by the microsoft on the build. Feel free to add more applications if anything is missed.</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ProvisionedAppPackageNames</span> <span class="o">=</span> @<span class="o">(</span>
+“Microsoft.3DBuilder”
+‘“Microsoft.BingFinance”’
+‘“Microsoft.BingNews”
+“Microsoft.BingSports”’
+“Microsoft.BingWeather”’
+“Microsoft.ConnectivityStore”
+““Microsoft.Getstarted”
+““Microsoft.Messaging”’
+““Microsoft.Microsoft3D
+Viewer”’
+‘“Microsoft.MicrosoftOfficeHub”
+“Microsoft.MicrosoftSolitaireCollection’
+“Microsoft.MicrosoftStickyNotes”
+‘“Microsoft.MSPaint”
+‘“Microsoft.Office. OneNote”
+“Microsoft.People”
+“Microsoft.Print3D”
+‘“Microsoft.skypeApp”’
+“Microsoft.StorePurchaseApp”’
+“microsoft.windowscommunicationsapps” <span class="c"># Mail,Calendar</span>
+“Microsoft. WindowsFeedbackHub”
+“Microsoft.WindowsPhone”’
+“Microsoft.WindowsStore”’
+“Microsoft.
+Xbox. TCUI”
+“Microsoft.XboxApp”
+“Microsoft.XboxGameOverlay”
+“Microsoft. XboxIdentityProvider”’
+“Microsoft.XboxSpeechToTextOverlay”
+“Microsoft.ZuneMusic”’
+“Microsoft.ZuneVideo”’
+“Microsoft. YourPhone’’<span class="o">)</span>
+?
+foreach <span class="o">(</span><span class="nv">$ProvisionedAppName</span> <span class="k">in</span> <span class="nv">$ProvisionedAppPackageNames</span><span class="o">)</span>
+<span class="o">{</span>
+Get-AppxPackage <span class="nt">-Name</span> <span class="nv">$ProvisionedAppName</span> <span class="nt">-AllUsers</span> | Remove-AppxPackage
+Get-AppXProvisionedPackage <span class="nt">-Online</span> | Where-Object DisplayName <span class="nt">-EQ</span> <span class="nv">$ProvisionedAppName</span> |
+Remove-AppxProvisionedPackage <span class="nt">-Online</span><span class="o">}</span>
+<span class="nb">exit</span>
+</code></pre></div></div>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>My bottom line is that Linux is more private and secure than Windows or macOS, and macOS is more private and secure than Windows. Some may say that Mac computers are more secure than Linux due to their “walled garden” which prevents many malicious apps from executing within the operating system. And Do you know I havent used windows for more than 10 to 20 days in my life and I tried nearly 30+ Linux distributions and settled with Ubuntu as the Home OS.</p>
 
 </article>
       </section>
