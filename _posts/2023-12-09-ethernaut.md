@@ -3524,40 +3524,38 @@ contract Switch {
 6. We can modify the calldata in order to bypass the check and as well as call the `turnSwitchOn()` function.
 7. Lets understand `calldata` specificly when passing dynamic datatypes as arguments
 8. When we call a function on a contract, the calldata will be sent via the transaction as `msg.data`, Lets see what this data consists.
-```
-calldata with dynamic arguments
-    => <function signature> <offset> <length of data> <data>
-Each field will be padded to 32 bytes except function signature.
+   ```
+    calldata with dynamic arguments
+      => <function signature> <offset> <length of data> <data>
+    Each field will be padded to 32 bytes except function signature.
 
-calldata when we call flipSwitch() with turnSwitchOff() function signature 
-       30c13ade  // flipSwitch() signature
-  00 : 0000000000000000000000000000000000000000000000000000000000000020   ==> offset - the starting position of the actual data 
-  20 : 0000000000000000000000000000000000000000000000000000000000000004   ==> length - data length
-  40 : 20606e1500000000000000000000000000000000000000000000000000000060   ==> data - data that we passed through argument (turnSwitchOff() signature)
-
-```
+    calldata when we call flipSwitch() with turnSwitchOff() function signature 
+         30c13ade  // flipSwitch() signature
+    00 : 0000000000000000000000000000000000000000000000000000000000000020   ==> offset - the starting position of the actual data 
+    20 : 0000000000000000000000000000000000000000000000000000000000000004   ==> length - data length
+    40 : 20606e1500000000000000000000000000000000000000000000000000000060   ==> data - data that we passed through argument (turnSwitchOff() signature)
+   ```
 9. This call to flipSwitch() is succeeded because the check was passed. The check is that from the 68th byte to 72nd byte will be sliced out and this will be checked with the signature of the `turnSwitchOff()` function.
 10. Now we somehow should manage to send the `turnSwitchOn()` signature along with this calldata. And we should make sure that only `turnSwitchOn()` signature should be passed to the `call` inside `flipSwitch()`. 
 11. The data which is used inside the function will be specified by the `offset`. The function will make use of the actual data that is pointed by the offset.
 12. As the `onlyOff` modifier uses the hardcoded check, we can modify the calldata to be able to insert the `turnSwitchOff()` function signature at the 68th bytes and append the `turnSwitchOn()` signature.
 13. Now we have to change the offset of the calldata in such a way that it points to the `turnSwitchOn()` signature.
-```
-calldata to bypass onlyOff
-    => <flipSwitch Singature> <Offset> <Dummy Data> <turnSwitchOff Signature> <length of data> <turnSwitchOn Signature>
+    ```
+    calldata to bypass onlyOff
+      => <flipSwitch Singature> <Offset> <Dummy Data> <turnSwitchOff Signature> <length of data> <turnSwitchOn Signature>
 
-30c13ade
-00 : 00000000000000000000000000000000000000000000000000000000000000[60]  ==> Offset - position of actual data
-20 : 0000000000000000000000000000000000000000000000000000000000000000     ==> Dummy data - to move turnSwitchOff data to 68th byte
-40 : 20606e1500000000000000000000000000000000000000000000000000000000  ==> Data - turnSwitchOff() selector (By passes onlyOff)
-60 : 0000000000000000000000000000000000000000000000000000000000000004  ==> Length - Length of the turnSwitchOff() signature data
-80 : 76227e1200000000000000000000000000000000000000000000000000000000  ==> Actual data - turnSwitchOff() signature
-
-```
+       30c13ade
+  00 : 00000000000000000000000000000000000000000000000000000000000000[60]  ==> Offset - position of actual data
+  20 : 0000000000000000000000000000000000000000000000000000000000000000     ==> Dummy data - to move turnSwitchOff data to 68th byte
+  40 : 20606e1500000000000000000000000000000000000000000000000000000000  ==> Data - turnSwitchOff() selector (By passes onlyOff)
+  60 : 0000000000000000000000000000000000000000000000000000000000000004  ==> Length - Length of the turnSwitchOff() signature data
+  80 : 76227e1200000000000000000000000000000000000000000000000000000000  ==> Actual data - turnSwitchOff() signature
+   ```
 14. Now this calldata will bypasses the check of onlyOff and we modified the offset to point it to the turnSwitchOn() signature.
 15. So, now the calldata passed to the `call` inside flipSwitch() will be,
-```
-76227e1200000000000000000000000000000000000000000000000000000000
-```
+   ```
+    76227e1200000000000000000000000000000000000000000000000000000000
+   ```
 16. This will call the turnSwitchOn() function in Switch contract. Finally we will be able to solve the challenge.
 
 `SwitchSolve.s.sol`
