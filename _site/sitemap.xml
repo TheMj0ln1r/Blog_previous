@@ -121,6 +121,10 @@
 <lastmod>2023-12-09T00:00:00+05:30</lastmod>
 </url>
 <url>
+<loc>http://localhost:4000/posts/pessimist-tasks</loc>
+<lastmod>2023-12-30T00:00:00+05:30</lastmod>
+</url>
+<url>
 <loc>http://localhost:4000/404</loc>
 </url>
 <url>
@@ -158,6 +162,9 @@
 </url>
 <url>
 <loc>http://localhost:4000/page/10/</loc>
+</url>
+<url>
+<loc>http://localhost:4000/page/11/</loc>
 </url>
 <url>
 <loc>http://localhost:4000/assets/files/picoctf2023.pdf</loc>
