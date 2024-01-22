@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-Decentralized Voting</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Decentralized Voting | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Decentralized Voting" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A simple Decentralized Project developed by me for an internship task." />
+<meta property="og:description" content="A simple Decentralized Project developed by me for an internship task." />
+<link rel="canonical" href="http://localhost:4000/posts/votingproject" />
+<meta property="og:url" content="http://localhost:4000/posts/votingproject" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-01-23T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Decentralized Voting" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2024-01-23T00:00:00+05:30","datePublished":"2024-01-23T00:00:00+05:30","description":"A simple Decentralized Project developed by me for an internship task.","headline":"Decentralized Voting","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/votingproject"},"url":"http://localhost:4000/posts/votingproject"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div class="head-parent">
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat dvoting</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>Decentralized Voting</h2>
+  <time datetime="2024-01-23T00:00:00+05:30" class="by-line">23 Jan 2024</time>
+  <p>A simple Decentralized Project developed by me for an internship task.</p>
+
+<p>Project Repo :  <a href="https://github.com/TheMj0ln1r/Decentralized-Voting-System" target="_blank">Decentralized Voting Project</a></p>
+
+<hr />
+
+<h1 id="decentralized-voting-system"><strong>Decentralized Voting System</strong></h1>
+
+<p>The system has following features:</p>
+
+<ul>
+  <li>
+    <p>Users can register to vote.</p>
+  </li>
+  <li>
+    <p>The owner of the contract can add candidates.</p>
+  </li>
+  <li>
+    <p>Only owner can start an election.</p>
+  </li>
+  <li>
+    <p>Multiple Elections can be conducted.</p>
+  </li>
+  <li>
+    <p>Registered voters can cast their votes for a specific candidate.</p>
+  </li>
+  <li>
+    <p>The voting process should be transparent, and the results should be publicly accessible.</p>
+  </li>
+</ul>
+
+<h2 id="design-choices">Design Choices</h2>
+
+<p>The Election contract is designed to manage a simple voting process, with features to register voters and candidates, cast votes, and reveal election results.</p>
+
+<p><strong>Access Control:</strong> The contract uses an onlyOwner modifier to restrict certain functions (like registering candidates and revealing results) to the owner of the contract, which is set during contract deployment.</p>
+
+<p><strong>Voter Tracking:</strong> Voters are tracked using mappings that associate their addresses with respective Voter. This design allows for efficient lookups and updates.</p>
+
+<p><strong>Unique Identifiers:</strong> Both voters and candidates are assigned unique IDs to differentiate them within their respective categories.
+Vote Casting Mechanism: Voters can cast votes for registered candidates, and the contract ensures that each voter can only vote once.</p>
+
+<p><strong>Election Results:</strong> The contract allows the owner to calculate and reveal the winner based on the number of votes each candidate received. The reveal results feature is a bit complex as it supports if the multiple candidates got the same majority.</p>
+
+<p><strong>Election Duration:</strong> The contract checks whether the election is active before allowing certain operations (e.g., voter registration, voting). This prevents these operations from occurring outside the specified election duration.</p>
+
+<p><strong>Events:</strong> The contract emits events for candidate registration, voter registration, vote casting, and winner declaration, which helps in tracking activities on the blockchain.</p>
+
+<p><strong>Error Handling:</strong> The contract uses error messages to clearly communicate the reasons for transaction failures. For example, it raises errors like Election_Not_Owner(), Election_Voter_Already_Registered(), etc. This helps users and developers understand the context of the failure.</p>
+
+<p><strong>Time-Based Logic:</strong> The contract uses <code class="language-plaintext highlighter-rouge">electionDuration</code> and <code class="language-plaintext highlighter-rouge">electionStartTime</code> to manage the duration of the election.</p>
+
+<p><strong>Dynamic Arrays</strong>: The <code class="language-plaintext highlighter-rouge">candidateDetails</code> array is used to store a dynamic list of <code class="language-plaintext highlighter-rouge">Candidate</code> structs. This allows for an arbitrary number of candidates to be registered in the election.</p>
+
+<p><strong>State Variables:</strong></p>
+
+<p><code class="language-plaintext highlighter-rouge">owner</code>: The address of the contract owner.</p>
+
+<p><code class="language-plaintext highlighter-rouge">totalNumOfVoters</code>: A counter for the total number of registered voters.</p>
+
+<p><code class="language-plaintext highlighter-rouge">totalNumOfCandidates</code>: A counter for the total number of registered candidates.</p>
+
+<p><code class="language-plaintext highlighter-rouge">voterDetails</code>: A mapping from voter addresses to Voter structs.</p>
+
+<p><code class="language-plaintext highlighter-rouge">candidateDetails</code>: A mapping from candidate addresses to Candidate</p>
+
+<p><strong>Structs</strong>:</p>
+
+<p><code class="language-plaintext highlighter-rouge">candidIdToAddr</code>: A mapping from candidate IDs to their addresses.
+Structs:</p>
+
+<p><code class="language-plaintext highlighter-rouge">Voter</code>: Contains voter ID and a boolean indicating whether the voter has voted.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Candidate</code>: Contains candidate ID and the number of votes received.</p>
+
+<p><strong>Modifiers</strong>:</p>
+
+<p><code class="language-plaintext highlighter-rouge">onlyOwner</code>: Restricts function access to the contract owner.</p>
+
+<p><strong>Functions</strong>:</p>
+
+<p><code class="language-plaintext highlighter-rouge">registerVoter</code>(): Allows an address to register as a voter.</p>
+
+<p><code class="language-plaintext highlighter-rouge">registerCandidate(address _candidate)</code>: Allows the owner to register a new candidate.</p>
+
+<p><code class="language-plaintext highlighter-rouge">castVote(address _candidate)</code>: Allows a registered voter to cast a vote for a registered candidate.</p>
+
+<p><code class="language-plaintext highlighter-rouge">revealResults()</code>: Allows the owner to calculate and reveal the winner of the election.</p>
+
+<p><code class="language-plaintext highlighter-rouge">getMajority(address _candidate)</code>: Returns the number of votes for a given candidate.</p>
+
+<p><strong>Events</strong>:</p>
+
+<p><code class="language-plaintext highlighter-rouge">Election_Candidate_Registered</code>: Emitted when a new candidate is registered.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Election_Voter_Registered</code>: Emitted when a new voter is registered.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Election_Voted</code>: Emitted when a vote is cast.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Election_Winner_Declared</code>: Emitted when the election winner is declared.</p>
+
+<p><code class="language-plaintext highlighter-rouge">Election_Election_Started</code> : Emitted when election was started by owner.</p>
+
+<h2 id="security-considerations">Security Considerations</h2>
+
+<p>The Election smart contract incorporates several security considerations to protect the integrity of the election process:</p>
+
+<p><strong>Access Control:</strong> The contract uses an onlyOwner modifier, which employs a simple authorization check to restrict access to sensitive functions such as registerCandidate and revealResults. This ensures that only the owner can perform certain actions 1.</p>
+
+<p><strong>Checks-Effects-Interactions Pattern:</strong> The contract adheres to the Checks-Effects-Interactions pattern by performing checks first (such as verifying if a voter or candidate is already registered), updating the contract state, and then emitting events 13.</p>
+
+<p><strong>State Variable Visibility:</strong> State variables such as owner, totalNumOfVoters, and totalNumOfCandidates are declared public, allowing transparency and verification of contract state by external observers 25.</p>
+
+<p><strong>Use of Custom Errors:</strong> The contract uses custom error messages for reverting transactions when certain conditions are not met. This helps in reducing gas costs compared to using require with string messages and improves clarity regarding why a transaction failed 1.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```solidity
+error Election_Not_Owner();
+error Election_Voter_Already_Registered();
+error Election_Candidate_Already_Registered();
+error Election_Invalid_Candidate();
+error Election_Already_Voted();
+error Election_Voter_Not_Registered();
+error Election_Election_Running();
+error Election_Election_Completed();
+error Election_Invalid_Duration();
+```
+</code></pre></div></div>
+
+<p><strong>Event Emission:</strong> Events are emitted for key actions such as voter registration, candidate registration, vote casting, and winner declaration. This allows for off-chain monitoring and verification of contract interactions 3.</p>
+
+<p><strong>Minimal Use of Loops:</strong> The contract avoids extensive use of loops, which can lead to out-of-gas errors. The only loop present is in the revealResults function, which iterates through candidates to determine the winner. This loop is bound by the number of candidates, which is expected to be a manageable number 13.</p>
+
+<p><strong>No External Calls:</strong> The contract does not make external calls to other contracts, which reduces the risk of reentrancy attacks and unexpected interactions with untrusted contracts 12.</p>
+
+<p><strong>Immutable Owner:</strong> The owner is set once upon contract deployment and is not changeable. This prevents potential takeover attacks where the ownership could be transferred to a malicious party 1.</p>
+
+<p><strong>No Ether Handling:</strong> The contract does not handle Ether transactions, which means there’s no risk associated with sending and receiving Ether, nor any need for a fallback function 1.</p>
+
+<h2 id="test-cases">Test Cases</h2>
+
+<p><strong>setUp:</strong> This function initializes the test environment. It creates instances of the Election contract and assigns addresses to voters and candidates.</p>
+
+<p><strong>testInitialElectionState:</strong> This test checks the initial state of the Election contract. It asserts that the owner is set correctly, and that the initial number of voters, election duration, and election start time are all zero.</p>
+
+<p><strong>testRegisterVoter:</strong> This test verifies the functionality of the registerVoter function. It checks that a voter can be registered, and that attempting to register the same voter twice causes a revert.</p>
+
+<p><strong>testRegisterVoterDuringElection:</strong> This test checks that a voter cannot be registered during an election. It attempts to register a voter while an election is running and expects a revert.</p>
+
+<p><strong>testRegisterCandidate:</strong> This test verifies the registration of candidates. It checks that a candidate can be registered, that attempting to register the same candidate twice causes a revert, and that attempting to register an invalid candidate also causes a revert.</p>
+
+<p><strong>testRegisterCandidateDuringElection:</strong> This test checks that a candidate cannot be registered during an election. It attempts to register a candidate while an election is running and expects a revert.</p>
+
+<p><strong>testStartElection</strong>: This test checks the startElection function. It verifies that an election can be started, and that starting an election with an invalid duration causes a revert.</p>
+
+<p><strong>testStartElectionAlreadyRunning:</strong> This test verifies that an election cannot be started if another one is already running. It attempts to start an election while another one is running and expects a revert.</p>
+
+<p><strong>testCastVote:</strong> This test checks the castVote function. It verifies that a vote can be cast by a registered voter, and that attempting to cast a vote with an unregistered voter or an invalid candidate causes a revert.</p>
+
+<p><strong>testGetMajority:</strong> This test checks the getMajority function. It verifies that the majority of votes is calculated correctly for a single candidate.</p>
+
+<p><strong>testIsElectionActive:</strong> This test checks the isElectionActive function. It verifies that the function correctly identifies whether an election is currently active.</p>
+
+<p><strong>testRevealResults:</strong> This test verifies the revealResults function. It checks that the function correctly declares the winner of an election.</p>
+
+<p><strong>testRevealResultsMultipleWinners:</strong> This test checks that the revealResults function correctly handles elections with multiple winners.</p>
+
+<p><strong>testRevealResultsNotOwner:</strong> This test checks that the revealResults function can only be called by the owner of the election.</p>
+
+<p><strong>testScript:</strong> This test verifies the execution of the ElectionScript. It checks that the script runs successfully and that the Election contract instance it creates is valid.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/decentralized_voting_system<span class="nv">$ </span>forge coverage
+<span class="o">[</span>⠢] Compiling...
+<span class="o">[</span>⠊] Compiling 24 files with 0.8.23
+<span class="o">[</span>⠔] Solc 0.8.23 finished <span class="k">in </span>7.80s
+Compiler run successful!
+Analysing contracts...
+Running tests...
+| File                  | % Lines         | % Statements   | % Branches     | % Funcs       |
+|-----------------------|-----------------|----------------|----------------|---------------|
+| script/Election.s.sol | 100.00% <span class="o">(</span>3/3<span class="o">)</span>   | 100.00% <span class="o">(</span>3/3<span class="o">)</span>  | 100.00% <span class="o">(</span>0/0<span class="o">)</span>  | 100.00% <span class="o">(</span>1/1<span class="o">)</span> |
+| src/Election.sol      | 100.00% <span class="o">(</span>55/55<span class="o">)</span> | 96.34% <span class="o">(</span>79/82<span class="o">)</span> | 88.24% <span class="o">(</span>30/34<span class="o">)</span> | 100.00% <span class="o">(</span>7/7<span class="o">)</span> |
+| Total                 | 100.00% <span class="o">(</span>58/58<span class="o">)</span> | 96.47% <span class="o">(</span>82/85<span class="o">)</span> | 88.24% <span class="o">(</span>30/34<span class="o">)</span> | 100.00% <span class="o">(</span>8/8<span class="o">)</span> |
+</code></pre></div></div>
+
+<h2 id="usage">Usage</h2>
+
+<h3 id="clone">Clone</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git clone 
+<span class="nv">$ </span><span class="nb">cd</span> 
+</code></pre></div></div>
+
+<h3 id="build">Build</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>forge build
+</code></pre></div></div>
+
+<h3 id="test">Test</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>forge <span class="nb">test</span>
+</code></pre></div></div>
+
+<h3 id="deploy">Deploy</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>forge script script/Election.s.sol:ElectionScript <span class="nt">--rpc-url</span> &lt;your_rpc_url&gt; <span class="nt">--private-key</span> &lt;your_private_key&gt;
+</code></pre></div></div>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2024
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>

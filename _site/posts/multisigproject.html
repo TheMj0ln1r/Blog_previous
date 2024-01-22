@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-MultiSig Project</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>MultiSig Project | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="MultiSig Project" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A simple MultiSig Wallet Project developed by me for an internship task." />
+<meta property="og:description" content="A simple MultiSig Wallet Project developed by me for an internship task." />
+<link rel="canonical" href="http://localhost:4000/posts/multisigproject" />
+<meta property="og:url" content="http://localhost:4000/posts/multisigproject" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-01-23T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="MultiSig Project" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2024-01-23T00:00:00+05:30","datePublished":"2024-01-23T00:00:00+05:30","description":"A simple MultiSig Wallet Project developed by me for an internship task.","headline":"MultiSig Project","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/multisigproject"},"url":"http://localhost:4000/posts/multisigproject"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div class="head-parent">
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat multisig</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>MultiSig Project</h2>
+  <time datetime="2024-01-23T00:00:00+05:30" class="by-line">23 Jan 2024</time>
+  <p>A simple MultiSig Wallet Project developed by me for an internship task.</p>
+
+<p>Project Repo :  <a href="https://github.com/TheMj0ln1r/MultiSig-Wallet" target="_blank">MultiSig Project</a></p>
+
+<hr />
+
+<h2 id="multi-signature-wallet"><strong>Multi Signature Wallet</strong></h2>
+
+<p><strong>A multi-signature (multisig) wallet is a smart contract that requires multiple private keys to authorize and execute a transaction. This provides an additional layer of security compared to traditional single-signature wallets, where only one private key is needed. Multisig wallets are commonly used in various decentralized applications, including cryptocurrency platforms and decentralized autonomous organizations (DAOs).</strong></p>
+
+<h2 id="documentation">Documentation</h2>
+
+<h3 id="features">Features</h3>
+<p>This multi-sig contract has the following features:</p>
+
+<ul>
+  <li>
+    <p>The contract allows multiple owners to collectively control the funds in the wallet.</p>
+  </li>
+  <li>
+    <p>Wallet has multiple owners, each having their own private key.</p>
+  </li>
+  <li>
+    <p>A specified number of owners (threshold) is required to approve and execute a transaction.</p>
+  </li>
+  <li>
+    <p>Owners can submit, approve, and cancel transactions.</p>
+  </li>
+</ul>
+
+<h3 id="design-choices">Design Choices</h3>
+
+<p>I have designed this MultiSig contract with the following functionalities with my design choices to make this efficient.</p>
+
+<ol>
+  <li>
+    <p><strong>Structs for Transactions</strong> : This choice makes it easy to manage and organize transaction data. The struct encapsulates the details of each transaction, including the owner initiating it, whether it has been executed, the recipient address, value, and data.</p>
+  </li>
+  <li>
+    <p><strong>Approval Status</strong> : Used a mapping to track approval status for each transaction. Storing approval status in a mapping (<code class="language-plaintext highlighter-rouge">isApproved</code>) allows for efficient lookup and management of transaction approvals. It helps in quickly determining whether an owner has already approved a specific transaction.</p>
+  </li>
+  <li>
+    <p><strong>Several Modifiers</strong>: Implemented modifiers like <code class="language-plaintext highlighter-rouge">validTxId</code>, <code class="language-plaintext highlighter-rouge">onlyOwner</code>, <code class="language-plaintext highlighter-rouge">hasToExecuted</code>, and <code class="language-plaintext highlighter-rouge">hasToApproved</code> for access control. Modifiers help in code reusability and readability. They enforce certain conditions before executing a function, making the code more secure and preventing unauthorized access.</p>
+  </li>
+  <li>
+    <p><strong>ThreshHold</strong> :  Used a <code class="language-plaintext highlighter-rouge">threshold</code> value to determine when a transaction is considered confirmed. The contract requires a minimum number of owner approvals (<code class="language-plaintext highlighter-rouge">threshHold</code>) to execute a transaction.</p>
+  </li>
+  <li>
+    <p><strong>Revoking Approve</strong>: Implemented a <code class="language-plaintext highlighter-rouge">revokeApprove</code> function. Allowing owners to revoke their approvals provides additional control and flexibility. If an owner changes their mind before a transaction is executed, they can revoke their approval, preventing the transaction from going through.</p>
+  </li>
+  <li>
+    <p><strong>Cancellation of Tx</strong> : Implemented a <code class="language-plaintext highlighter-rouge">cancelTx</code> function. Owners have the ability to cancel transactions they initiated, providing a way to clean up the transaction list and prevent the execution of unwanted transactions. I have implemented this <code class="language-plaintext highlighter-rouge">cancelTx</code> function in such a way that it can only be callable by the transaction owner. i.e, who submits that transaction.</p>
+  </li>
+  <li>
+    <p><strong>Many Events</strong> : Events are emitted to provide transparency and allow external systems to react to state changes.</p>
+
+    <pre><code class="language-solidity"> // Events
+ event MultiSig_Transaction_Submit(uint indexed txId, address indexed from, address _to, uint value, bytes data);
+ event MultiSig_Transaction_Approved(uint indexed _txId, address indexed _owner);
+ event MultiSig_Transaction_Executed(uint indexed _txId);
+ event MultiSig_EthDeposited(address indexed sender, uint indexed value);
+ event MultiSig_Approve_Revoked(address indexed _owner, uint indexed _txId);
+</code></pre>
+  </li>
+  <li>
+    <p><strong>Custom Errors</strong> : I have used custom error types to be more specific to the user when they encounter any error.</p>
+
+    <pre><code class="language-solidity"> // Errors
+ error MultiSig_Not_Enough_Owners();
+ error MultiSig_Invalid_ThreshHold_Specified();
+ error MultiSig_Invalid_Owner();
+ error MultiSig_Not_Owner();
+ error MultiSig_Invalid_To();
+ error MultiSig_Invalid_TransactionID();
+ error MultiSig_Tx_Already_Approved();
+ error MultiSig_Tx_Already_Executed();
+ error MultiSig_Transaction_Not_Yet_Confirmed();
+ error MultiSig_Transaction_Failed();
+ error MultiSig_Tx_Not_Approved();
+ error MultiSig_Not_Tx_Owner();
+ error MultiSig_Insufficient_Wallet_Balance();
+</code></pre>
+  </li>
+  <li>
+    <p><strong>Added a receive function</strong> : To be able to receive deposited ether to the wallet. Upon receiving ether the Wallet will emit Deposit event.</p>
+  </li>
+</ol>
+
+<h3 id="security-considerations">Security Considerations</h3>
+
+<p>I have taken some important security considerations in the <code class="language-plaintext highlighter-rouge">MultiSig</code> contract which handles many edge cases and eliminates vulnerabilities in the contract.</p>
+
+<ol>
+  <li>
+    <p><strong>Access COntrol</strong> : Access to the functions were handled by modifiers, for example : Submitting a transaction can only possible for a owner. This check done my <code class="language-plaintext highlighter-rouge">onlyOwner()</code> modifier.</p>
+  </li>
+  <li>
+    <p><strong>Transaction State Checks</strong> : Modifiers like executed and approved prevent actions such as double approvals or double executions of transactions.</p>
+  </li>
+  <li>
+    <p><strong>Constructor validation</strong> : The owners specified in constructor were checked again duplicate owner addresses and zero addresses. The threshold is ensured to less than total number of owners and atleast 2.</p>
+  </li>
+  <li>
+    <p><strong>Custom Errors</strong> : Custom errors provide informative feedback and help save gas compared to traditional require statements with error messages.</p>
+  </li>
+  <li>
+    <p><strong>Event Emission</strong> : The contract emits events for significant actions like transaction submission, approval, execution, and fund deposits.</p>
+  </li>
+  <li>
+    <p><strong>Cancelling Transaction</strong> : The cancellation of transaction can only done before the transaction executes and only by the owner who submits that transaction.</p>
+  </li>
+  <li>
+    <p><strong>Executing Transaction</strong> : The transaction can only executed by a owner when the transaction get enough approvals (threshold). The transaction existence is checked by <code class="language-plaintext highlighter-rouge">validTxId</code> modifier.</p>
+  </li>
+  <li>
+    <p><strong>Low level call handle</strong> : The low level call is used to send the valut to the address. This <code class="language-plaintext highlighter-rouge">call</code> is handled properly by ensuring its return value. And the <code class="language-plaintext highlighter-rouge">checks-effect-interactions</code> is followed to mitigate <code class="language-plaintext highlighter-rouge">Reentrancy</code>.</p>
+  </li>
+</ol>
+
+<h3 id="test-cases">Test Cases</h3>
+
+<p>I have implemented near 100% test coverage for the MultiSig contract. Which ensures following test cases.</p>
+
+<p>Here’s an outline of the test cases we will cover:</p>
+
+<ol>
+  <li>
+    <p>Test the contract initialization and owner settings.</p>
+  </li>
+  <li>
+    <p>Test submitting a transaction by an owner.</p>
+  </li>
+  <li>
+    <p>Test approving a transaction by an owner.</p>
+  </li>
+  <li>
+    <p>Test approving a transaction reverts if already approved.</p>
+  </li>
+  <li>
+    <p>Test executing a transaction after reaching the threshold.</p>
+  </li>
+  <li>
+    <p>Test executing a transaction reverts if not enough approvals.</p>
+  </li>
+  <li>
+    <p>Test revoking an approval.</p>
+  </li>
+  <li>
+    <p>Test revoking an approval reverts if not previously approved.</p>
+  </li>
+  <li>
+    <p>Test transaction execution reverts if it’s already executed.</p>
+  </li>
+  <li>
+    <p>Test canceling a transaction by its owner.</p>
+  </li>
+</ol>
+
+<p>And even more…</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>forge coverage
+
+Running tests...
+| File                  | % Lines         | % Statements    | % Branches     | % Funcs       |
+|-----------------------|-----------------|-----------------|----------------|---------------|
+| script/MultiSig.s.sol | 100.00% <span class="o">(</span>9/9<span class="o">)</span>   | 100.00% <span class="o">(</span>10/10<span class="o">)</span> | 100.00% <span class="o">(</span>0/0<span class="o">)</span>  | 100.00% <span class="o">(</span>1/1<span class="o">)</span> |
+| src/MultiSig.sol      | 100.00% <span class="o">(</span>24/24<span class="o">)</span> | 97.06% <span class="o">(</span>33/34<span class="o">)</span>  | 92.86% <span class="o">(</span>13/14<span class="o">)</span> | 100.00% <span class="o">(</span>6/6<span class="o">)</span> |
+| Total                 | 100.00% <span class="o">(</span>33/33<span class="o">)</span> | 97.73% <span class="o">(</span>43/44<span class="o">)</span>  | 92.86% <span class="o">(</span>13/14<span class="o">)</span> | 100.00% <span class="o">(</span>7/7<span class="o">)</span> |
+</code></pre></div></div>
+
+<h2 id="usage">Usage</h2>
+
+<h3 id="build">Build</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>forge build
+</code></pre></div></div>
+
+<h3 id="test">Test</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>forge <span class="nb">test</span>
+</code></pre></div></div>
+
+<h3 id="format">Format</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>forge <span class="nb">fmt</span>
+</code></pre></div></div>
+
+<h3 id="gas-snapshots">Gas Snapshots</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>forge snapshot
+</code></pre></div></div>
+
+<h3 id="anvil">Anvil</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>anvil
+</code></pre></div></div>
+
+<h3 id="deploy">Deploy</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>forge script script/MultiSig.s.sol:MultiSigScript <span class="nt">--rpc-url</span> &lt;your_rpc_url&gt; <span class="nt">--private-key</span> &lt;your_private_key&gt;
+</code></pre></div></div>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2024
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>

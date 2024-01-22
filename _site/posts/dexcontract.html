@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-DEX Token Swap</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>DEX Token Swap | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="DEX Token Swap" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A simple DEX Token Swap Project developed by me for an internship task." />
+<meta property="og:description" content="A simple DEX Token Swap Project developed by me for an internship task." />
+<link rel="canonical" href="http://localhost:4000/posts/dexcontract" />
+<meta property="og:url" content="http://localhost:4000/posts/dexcontract" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-01-23T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="DEX Token Swap" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2024-01-23T00:00:00+05:30","datePublished":"2024-01-23T00:00:00+05:30","description":"A simple DEX Token Swap Project developed by me for an internship task.","headline":"DEX Token Swap","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/dexcontract"},"url":"http://localhost:4000/posts/dexcontract"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div class="head-parent">
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat dexswap</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>DEX Token Swap</h2>
+  <time datetime="2024-01-23T00:00:00+05:30" class="by-line">23 Jan 2024</time>
+  <p>A simple DEX Token Swap Project developed by me for an internship task.</p>
+
+<p>Project Repo :  <a href="https://github.com/TheMj0ln1r/DEX-Token-Swap" target="_blank">DEX Token Swap</a></p>
+
+<hr />
+
+<h1 id="erc20-token-swap"><strong>ERC20 Token Swap</strong></h1>
+
+<p><strong>This TokenSwap smart contract facilitates the swapping of one ERC-20 token for another at a predefined exchange rate</strong></p>
+
+<h2 id="documentation">Documentation</h2>
+
+<p><strong>Note : Most of the functionality of this pool is inspired by the design of <code class="language-plaintext highlighter-rouge">UniswapV2</code></strong></p>
+
+<h2 id="features">Features</h2>
+
+<p>The smart contract include the following features:</p>
+
+<ul>
+  <li>
+    <p>Users can swap Token A for Token B and vice versa.</p>
+  </li>
+  <li>
+    <p>The exchange rate between Token A and Token B is fixed <code class="language-plaintext highlighter-rouge">(1.2)</code>.</p>
+  </li>
+  <li>
+    <p>Users can provide liquidity to the pool in return they get <code class="language-plaintext highlighter-rouge">shares</code>.</p>
+  </li>
+  <li>
+    <p>Users can remove their liquidity from the pool.</p>
+  </li>
+</ul>
+
+<h2 id="design-choices">Design Choices</h2>
+
+<p>The <code class="language-plaintext highlighter-rouge">TokenSwapPool</code> contract is a simplified liquidity pool for swapping between two ERC-20 tokens (tokenA and tokenB) at a <strong>fixed exchange rate</strong>. It is an ERC-20 token itself, representing <strong>shares</strong> in the pool, which users get when they provide liquidity.</p>
+
+<p><strong>Immutables:</strong> <code class="language-plaintext highlighter-rouge">token0</code> and <code class="language-plaintext highlighter-rouge">token1</code> are immutable variables storing the addresses of the ERC-20 tokens that can be swapped. Once set in the constructor, their values cannot be changed.</p>
+
+<p><strong>Reserves:</strong> <code class="language-plaintext highlighter-rouge">reserves0</code> and <code class="language-plaintext highlighter-rouge">reserves1</code> keep track of the amounts of <code class="language-plaintext highlighter-rouge">token0</code> and <code class="language-plaintext highlighter-rouge">token1</code> in the pool, respectively.</p>
+
+<p><strong>Swap Function:</strong> Allows users to swap between <code class="language-plaintext highlighter-rouge">token0</code> and <code class="language-plaintext highlighter-rouge">token1</code>.</p>
+
+<ul>
+  <li>
+    <p>User have to send the amount of token that has to be swapped in the same transaction that calls <code class="language-plaintext highlighter-rouge">swap</code></p>
+  </li>
+  <li>
+    <p>It checks the balance difference before and after the transfer to find the amount sent by the user and then performs the swap based on the fixed exchange rate.</p>
+  </li>
+  <li>
+    <p>Then it checks that which token amount was sent by the user by checkng the following condition.</p>
+
+    <p><code class="language-plaintext highlighter-rouge">if (_tokenIn == address(token0))</code></p>
+  </li>
+  <li>
+    <p>If the user sent <code class="language-plaintext highlighter-rouge">tokenA</code> and wants to get <code class="language-plaintext highlighter-rouge">tokenB</code> the <code class="language-plaintext highlighter-rouge">if</code> block will execute.</p>
+  </li>
+  <li>
+    <p>Then the <code class="language-plaintext highlighter-rouge">amountToSend</code> will be calculated with the fixed exchange rate.</p>
+  </li>
+  <li>
+    <p>The exchange rate I used is <code class="language-plaintext highlighter-rouge">1.2</code>, so to handle with decimals in solidity I multiplied with <code class="language-plaintext highlighter-rouge">10</code> and devided with <code class="language-plaintext highlighter-rouge">12</code> in case of <code class="language-plaintext highlighter-rouge">tokenA</code>.</p>
+  </li>
+  <li>
+    <p>If the user sent <code class="language-plaintext highlighter-rouge">tokenB</code> and wants to get <code class="language-plaintext highlighter-rouge">tokenB</code> the <code class="language-plaintext highlighter-rouge">else</code> block will execute.</p>
+  </li>
+  <li>
+    <p>To calculate <code class="language-plaintext highlighter-rouge">amountToSend</code>, the <code class="language-plaintext highlighter-rouge">amountIn</code> will be multiplied with <code class="language-plaintext highlighter-rouge">12</code> and divided with <code class="language-plaintext highlighter-rouge">10</code>.</p>
+  </li>
+  <li>
+    <p>This will maintain the <code class="language-plaintext highlighter-rouge">fixed exchange rate</code> for the exchange.</p>
+  </li>
+</ul>
+
+<p><strong>addLiquidity Function:</strong> Add liquidity to the pool by sending both <code class="language-plaintext highlighter-rouge">token0</code> and <code class="language-plaintext highlighter-rouge">token1</code> to the contract.</p>
+
+<ul>
+  <li>
+    <p>The function calculates the number of share tokens (liquidity tokens) to mint based on the amounts added and the current pool size.</p>
+  </li>
+  <li>
+    <p>The both tokens amounts should be sent in the same transaction with calls the <code class="language-plaintext highlighter-rouge">addLiquidity</code> function.</p>
+  </li>
+  <li>
+    <p>When liquidity is added for the first time, the contract calculates the initial liquidity shares based on the <code class="language-plaintext highlighter-rouge">square root</code> of the product of the amounts of the two tokens.</p>
+  </li>
+  <li>
+    <p>A minimum liquidity amount <code class="language-plaintext highlighter-rouge">(_mint(address(0xdeadbeef), 1000))</code> is minted initially to lock some liquidity.</p>
+  </li>
+  <li>
+    <p>The address <code class="language-plaintext highlighter-rouge">0xdeadbeef</code> is taken to assume that no one has the private key of it.</p>
+  </li>
+  <li>
+    <p>In <code class="language-plaintext highlighter-rouge">Uniswap V2</code> it was <code class="language-plaintext highlighter-rouge">address(0)</code>, but if we use <code class="language-plaintext highlighter-rouge">address(0)</code> here the <code class="language-plaintext highlighter-rouge">ERC20</code> contract of <code class="language-plaintext highlighter-rouge">OpenZeppelin</code> reverts if the address passed to <code class="language-plaintext highlighter-rouge">_mint</code> is <code class="language-plaintext highlighter-rouge">0</code> then it will revert.</p>
+  </li>
+  <li>
+    <p>To solve this <code class="language-plaintext highlighter-rouge">Uniswap V2</code> implements its own <code class="language-plaintext highlighter-rouge">UniswapERC20</code> contract.</p>
+  </li>
+</ul>
+
+<p><strong>removeLiquidity:</strong> Allows users to burn their share tokens and withdraw a proportional amount of <code class="language-plaintext highlighter-rouge">token0</code> and <code class="language-plaintext highlighter-rouge">token1</code> from the pool.</p>
+
+<ul>
+  <li>
+    <p>It is assumed that the burner sent in share tokens before calling removeLiquidity, but advisably as part of one transaction.</p>
+  </li>
+  <li>
+    <p>If the total supply of share tokens is 1,000, and they burn 100 share tokens, then they get 10% of the token0 and token1 held by the pool.</p>
+  </li>
+  <li>
+    <p>_shareTokens / totalSupply is their burned share of the total supply of share tokens.</p>
+  </li>
+</ul>
+
+<p><strong>_update function:</strong> Updates the reserves of the pool.</p>
+
+<p><strong>getReserves function:</strong> Getter function for the <code class="language-plaintext highlighter-rouge">reserves0</code> and <code class="language-plaintext highlighter-rouge">reserves1</code>.</p>
+
+<p><strong>Events:</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```solidity
+event TokenSwap_Liquidity_Minted(address _to, uint _shareTokens);
+event TokenSwap_Liquidity_Burned(address sender, uint amount0, uint amount1, address _to);
+event TokenSwap_Swap(address, address, uint);
+```
+</code></pre></div></div>
+
+<p><strong>Errors:</strong></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>```solidity
+error TokenSwap_Invalid_Address();
+error TokenSwap_Invalid_Exchange_Rate();
+error TokenSwap_TokenA_Transfer_Failed();
+error TokenSwap_TokenB_Transfer_Failed();
+error TokenSwap_Invalid_Amount();
+error TokenSwap_No_Liquidity_Shares();
+error TokenSale_No_Liquidity_Output();
+```
+</code></pre></div></div>
+
+<h2 id="security-considerations">Security Considerations</h2>
+
+<p><strong>SafeERC20 Usage:</strong> The SafeERC20 library for token transfers, which helps guard against potential vulnerabilities such as reentrancy attacks by ensuring that ERC-20 token transfers are executed safely.</p>
+
+<p><strong>Custom Error Types:</strong> Custom error types are defined to provide specific and clear error messages when certain conditions are not met. This can help users understand the reason for a transaction failure.</p>
+
+<p><strong>Input Validation:</strong> Checks for valid addresses in the constructor and various functions, preventing potential issues related to invalid or zero addresses.</p>
+
+<p><strong>Minimum Liquidity Lock:</strong> A minimum liquidity amount is minted initially to lock some liquidity. This prevents an <code class="language-plaintext highlighter-rouge">inflation attack</code> where an attacker could artificially inflate the liquidity.</p>
+
+<p><strong>Liquidity Minting Approach:</strong> The contract calculates initial liquidity shares using a <code class="language-plaintext highlighter-rouge">square root</code> function, inspired by <code class="language-plaintext highlighter-rouge">Uniswap V2</code>. This approach aims to mitigate the “<strong>doubling liquidity</strong>” problem that could lead to unintended consequences.</p>
+
+<p><strong>Fixed Exchange Rate:</strong> Used a fixed exchange rate between token0 and token1 This simplifies the contract, it is important to note that in dynamic market conditions, fixed exchange rates may expose users to <code class="language-plaintext highlighter-rouge">impermanent loss</code>.</p>
+
+<p><strong>Minimum Liquidity Check:</strong> The <code class="language-plaintext highlighter-rouge">addLiquidity</code> function checks that the calculated liquidity shares are not zero before minting new liquidity tokens. This prevents users from adding liquidity with extremely low or zero values.</p>
+
+<p><strong>Reentrancy Protection:</strong> Ensuring that functions are not susceptible to reentrancy attacks by applying <code class="language-plaintext highlighter-rouge">nonReentrant</code> modifier.</p>
+
+<p><strong>Drawbacks</strong> The <code class="language-plaintext highlighter-rouge">swap</code> function transfers tokens with the predetermined exchange rate(12). So, the tokens of exchange will always be same. i.e If user sent X amount of tokens at one time he will get Y amount of tokens. This will hold for any time. That is user will will get same amount of tokens for every swap he made. And there is no check that liquidity of the pool is maintained or not. We cant use <code class="language-plaintext highlighter-rouge">constant product AMM</code> because the exchange rate will be varied with the amount od tokens present in the pool. And the <code class="language-plaintext highlighter-rouge">liquidators</code> wont receive any fee as the fee is not used in this contract.</p>
+
+<h2 id="test-cases">Test Cases</h2>
+
+<p><strong>testConstructor:</strong> Verifies that the constructor of the TokenSwapPool contract reverts if invalid addresses (zero addresses) are passed as parameters.</p>
+
+<p><strong>testAddLiquidityFailing:</strong> Checks that adding liquidity to the TokenSwapPool fails and reverts when the address provided is invalid or if there are no liquidity shares to add (i.e., the balances of tokens transferred to the pool are zero).</p>
+
+<p><strong>testAddLiquidity:</strong> Tests the successful addition of liquidity to the pool. It checks the initial state of the pool, transfers tokens to the pool, and then adds liquidity from the user. It verifies if the minted shares and total supply are updated correctly.</p>
+
+<p><strong>testAmountAddLiquidityMultipleTimes:</strong> Confirms that liquidity can be added multiple times and calculates the expected shares based on the pool’s reserves and total supply. It ensures that minted shares are correctly accounted for after each addition.</p>
+
+<p><strong>testAmountAddLiquidityDifferentRatio:</strong> Similar to the previous test, but with a different ratio of TokenA to TokenB, ensuring that the minted shares are calculated correctly based on the provided ratio.</p>
+
+<p><strong>testRemoveLiquidityFail:</strong> Ensures that attempting to remove liquidity fails when the address provided is invalid or if there’s no liquidity output expected (i.e., the shares to be burned are zero).</p>
+
+<p><strong>testRemoveLiquidity:</strong> Tests the successful removal of liquidity from the pool. It verifies that the tokens are returned to the user correctly and that the total supply of liquidity shares is updated.</p>
+
+<p><strong>testSwapMyA:</strong> Simulates a swap of TokenA for TokenB by a user and verifies that the user’s token balances are updated correctly after the swap.</p>
+
+<p><strong>testSwapMyB:</strong> Simulates a swap of TokenB for TokenA by a user and ensures that the user’s token balances are updated correctly after the swap.</p>
+
+<p><strong>testSwapFails:</strong> Checks that attempting to swap with an invalid amount (zero) or an invalid address causes the contract to revert.</p>
+
+<p><strong>testGetReserves:</strong> Confirms that the getReserves function returns the correct reserves of TokenA and TokenB in the pool.</p>
+
+<p><strong>testDeployScript:</strong> Verifies that the deployment script works correctly by deploying the contracts and checking that the addresses of the deployed contracts are non-zero.</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mj0ln1r@Linux:~/dex-token-swap<span class="nv">$ </span>forge coverage
+<span class="o">[</span>⠢] Compiling...
+<span class="o">[</span>⠔] Compiling 34 files with 0.8.23
+<span class="o">[</span>⠊] Solc 0.8.23 finished <span class="k">in </span>8.26s
+Compiler run successful!
+Analysing contracts...
+Running tests...
+| File                | % Lines        | % Statements   | % Branches     | % Funcs       |
+|---------------------|----------------|----------------|----------------|---------------|
+| script/Deploy.s.sol | 100.00% <span class="o">(</span>4/4<span class="o">)</span>  | 100.00% <span class="o">(</span>4/4<span class="o">)</span>  | 100.00% <span class="o">(</span>0/0<span class="o">)</span>  | 100.00% <span class="o">(</span>1/1<span class="o">)</span> |
+| src/TokenSwap.sol   | 98.31% <span class="o">(</span>58/59<span class="o">)</span> | 98.86% <span class="o">(</span>87/88<span class="o">)</span> | 95.45% <span class="o">(</span>21/22<span class="o">)</span> | 100.00% <span class="o">(</span>7/7<span class="o">)</span> |
+| Total               | 98.41% <span class="o">(</span>62/63<span class="o">)</span> | 98.91% <span class="o">(</span>91/92<span class="o">)</span> | 95.45% <span class="o">(</span>21/22<span class="o">)</span> | 100.00% <span class="o">(</span>8/8<span class="o">)</span> |
+</code></pre></div></div>
+
+<h2 id="usage">Usage</h2>
+
+<h3 id="build">Build</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>forge build
+</code></pre></div></div>
+
+<h3 id="test">Test</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>forge <span class="nb">test</span>
+</code></pre></div></div>
+
+<h3 id="format">Format</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>forge <span class="nb">fmt</span>
+</code></pre></div></div>
+
+<h3 id="deploy">Deploy</h3>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>forge script script/Deploy.s.sol:TokenSwapScript <span class="nt">--rpc-url</span> &lt;your_rpc_url&gt; <span class="nt">--private-key</span> &lt;your_private_key&gt;
+</code></pre></div></div>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2024
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>
