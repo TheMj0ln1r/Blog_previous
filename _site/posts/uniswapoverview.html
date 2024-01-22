@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="generator" content="Jekyll">
+
+  <title>Mj0ln1r-Uniswap V1_V2_V3 Overview</title>
+  <link rel="icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+
+  <!-- <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="ATOM Feed" /> <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Uniswap V1_V2_V3 Overview | Mj0ln1’s Blog</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Uniswap V1_V2_V3 Overview" />
+<meta name="author" content="Mj0ln1" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Hey hi all, I got something useful for all web3 learners. Past few days I spent to understand bits and bytes of the Uniswap Protocol. I gathered the best resources to learn all the things about Uniswap V2. During my learning I have taken notes of every thing that I learned. In this post you can get an gist of Uniswap DEX Protocol. You can check my Uniswap V2 Complete Code Walkthrough post to learn everything about Uniswap V2." />
+<meta property="og:description" content="Hey hi all, I got something useful for all web3 learners. Past few days I spent to understand bits and bytes of the Uniswap Protocol. I gathered the best resources to learn all the things about Uniswap V2. During my learning I have taken notes of every thing that I learned. In this post you can get an gist of Uniswap DEX Protocol. You can check my Uniswap V2 Complete Code Walkthrough post to learn everything about Uniswap V2." />
+<link rel="canonical" href="http://localhost:4000/posts/uniswapoverview" />
+<meta property="og:url" content="http://localhost:4000/posts/uniswapoverview" />
+<meta property="og:site_name" content="Mj0ln1’s Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-01-09T00:00:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Uniswap V1_V2_V3 Overview" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Mj0ln1","url":"https://themj0ln1r.github.io"},"dateModified":"2024-01-09T00:00:00+05:30","datePublished":"2024-01-09T00:00:00+05:30","description":"Hey hi all, I got something useful for all web3 learners. Past few days I spent to understand bits and bytes of the Uniswap Protocol. I gathered the best resources to learn all the things about Uniswap V2. During my learning I have taken notes of every thing that I learned. In this post you can get an gist of Uniswap DEX Protocol. You can check my Uniswap V2 Complete Code Walkthrough post to learn everything about Uniswap V2.","headline":"Uniswap V1_V2_V3 Overview","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/posts/uniswapoverview"},"url":"http://localhost:4000/posts/uniswapoverview"}</script>
+<!-- End Jekyll SEO tag -->
+ 
+</head>
+
+<body>
+  <div id="wrapper">
+    <header>
+  <div class="head-parent">
+      <a href="/">
+        <h1>mj0ln1r@home:~$</h1></a>
+        <span id="command">cat uniswap_overview</span>
+    <div class="header-links">
+      <a href="/archive"><h2 class="header-link">Archive</h2></a>
+<a href="/about"><h2 class="header-link">About</h2></a>
+
+    </div>
+  </div>
+</header>
+    <div class="container">
+      <section id="main_content">
+        <article>
+  <h2>Uniswap V1_V2_V3 Overview</h2>
+  <time datetime="2024-01-09T00:00:00+05:30" class="by-line">09 Jan 2024</time>
+  <p>Hey hi all, I got something useful for all web3 learners. Past few days I spent to understand bits and bytes of the Uniswap Protocol. I gathered the best resources to learn all the things about Uniswap V2. During my learning I have taken notes of every thing that I learned. In this post you can get an gist of <strong>Uniswap DEX</strong> Protocol. You can check my <a href="https://themj0ln1r.github.io/posts/uniswapv2complete">Uniswap V2 Complete Code Walkthrough</a> post to learn everything about Uniswap V2.</p>
+
+<h1 id="uniswap">Uniswap</h1>
+
+<p>Uniswap is an automated ethereum-based crypto exchange with its own governance token, UNI.</p>
+
+<h1 id="uniswap-v1">Uniswap V1</h1>
+
+<p>It introduced the ETH/ERC20 liquidity pool, where LPs (Liquidity Providers) could deposit tokens in exchange for liquidity tokens.</p>
+
+<p>Uniswap V1 uses the <code class="language-plaintext highlighter-rouge">X * Y = K</code> constant product equation to calculate token price where</p>
+
+<p>X is the amount of token 1,</p>
+
+<p>Y is the amount of token 2, and</p>
+
+<p>K is the constant that the liquidity pool’s smart contract keeps the same throughout swaps.</p>
+
+<p>Uniswap V1 model faces many issues involving <strong>slippage</strong> - the change in price of a token because of your trade, and a <strong>lack of dedicated token-only pools</strong> that forces users to interact with two pools to trade between non-native tokens.</p>
+
+<p><img src="/assets/img/blog_img/uniswapv1_dai_usdc.png" class="autoimg" /></p>
+
+<p>First, the buyer interacts with the <strong>DAI/ETH</strong> pool to swap his <strong>DAI</strong> for <strong>ETH</strong>, then uses that <strong>ETH</strong> to interact with the <strong>USDC/ETH</strong> pool which outputs <strong>USDC</strong> in exchange for the <strong>ETH</strong>.</p>
+
+<p>Uniswap V1 has a flat <strong>0.3%</strong> fee for LPs (Liquidity Providers) to incentivize participation in the network, which must be taken into account as well in the equation.</p>
+
+<p><strong>Weakness :</strong></p>
+
+<ul>
+  <li>Uniswap V1 model faces is the weakness to price manipulation like <strong>front-running</strong> and <strong>sandwich attacks</strong></li>
+</ul>
+
+<h1 id="uniswap-v2">Uniswap V2</h1>
+
+<p>The Uniswap V2 was launched in May, 2020 with a plethora of new features including <strong>TWAP</strong> (Time Weighted Average Price), <strong>Liquidity pools</strong> <strong>for non-native tokens</strong> which halves gas fees and slippage for token swaps, and <strong>Flash Swaps</strong>. In addition, this update removed native token functionality in favor of <strong>WETH</strong> (Wrapped Ether) and is written in Solidity - a welcome change for readability.</p>
+
+<p>The <strong>0.3%</strong> fee model was shortly modified after release by members of the DAO, where <strong>0.05%</strong> of the fee’s funds are reserved for the development of the Uniswap network.</p>
+
+<h3 id="twap"><strong>TWAP</strong></h3>
+
+<p><strong>TWAP</strong> works by averaging a price for a token in a pool over a set period of time, making manipulating prices extremely difficult. Each new block pairs measure the market price before trades take place.</p>
+
+<p><img src="/assets/img/blog_img/uniswapv2_cumulative.png" class="autoimg" /></p>
+
+<p>Let’s say we wish to measure the <strong>TWAP</strong> of a token price over a set of time <code class="language-plaintext highlighter-rouge">T</code>. The equation to find the TWAP price is calculated by dividing the cumulative price (or the aforementioned <code class="language-plaintext highlighter-rouge">priceCumulative</code> variable in the pictures) by <code class="language-plaintext highlighter-rouge">T</code>.</p>
+
+<p>This gives us an average price that is resilient to an outlier price given by the oracle. For example, if a token were to be manipulated at block <strong>10</strong> with an <em>outrageous</em> price, instead of drawing this inaccurate reading to be the true price of swap, it is averaged between blocks <strong>6</strong>, <strong>7</strong>, <strong>8</strong>, and <strong>9</strong> which read much closer to the accurate price. Therefore, <strong>much</strong> less slippage/manipulation is realized by the end user.</p>
+
+<p><img src="/assets/img/blog_img/uniswapv2_twap.png" class="autoimg" /></p>
+
+<p><strong>Flash Swaps :</strong></p>
+
+<p><strong>Uniswap V2 flash swaps</strong> allow you to withdraw as much as you want of any ERC20 token on Uniswap at no upfront cost and do anything you want with them (execute arbitrary code), provided that by the end of the transaction execution, you either:</p>
+
+<ul>
+  <li>Pay for all ERC20 tokens withdrawn</li>
+  <li>Pay for a percentage of ERC20 tokens and return the rest</li>
+  <li>Return all ERC20 tokens withdrawn</li>
+</ul>
+
+<p>Liquidity provider fees are enforced by subtracting 0.3% from all input amounts, even if the input ERC20 tokens are being returned as part of a flash swap.</p>
+
+<p><img src="/assets/img/blog_img/uniswapv2_flash.png" class="autoimg" /></p>
+
+<h1 id="uniswap-v3">Uniswap V3</h1>
+
+<p>Uniswap V3 was launched on May 5, 2021 with numerous features among many others: <strong>concentrated liquidity</strong>, <strong>multiple fee tiers</strong>, <strong>non-fungible liquidity</strong>, and <strong>improved TWAP oracles</strong>.</p>
+
+<ul>
+  <li>**Concentrated liquidity : ** Giving individual LPs granular control over what price ranges their capital is allocated to. Individual positions are aggregated together into a single pool, forming one combined curve for users to trade against</li>
+  <li><strong>Multiple fee tiers :</strong> Allowing LPs to be appropriately compensated for taking on varying degrees of risk</li>
+  <li><strong>Non-fungible liquidity :</strong> As a byproduct of per-LP custom price curves, liquidity positions are no longer fungible and are not represented as ERC20 tokens in the core protocol.</li>
+  <li><strong>Improved TWAP Oracles :</strong> Uniswap v3 offers significant improvements to the TWAP oracle, making it possible to calculate any recent TWAP within the past ~9 days in a single on-chain call. This is achieved by storing an array of cumulative sums instead of just one.</li>
+  <li><strong>Improved TWAP Oracles :</strong> Uniswap v3 offers significant improvements to the TWAP oracle, making it possible to calculate any recent TWAP within the past ~9 days in a single on-chain call. This is achieved by storing an array of cumulative sums instead of just one.</li>
+</ul>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="https://docs.uniswap.org/concepts/uniswap-protocol" target="_blank">Uniswap Docs</a></li>
+</ul>
+
+</article>
+      </section>
+    </div>
+  </div>
+
+   <footer>
+  <a href="/">
+    <span>
+        <b>Mj0ln1r</b>
+    </span>
+    
+    <span>© 2024
+  </a>
+
+  <a href="https://twitter.com/TheMj0ln1r" target="_blank">
+  </span>/Twitter</span>
+  </a>
+
+  <a href="https://github.com/TheMj0ln1r" target="_blank">
+  </span>/Github</span>
+  </a>
+
+  <a href="https://www.linkedin.com/in/mj0ln1r" target="_blank">
+  </span>/LinkedIn</span></a>
+
+  <a href=""><span style="color:red;">^TOP</span></a>
+
+</footer>
+
+  
+</body>
+
+</html>
